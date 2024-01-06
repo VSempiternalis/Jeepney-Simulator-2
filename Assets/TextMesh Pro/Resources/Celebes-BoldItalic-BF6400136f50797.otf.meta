@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 51c4d9f92788ea041a5b3081a28de4b1
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Celebes
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: c0c488d869edc7a429d7f3024a3b9b65, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

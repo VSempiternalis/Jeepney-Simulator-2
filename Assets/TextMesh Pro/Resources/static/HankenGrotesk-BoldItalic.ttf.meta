@@ -1,0 +1,39 @@
+fileFormatVersion: 2
+guid: 5f4ea13f5da60294a8febcca3d5e7c53
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Hanken Grotesk
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 098a7b0636eb8094c996abd27ece3c06, type: 3}
+  - {fileID: 12800000, guid: 8e2be1d60d23bec4ea18a7ca43ff926c, type: 3}
+  - {fileID: 12800000, guid: abd3411877f2ad04a844436cf3c3a271, type: 3}
+  - {fileID: 12800000, guid: d370cedfbeacdc0418c01d53659c9470, type: 3}
+  - {fileID: 12800000, guid: 2ed4798e61a2d0b43b7c0c76468c1553, type: 3}
+  - {fileID: 12800000, guid: 0cd9b1ccce84e58479186e0b50b8b9b5, type: 3}
+  - {fileID: 12800000, guid: 011ae583752ae37429d85b5f6b534959, type: 3}
+  - {fileID: 12800000, guid: 24a71176c1f9194408d8802cc633e6d1, type: 3}
+  - {fileID: 12800000, guid: a9aea33e061808d4082b289c584862e2, type: 3}
+  - {fileID: 12800000, guid: 21aab3d7267a3444eb077a644316dbda, type: 3}
+  - {fileID: 12800000, guid: 174e81b58cfad184cba980f9d177b6c6, type: 3}
+  - {fileID: 12800000, guid: 73d17615880322e46999f70ec8a4a574, type: 3}
+  - {fileID: 12800000, guid: ba4694c76272156418ac62305f956a68, type: 3}
+  - {fileID: 12800000, guid: c827aa5fe04e7fb42ba7a55f8502af39, type: 3}
+  - {fileID: 12800000, guid: 7c4abbc52347a84428aa149125fc0b4d, type: 3}
+  - {fileID: 12800000, guid: f7f09e410392b494eb8bc7ac8d9c7ef5, type: 3}
+  - {fileID: 12800000, guid: 2bce8cd1109b16a44b063239dd2c92f3, type: 3}
+  - {fileID: 12800000, guid: 06fa3605843baf6419f9b7e59d0a69d8, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

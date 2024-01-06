@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 5cc6974fd271ffd43a8788dd8656a3bb
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Naga
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 6516e87866091324b81fc251e3c82547, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
