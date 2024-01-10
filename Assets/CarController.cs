@@ -62,7 +62,8 @@ public class CarController : MonoBehaviour {
         foreach(Wheel wheel in wheels) {
             if(wheel.axle == Axle.Front) {
                 float steerAngle = steerInput * turnSens * maxSteerAngle;
-                wheel.wheelCollider.steerAngle = Mathf.Lerp(wheel.wheelCollider.steerAngle, steerAngle, 0.6f);
+                // wheel.wheelCollider.steerAngle = steerAngle;
+                wheel.wheelCollider.steerAngle = Mathf.Lerp(wheel.wheelCollider.steerAngle, steerAngle, 1.0f);
             }
         }
     }
