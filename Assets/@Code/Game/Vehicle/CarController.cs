@@ -119,7 +119,7 @@ public class CarController : MonoBehaviour {
 
             driver.SetParent(driverPos);
             driver.localPosition = Vector3.zero;
-            driver.rotation = driverPos.rotation;
+            // driver.rotation = driverPos.rotation;
 
             driver.GetComponent<PlayerDriveInput>().SetIsDriving(true);
             driver.GetComponent<PlayerDriveInput>().carCon = this;

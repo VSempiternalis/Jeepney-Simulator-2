@@ -161,6 +161,7 @@ Shader "GapperGames/Skybox_Proc" {
 
                 v2f vert(appdata_t v)
                 {
+                    float3 ray;
                     v2f OUT;
                     UNITY_SETUP_INSTANCE_ID(v);
                     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
@@ -412,22 +413,25 @@ Shader "GapperGames/Skybox_Proc" {
 
                 half4 frag(v2f IN) : SV_Target
                 {
+                    half3 ray = normalize(IN.pos.xyz);
+                    // half3 ray = normalize(IN.vertex.xyz);
                     half3 col = half3(0.0, 0.0, 0.0);
 
                     // if y > 1 [eyeRay.y < -SKY_GROUND_THRESHOLD] - ground
                     // if y >= 0 and < 1 [eyeRay.y <= 0 and > -SKY_GROUND_THRESHOLD] - horizon
                     // if y < 0 [eyeRay.y > 0] - sky
                     #if SKYBOX_SUNDISK == SKYBOX_SUNDISK_HQ
-                        half3 ray = normalize(IN.vertex.xyz);
+                        ray = normalize(IN.vertex.xyz);
                         half y = ray.y / SKY_GROUND_THRESHOLD;
                     #elif SKYBOX_SUNDISK == SKYBOX_SUNDISK_SIMPLE
-                        half3 ray = IN.rayDir.xyz;
+                        ray = IN.rayDir.xyz;
                         half y = ray.y / SKY_GROUND_THRESHOLD;
                     #else
                         half y = IN.skyGroundFactor;
                     #endif
 
-                        float uvY = (normalize(ray).y * 0.65) + 0.35;
+                        // float uvY = (normalize(float3 ray).y * 0.65) + 0.35;
+                        float uvY = (ray.y * 0.65) + 0.35;
                         float2 uv = normalize(ray).xz / uvY;
 
                         float stars = step(cellular((uv * 0.1) + (_Time * 0.005), 10, 10), 0.01);
