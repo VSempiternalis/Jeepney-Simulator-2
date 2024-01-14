@@ -24,7 +24,7 @@ public class MainMenuManager : MonoBehaviour {
         loadingScreen.In();
         loadingScreen.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
-        // yield return new WaitForSeconds(loadTransitionTime);
+        yield return new WaitForSeconds(loadTransitionTime);
 
         // SceneManager.LoadScene("SCENE - Game");
 

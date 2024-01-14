@@ -21,7 +21,7 @@ public class PlayerDriveInput : MonoBehaviour {
 
         fpm.enabled = !isDriving;
         jump.enabled = !isDriving;
-        crouch.enabled = !isDriving;
+        // crouch.enabled = !isDriving;
         fpa.enabled = !isDriving;
     }
 }
