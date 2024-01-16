@@ -139,14 +139,14 @@ public class CarController : MonoBehaviour {
         //movement
         if(Input.GetKey(Key_DriveForward)) {
             //if R or N, set to gear 1
-            if(gear < 2) {
+            if(gear < 1) {
                 gear = 2;
                 gearText.text = "1";
             }
             moveInput = 1;
         } else if(Input.GetKey(Key_DriveBackward)) {
             //if forward, set to R
-            if(gear > 1) {
+            if(gear > 0) {
                 gear = 0;
                 gearText.text = "R";
             }
@@ -158,7 +158,9 @@ public class CarController : MonoBehaviour {
         brakeInput = Input.GetKey(Key_Brake);
 
         //Steering
-        steerInput = Input.GetAxis("Horizontal");
+        if(Input.GetKey(Key_SteerLeft)) steerInput = -1;
+        else if(Input.GetKey(Key_SteerRight)) steerInput = 1;
+
         if(steerInput != 0) {
             Vector3 newRot = swStandardRot;
             newRot.z = steerInput * 90;
@@ -277,6 +279,7 @@ public class CarController : MonoBehaviour {
         }
 
         UpdateGearText();
+        UpdateGearStick();
     }
 
     private void UpdateGearText() {
@@ -284,6 +287,10 @@ public class CarController : MonoBehaviour {
         if(gear == 0) returnText = "R";
         else if(gear == 1) returnText = "N";
         gearText.text = returnText;
+    }
+
+    private void UpdateGearStick() {
+    
     }
 
     private void AnimateDashboard() {
