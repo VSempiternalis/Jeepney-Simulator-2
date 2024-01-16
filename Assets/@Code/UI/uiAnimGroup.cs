@@ -77,7 +77,7 @@ public class uiAnimGroup : MonoBehaviour {
     public void Out() {
         switch (outAnimationType) {
             case AnimationType.Move:
-                print("should be moving");
+                // print("should be moving");
                 LeanTween.move(rectTransform, outTargetPosition, outTime).setEase(outEasingType);
                 break;
             case AnimationType.Scale:
