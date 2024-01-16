@@ -139,14 +139,16 @@ public class CarController : MonoBehaviour {
         //movement
         if(Input.GetKey(Key_DriveForward)) {
             //if R or N, set to gear 1
-            if(gear < 1) {
+            if(gear < 2) {
                 gear = 2;
                 gearText.text = "1";
             }
             moveInput = 1;
         } else if(Input.GetKey(Key_DriveBackward)) {
             //if forward, set to R
+            print("Trying to drive back " + Time.time);
             if(gear > 0) {
+                print("Driving back " + Time.time);
                 gear = 0;
                 gearText.text = "R";
             }
