@@ -32,10 +32,12 @@ public class Settings : MonoBehaviour {
     [SerializeField] private Toggle ppToggle; //post processing
     [SerializeField] private Light sun;
     [SerializeField] private Toggle shadowsToggle; //post processing
+    [SerializeField] private TMP_Text fovText;
 
-    // [Space(10)]
-    // [Header("GAME")]
-    // [SerializeField] private ;
+    [Space(10)]
+    [Header("GAME")]
+    [SerializeField] private TMP_Text zoomSensText;
+    [SerializeField] private TMP_Text mouseSensText;
 
     private void Start() {
         resolutions = Screen.resolutions;
@@ -82,12 +84,18 @@ public class Settings : MonoBehaviour {
         // else Cursor.lockState = CursorLockMode.Locked;
     }
 
+    #region AUDIO
+
     public void SetMasterVolume(float newVol) {
         audioMixer.SetFloat("MasterVolume", newVol);
         masterVolumeText.text = (newVol + 80) + "";
 
         PlayerPrefs.SetFloat("Settings_MasterVolume", newVol);
     }
+
+    #endregion
+
+    #region VIDEO
 
     public void SetGraphicsPreset(int qualityIndex) {
         QualitySettings.SetQualityLevel(qualityIndex);
@@ -147,4 +155,34 @@ public class Settings : MonoBehaviour {
         //Update UI
         shadowsToggle.isOn = isOn;
     }
+
+    public void SetFOV(float newFOV) {
+        playerCam.GetComponent<Zoom>().defaultFOV = newFOV;
+        fovText.text = newFOV.ToString();
+
+        //Saving
+        PlayerPrefs.SetFloat("Settings_FOV", newFOV);
+    }
+
+    #endregion
+
+    #region GAME
+
+    public void SetMouseSens(float newMouseSens) {
+        playerCam.GetComponent<FirstPersonLook>().sensitivity = newMouseSens;
+        mouseSensText.text = Mathf.Round(newMouseSens*10.0f) * 0.01f + "";
+
+        //Saving
+        PlayerPrefs.SetFloat("Settings_MouseSens", newMouseSens);
+    }
+
+    public void SetZoomSens(float newZoomSens) {
+        playerCam.GetComponent<Zoom>().sensitivity = newZoomSens;
+        zoomSensText.text = newZoomSens.ToString();
+
+        //Saving
+        PlayerPrefs.SetFloat("Settings_ZoomSens", newZoomSens);
+    }
+
+    #endregion
 }

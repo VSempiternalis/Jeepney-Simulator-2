@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Rendering;
+// using UnityEditor.Rendering;
 
 public class CarController : MonoBehaviour {
     [SerializeField] private GameObject headlights;
@@ -45,9 +45,16 @@ public class CarController : MonoBehaviour {
     [SerializeField] private float idleRPM;
     [SerializeField] private TMP_Text rpmText;
     [SerializeField] private TMP_Text gearText;
+    [SerializeField] private TMP_Text speedText;
+    // private float speed;
+    [SerializeField] private float maxSpeed;
+    // private float speedClamped;
     [SerializeField] private Transform rpmNeedle;
-    [SerializeField] private float minNeedleRotation;
-    [SerializeField] private float maxNeedleRotation;
+    [SerializeField] private float minRPMNeedleRotation;
+    [SerializeField] private float maxRPMNeedleRotation;
+    [SerializeField] private Transform speedNeedle;
+    [SerializeField] private float minSpeedNeedleRotation;
+    [SerializeField] private float maxSpeedNeedleRotation;
     [SerializeField] private int gear;
     private float wheelRPM;
     [SerializeField] private AnimationCurve horsePowerToRPMCurve;
@@ -56,10 +63,6 @@ public class CarController : MonoBehaviour {
     [SerializeField] private float differentialRatio;
     private float torque;
     private float clutch;
-    private GearState gearState;
-    // [SerializeField] private float increaseGearRPM;
-    // [SerializeField] private float decreaseGearRPM;
-    // [SerializeField] private float changeGearTime = 0.5f;
 
     [Space(10)]
     [Header("Keybinds")]
@@ -99,6 +102,8 @@ public class CarController : MonoBehaviour {
 
         // KeybindsManager.current.onKeyChangeEvent += OnKeyChangeEvent;
         OnKeyChangeEvent();
+
+        UpdateGearText();
     }
 
     private void Update() {
@@ -127,15 +132,25 @@ public class CarController : MonoBehaviour {
     }
 
     public void GetInput() {
+        moveInput = 0;
+        steerInput = 0;
+        brakeInput = false;
+
         //movement
         if(Input.GetKey(Key_DriveForward)) {
             //if R or N, set to gear 1
-            // if()
+            if(gear < 2) {
+                gear = 2;
+                gearText.text = "1";
+            }
             moveInput = 1;
         } else if(Input.GetKey(Key_DriveBackward)) {
             //if forward, set to R
-            // if()
-            moveInput = 1;
+            if(gear > 1) {
+                gear = 0;
+                gearText.text = "R";
+            }
+            moveInput = -1;
         }
         // moveInput = Input.GetAxis("Vertical");
 
@@ -159,7 +174,8 @@ public class CarController : MonoBehaviour {
         }
 
         //Shifting
-
+        if(Input.GetKeyDown(Key_GearUp)) ShiftGear(1);
+        else if(Input.GetKeyDown(Key_GearDown)) ShiftGear(-1);
     }
 
     public void ToggleDriverSeat(Transform driver) {
@@ -213,6 +229,7 @@ public class CarController : MonoBehaviour {
         torque = 0;
         foreach(Wheel wheel in wheels) {
             if(wheel.axle == Axle.Rear) {
+                // if(RPM < idleRPM + 200 )
                 wheelRPM = Mathf.Abs(wheel.wheelCollider.rpm) * gearRatios[gear] * differentialRatio;
                 RPM = Mathf.Lerp(RPM, Mathf.Max(idleRPM-100, wheelRPM), Time.deltaTime * 3f);
                 torque = (horsePowerToRPMCurve.Evaluate(RPM/redLine)*motorPower/RPM)*gearRatios[gear]*differentialRatio*5252f;//*clutch
@@ -252,11 +269,30 @@ public class CarController : MonoBehaviour {
     //     }
     // }
 
+    private void ShiftGear(int gearAdd) {
+        if(gearAdd > 0 && gear != gearRatios.Length - 1) {
+            gear ++;
+        } else if(gearAdd < 0 && gear != 0) {
+            gear --;
+        }
+
+        UpdateGearText();
+    }
+
+    private void UpdateGearText() {
+        string returnText  = (gear-1).ToString();
+        if(gear == 0) returnText = "R";
+        else if(gear == 1) returnText = "N";
+        gearText.text = returnText;
+    }
+
     private void AnimateDashboard() {
         //needle rotation
-        rpmNeedle.rotation = Quaternion.Euler(0, Mathf.Lerp(minNeedleRotation, maxNeedleRotation, RPM/redLine), 0);
-        rpmText.text = RPM.ToString("0, 000");
-        gearText.text = (gear+1).ToString();
+        rpmNeedle.localRotation = Quaternion.Euler(Mathf.Lerp(minRPMNeedleRotation, maxRPMNeedleRotation, RPM/redLine), 0, 0);
+        rpmText.text = RPM.ToString("0 000");
+        float speed = carRb.velocity.magnitude;
+        speedNeedle.localRotation = Quaternion.Euler(Mathf.Lerp(minSpeedNeedleRotation, maxSpeedNeedleRotation, speed/maxSpeed), 0, 0);
+        speedText.text = speed.ToString("000");
         //speed
         //speedClamped
     }
@@ -270,30 +306,6 @@ public class CarController : MonoBehaviour {
             wheel.wheelModel.transform.rotation = rot;
         }
     }
-
-    // IEnumerator ChangeGear(int gearChange) {
-    //     gearState = GearState.CheckingChange;
-    //     if(gear + gearChange >= 0) {
-    //         if(gearChange > 0) {
-    //             yield return new WaitForSeconds(0.7f);
-    //             if(RPM < increaseGearRPM || gear >= gearRatios.Length-1) {
-    //                 gearState = GearState.Running;
-    //                 yield break;
-    //             }
-    //         } else if(gearChange < 0) {
-    //             yield return new WaitForSeconds(0.1f);
-
-    //             if(RPM > decreaseGearRPM || gear <= 0) {
-    //                 gearState = GearState.Running;
-    //                 yield break;
-    //             }
-    //         }
-    //         gearState = GearState.Changing;
-    //         yield return new WaitForSeconds(changeGearTime);
-    //     }
-    //     gear += gearChange;
-    //     gearState = GearState.Running;
-    // }
 }
 
 public enum GearState {
