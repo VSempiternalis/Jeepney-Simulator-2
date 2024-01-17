@@ -146,9 +146,7 @@ public class CarController : MonoBehaviour {
             moveInput = 1;
         } else if(Input.GetKey(Key_DriveBackward)) {
             //if forward, set to R
-            print("Trying to drive back " + Time.time);
             if(gear > 0) {
-                print("Driving back " + Time.time);
                 gear = 0;
                 gearText.text = "R";
             }
