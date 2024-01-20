@@ -297,9 +297,10 @@ public class CarController : MonoBehaviour {
         //needle rotation
         rpmNeedle.localRotation = Quaternion.Euler(Mathf.Lerp(minRPMNeedleRotation, maxRPMNeedleRotation, RPM/redLine), 0, 0);
         rpmText.text = RPM.ToString("0 000");
-        float speed = carRb.velocity.magnitude;
-        speedNeedle.localRotation = Quaternion.Euler(Mathf.Lerp(minSpeedNeedleRotation, maxSpeedNeedleRotation, speed/maxSpeed), 0, 0);
-        speedText.text = speed.ToString("000");
+        float speedMpS = carRb.velocity.magnitude;
+        float speedKpH = speedMpS*3.6f;
+        speedNeedle.localRotation = Quaternion.Euler(Mathf.Lerp(minSpeedNeedleRotation, maxSpeedNeedleRotation, speedKpH/maxSpeed), 0, 0);
+        speedText.text = speedKpH.ToString("000");
         //speed
         //speedClamped
     }
