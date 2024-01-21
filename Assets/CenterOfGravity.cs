@@ -26,6 +26,6 @@ public class CenterOfGravity : MonoBehaviour {
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
-        Gizmos.DrawSphere(transform.position + transform.rotation * CenterOfMass2, 0.7f);
+        Gizmos.DrawSphere(transform.position + transform.rotation * CenterOfMass2, 0.5f);
     }
 }
