@@ -64,6 +64,8 @@ public class CarController : MonoBehaviour {
     private float torque;
     private float clutch;
 
+    [SerializeField] private StickShift stickShift;
+
     [Space(10)]
     [Header("Keybinds")]
     private KeyCode Key_DriveForward;
@@ -280,6 +282,7 @@ public class CarController : MonoBehaviour {
 
         UpdateGearText();
         UpdateGearStick();
+        stickShift.MoveToGear(gear);
     }
 
     private void UpdateGearText() {

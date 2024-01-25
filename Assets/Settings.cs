@@ -15,6 +15,7 @@ public class Settings : MonoBehaviour {
 
     [Space(10)]
     [Header("AUDIO")]
+    [SerializeField] private Slider masterVolSlider;
     [SerializeField] private TMP_Text masterVolumeText;
 
     [Space(10)]
@@ -35,10 +36,13 @@ public class Settings : MonoBehaviour {
     [SerializeField] private GameObject reflectionProbe;
     [SerializeField] private Toggle reflectionProbeToggle; //post processing
     [SerializeField] private TMP_Text fovText;
+    [SerializeField] private Slider fovSlider;
 
     [Space(10)]
     [Header("GAME")]
+    [SerializeField] private Slider zoomSensSlider;
     [SerializeField] private TMP_Text zoomSensText;
+    [SerializeField] private Slider mouseSensSlider;
     [SerializeField] private TMP_Text mouseSensText;
 
     private void Start() {
@@ -57,6 +61,24 @@ public class Settings : MonoBehaviour {
         resolutionDropdown.value = currentResolutionIndex;
         // resolutionDropdown.value = currentResolutionIndex - 1;
         resolutionDropdown.RefreshShownValue();
+
+        // PlayerPrefs.SetInt("IsNewPlay", 0);
+
+        // If new player, set settings to default
+        if(PlayerPrefs.GetInt("IsNewPlay") == 0) {
+            print("NEW PLAYER");
+            currentResolutionIndex = 0;
+            currentResolutionIndex = resolutionOptions.Count - 1;
+
+            LoadDefaultSettings();
+
+            PlayerPrefs.SetInt("IsNewPlay", 1);
+        }
+        // If old player, load saved settings
+        else {
+            print("OLD PLAYER");
+            LoadSavedSettings();
+        }
     }
 
     private void Update() {
@@ -64,6 +86,47 @@ public class Settings : MonoBehaviour {
         if(Input.GetKeyDown(KeyCode.Escape)) {
             ToggleSettings();
         }
+    }
+
+    public void LoadDefaultSettings() {
+        print("[SETTINGS] Loading default settings");
+        SetMasterVolume(0);
+        // SetMusic
+        
+        SetGraphicsPreset(3);
+        SetResolution(resolutions.Length - 1);
+        SetFullscreen(true);
+        SetFog(false);
+        SetPP(true);
+        SetShadows(true);
+        SetReflectionProbe(false);
+        SetFOV(80);
+
+        SetMouseSens(2);
+        SetZoomSens(3);
+        //SetTutorialUI
+    }
+
+    private void LoadSavedSettings() {
+        print("[SETTINGS] Loading saved settings");
+        float volume = PlayerPrefs.GetFloat("Settings_MasterVolume");
+        SetMasterVolume(volume);
+
+        int qualityIndex = PlayerPrefs.GetInt("Settings_GraphicsPreset");
+        SetGraphicsPreset(qualityIndex);
+        // SetFullscreen((PlayerPrefs.GetInt("Settings_IsFullscreen") == 1 ? true : false));
+        int resolutionIndex = PlayerPrefs.GetInt("Settings_ResolutionIndex");
+        SetResolution(resolutionIndex);
+        SetFog(PlayerPrefs.GetInt("Settings_ActiveFog") == 1? true : false);
+        SetPP(PlayerPrefs.GetInt("Settings_ActivePP") == 1? true : false);
+        SetShadows(PlayerPrefs.GetInt("Settings_ActiveShadows") == 1? true : false);
+        SetReflectionProbe(PlayerPrefs.GetInt("Settings_ReflectionProbe") == 1? true : false);
+        SetFOV(PlayerPrefs.GetFloat("Settings_FOV"));
+
+        float mouseSens = PlayerPrefs.GetFloat("Settings_MouseSens");
+        SetMouseSens(mouseSens);
+        float zoomSens = PlayerPrefs.GetFloat("Settings_ZoomSens");
+        SetZoomSens(zoomSens);
     }
 
     public void ToggleSettings() {
@@ -91,6 +154,7 @@ public class Settings : MonoBehaviour {
     public void SetMasterVolume(float newVol) {
         audioMixer.SetFloat("MasterVolume", newVol);
         masterVolumeText.text = (newVol + 80) + "";
+        masterVolSlider.value = newVol;
 
         PlayerPrefs.SetFloat("Settings_MasterVolume", newVol);
     }
@@ -103,6 +167,8 @@ public class Settings : MonoBehaviour {
         QualitySettings.SetQualityLevel(qualityIndex);
 
         PlayerPrefs.SetInt("Settings_GraphicsPreset", qualityIndex);
+
+        graphicsDropdown.value = qualityIndex;
     }
 
     public void SetResolution(int resolutionIndex) {
@@ -174,11 +240,15 @@ public class Settings : MonoBehaviour {
     }
 
     public void SetFOV(float newFOV) {
+        print("Setting fov to: " + newFOV);
         playerCam.GetComponent<Zoom>().defaultFOV = newFOV;
+        playerCam.GetComponent<Camera>().fieldOfView = newFOV;
         fovText.text = newFOV.ToString();
+        fovSlider.value = newFOV;
 
         //Saving
         PlayerPrefs.SetFloat("Settings_FOV", newFOV);
+        print("Saving FOV from: " + newFOV + " to: " + PlayerPrefs.GetFloat(""));
     }
 
     #endregion
@@ -188,6 +258,7 @@ public class Settings : MonoBehaviour {
     public void SetMouseSens(float newMouseSens) {
         playerCam.GetComponent<FirstPersonLook>().sensitivity = newMouseSens;
         mouseSensText.text = Mathf.Round(newMouseSens*10.0f) * 0.01f + "";
+        mouseSensSlider.value = newMouseSens;
 
         //Saving
         PlayerPrefs.SetFloat("Settings_MouseSens", newMouseSens);
@@ -196,6 +267,7 @@ public class Settings : MonoBehaviour {
     public void SetZoomSens(float newZoomSens) {
         playerCam.GetComponent<Zoom>().sensitivity = newZoomSens;
         zoomSensText.text = newZoomSens.ToString();
+        zoomSensSlider.value = newZoomSens;
 
         //Saving
         PlayerPrefs.SetFloat("Settings_ZoomSens", newZoomSens);
