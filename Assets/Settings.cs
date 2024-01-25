@@ -32,6 +32,8 @@ public class Settings : MonoBehaviour {
     [SerializeField] private Toggle ppToggle; //post processing
     [SerializeField] private Light sun;
     [SerializeField] private Toggle shadowsToggle; //post processing
+    [SerializeField] private GameObject reflectionProbe;
+    [SerializeField] private Toggle reflectionProbeToggle; //post processing
     [SerializeField] private TMP_Text fovText;
 
     [Space(10)]
@@ -154,6 +156,21 @@ public class Settings : MonoBehaviour {
 
         //Update UI
         shadowsToggle.isOn = isOn;
+    }
+
+    public void SetReflectionProbe(bool isOn) {
+        reflectionProbe.SetActive(isOn);
+        // sun.shadows = isOn? LightShadows.Hard : LightShadows.None;
+        // foreach(Camera cam in GameObject.FindObjectsOfType<Camera>()) {
+        //     cam.allowHDR = isOn;
+        //     cam.allowMSAA = isOn;    
+        // }
+
+        //Saving
+        PlayerPrefs.SetInt("Settings_ReflectionProbe", isOn? 1:0);
+
+        //Update UI
+        reflectionProbeToggle.isOn = isOn;
     }
 
     public void SetFOV(float newFOV) {
