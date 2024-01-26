@@ -67,11 +67,6 @@ public class CarController : MonoBehaviour {
     [SerializeField] private StickShift stickShift;
 
     [Space(10)]
-    [Header("AUDIO")]
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip audioGearChange;
-
-    [Space(10)]
     [Header("Keybinds")]
     private KeyCode Key_DriveForward;
     private KeyCode Key_DriveBackward;
@@ -147,17 +142,15 @@ public class CarController : MonoBehaviour {
         if(Input.GetKey(Key_DriveForward)) {
             //if R or N, set to gear 1
             if(gear < 2) {
-                // gear = 2;
-                // gearText.text = "1";
-                SetGear(2);
+                gear = 2;
+                gearText.text = "1";
             }
             moveInput = 1;
         } else if(Input.GetKey(Key_DriveBackward)) {
             //if forward, set to R
             if(gear > 0) {
-                // gear = 0;
-                // gearText.text = "R";
-                SetGear(0);
+                gear = 0;
+                gearText.text = "R";
             }
             moveInput = -1;
         }
@@ -189,15 +182,8 @@ public class CarController : MonoBehaviour {
         else if(Input.GetKeyDown(Key_GearDown)) ShiftGear(-1);
     }
 
-    public void SetEngine(bool newIsOn) {
-        isEngineOn = newIsOn;
-
-        if(newIsOn) audioSource.Play();
-        else audioSource.Stop();
-    }
-
     public void ToggleDriverSeat(Transform driver) {
-        //EXIT
+        //exit
         if(driverPos.childCount > 0 && driverPos.GetChild(0) == driver) {
             //cameras
 
@@ -206,7 +192,7 @@ public class CarController : MonoBehaviour {
             // driver.SetParent(GameObject.Find("WORLD").transform);
             driver.SetParent(null);
 
-            driver.GetComponent<PlayerDriveInput>().SetIsDriving(false, null);
+            driver.GetComponent<PlayerDriveInput>().SetIsDriving(false);
             driver.GetComponent<Rigidbody>().isKinematic = false;
             driver.GetComponent<CapsuleCollider>().isTrigger = false;
 
@@ -221,18 +207,17 @@ public class CarController : MonoBehaviour {
 
             //gear
 
-        } 
-        //ENTER
-        else { 
+        } else { //enter
             //cameras
 
-            //Seating
             driver.SetParent(driverPos);
             driver.localPosition = Vector3.zero;
             driver.rotation = driverPos.rotation;
 
-            //Set player isDriving
-            driver.GetComponent<PlayerDriveInput>().SetIsDriving(true, this);
+            driver.GetComponent<PlayerDriveInput>().SetIsDriving(true);
+            driver.GetComponent<PlayerDriveInput>().carCon = this;
+            driver.GetComponent<Rigidbody>().isKinematic = true;
+            driver.GetComponent<CapsuleCollider>().isTrigger = true;
         
             // GetComponent<Rigidbody>().drag = freeDrag;
 
@@ -280,6 +265,14 @@ public class CarController : MonoBehaviour {
         }
     }
 
+    // private float CalculateTorque() {
+    //     float torque = 0;
+    //     if(isEngineOn) {
+    //         //cluch
+    //         wheelRPM = Mathf.Abs(Axle.Rear.)
+    //     }
+    // }
+
     private void ShiftGear(int gearAdd) {
         if(gearAdd > 0 && gear != gearRatios.Length - 1) {
             gear ++;
@@ -290,18 +283,6 @@ public class CarController : MonoBehaviour {
         UpdateGearText();
         UpdateGearStick();
         stickShift.MoveToGear(gear);
-
-        audioSource.PlayOneShot(audioGearChange);
-    }
-
-    private void SetGear(int newGear) {
-        gear = newGear;
-
-        UpdateGearText();
-        UpdateGearStick();
-        stickShift.MoveToGear(gear);
-
-        audioSource.PlayOneShot(audioGearChange);
     }
 
     private void UpdateGearText() {

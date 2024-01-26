@@ -4,7 +4,6 @@ public class DriversSeat : MonoBehaviour, IInteractable, ITooltipable {
     [SerializeField] private string header;
     [SerializeField] private string text;
     [SerializeField] private CarController carCon;
-    [SerializeField] private AudioSource audioSource;
 
     private void Start() {
         
@@ -17,7 +16,7 @@ public class DriversSeat : MonoBehaviour, IInteractable, ITooltipable {
     public void Interact(GameObject interactor) {
         carCon.ToggleDriverSeat(interactor.transform);
 
-        audioSource.Play();
+        // GetComponent<AudioSource>().Play();
     }
 
     public string GetHeader() {

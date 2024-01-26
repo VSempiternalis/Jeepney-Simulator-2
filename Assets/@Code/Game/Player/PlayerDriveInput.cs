@@ -7,8 +7,7 @@ public class PlayerDriveInput : MonoBehaviour {
     [SerializeField] private FirstPersonMovement fpm;
     [SerializeField] private Jump jump;
     [SerializeField] private Crouch crouch;
-    // [SerializeField] private FirstPersonAudio fpa;
-    [SerializeField] private GameObject fpa;
+    [SerializeField] private FirstPersonAudio fpa;
 
     private void Start() {
     }
@@ -17,17 +16,12 @@ public class PlayerDriveInput : MonoBehaviour {
         if(isDriving) carCon.GetInput();
     }
 
-    public void SetIsDriving(bool newIsDriving, CarController newCarCon) {
+    public void SetIsDriving(bool newIsDriving) {
         isDriving = newIsDriving;
 
         fpm.enabled = !isDriving;
         jump.enabled = !isDriving;
         crouch.enabled = !isDriving;
-        // fpa.enabled = !isDriving;
-        fpa.SetActive(!isDriving);
-
-        carCon = newCarCon;
-        GetComponent<Rigidbody>().isKinematic = isDriving;
-        GetComponent<CapsuleCollider>().isTrigger = isDriving;
+        fpa.enabled = !isDriving;
     }
 }

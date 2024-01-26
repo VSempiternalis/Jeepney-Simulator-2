@@ -93,7 +93,7 @@ public class Settings : MonoBehaviour {
         SetMasterVolume(0);
         // SetMusic
         
-        SetGraphicsPreset(2);
+        SetGraphicsPreset(3);
         SetResolution(resolutions.Length - 1);
         SetFullscreen(true);
         SetFog(false);
