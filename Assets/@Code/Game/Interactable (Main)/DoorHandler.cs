@@ -18,7 +18,7 @@ public class DoorHandler : MonoBehaviour, IInteractable, ITooltipable {
 
     private float limit = 1f;
 
-    // private AudioHandler audioHandler;
+    [SerializeField] private AudioHandler audioHandler;
 
     public bool isLocked;
     [SerializeField] private bool isHouseDoor;
@@ -31,21 +31,21 @@ public class DoorHandler : MonoBehaviour, IInteractable, ITooltipable {
     }
 
     private void Update() {
-        if(state == "Closing") {
-            if(pivot.transform.localRotation.eulerAngles.y >= closedYRot - limit && pivot.transform.localRotation.eulerAngles.y <= closedYRot + limit) {
-                state = "Closed";
-                pivot.transform.localRotation = Quaternion.Euler(closedXRot, closedYRot, closedZRot);
-            } else {
-                pivot.transform.localRotation = Quaternion.Slerp(pivot.transform.localRotation, Quaternion.Euler(closedXRot, closedYRot, closedZRot), rotationSpeed*Time.deltaTime);
-            }
-        } else if(state == "Opening") {
-            if(pivot.transform.localRotation.eulerAngles.y >= openYRot - limit && pivot.transform.localRotation.eulerAngles.y <= openYRot + limit) {
-                state = "Open";
-                pivot.transform.localRotation = Quaternion.Euler(openXRot, openYRot, openZRot);
-            } else {
-                pivot.transform.localRotation = Quaternion.Slerp(pivot.transform.localRotation, Quaternion.Euler(openXRot, openYRot, openZRot), rotationSpeed*Time.deltaTime);
-            }
-        }
+        // if(state == "Closing") {
+        //     if(pivot.transform.localRotation.eulerAngles.y >= closedYRot - limit && pivot.transform.localRotation.eulerAngles.y <= closedYRot + limit) {
+        //         state = "Closed";
+        //         pivot.transform.localRotation = Quaternion.Euler(closedXRot, closedYRot, closedZRot);
+        //     } else {
+        //         pivot.transform.localRotation = Quaternion.Slerp(pivot.transform.localRotation, Quaternion.Euler(closedXRot, closedYRot, closedZRot), rotationSpeed*Time.deltaTime);
+        //     }
+        // } else if(state == "Opening") {
+        //     if(pivot.transform.localRotation.eulerAngles.y >= openYRot - limit && pivot.transform.localRotation.eulerAngles.y <= openYRot + limit) {
+        //         state = "Open";
+        //         pivot.transform.localRotation = Quaternion.Euler(openXRot, openYRot, openZRot);
+        //     } else {
+        //         pivot.transform.localRotation = Quaternion.Slerp(pivot.transform.localRotation, Quaternion.Euler(openXRot, openYRot, openZRot), rotationSpeed*Time.deltaTime);
+        //     }
+        // }
     }
 
     #region INTERFACE FUNCTIONS
@@ -60,16 +60,32 @@ public class DoorHandler : MonoBehaviour, IInteractable, ITooltipable {
         
         if(state == "Open") {
             state = "Closing";
-            // audioHandler.Play(0);
+            audioHandler.Play(2);
+            // Tween close rotation
+            LeanTween.rotateLocal(pivot.gameObject, new Vector3(closedXRot, closedYRot, closedZRot), rotationSpeed)
+                .setEaseOutExpo()
+                .setOnComplete(() => state = "Closed");
         } else if(state == "Closed") {
             state = "Opening";
-            // audioHandler.Play(1);
+            audioHandler.Play(1);
+            // Tween open rotation
+            LeanTween.rotateLocal(pivot.gameObject, new Vector3(openXRot, openYRot, openZRot), rotationSpeed)
+                .setEaseOutExpo()
+                .setOnComplete(() => state = "Open");
         } else if(state == "Opening" && pivot.transform.localRotation.eulerAngles.y > openYRot) {
             state = "Closing";
-            // audioHandler.Play(0);
+            audioHandler.Play(2);
+            // Tween close rotation
+            LeanTween.rotateLocal(pivot.gameObject, new Vector3(closedXRot, closedYRot, closedZRot), rotationSpeed)
+                .setEaseOutExpo()
+                .setOnComplete(() => state = "Closed");
         } else if(state == "Closing" && pivot.transform.localRotation.eulerAngles.y < closedYRot) {
             state = "Opening";
-            // audioHandler.Play(1);
+            audioHandler.Play(1);
+            // Tween open rotation
+            LeanTween.rotateLocal(pivot.gameObject, new Vector3(openXRot, openYRot, openZRot), rotationSpeed)
+                .setEaseOutExpo()
+                .setOnComplete(() => state = "Open");
         }
     }
 
