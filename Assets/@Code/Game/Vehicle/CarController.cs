@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 // using UnityEditor.Rendering;
@@ -70,6 +71,15 @@ public class CarController : MonoBehaviour {
     [Header("AUDIO")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip audioGearChange;
+    [SerializeField] private AudioSource audioHazard;
+    [SerializeField] private Vroomer vroomer;
+
+    [Space(10)]
+    [Header("LIGHTS")]
+    [SerializeField] private GameObject indicatorArrowLeft;
+    [SerializeField] private GameObject indicatorArrowRight;
+    private bool hazardLightsActive;
+    [SerializeField] private float blinkTime;
 
     [Space(10)]
     [Header("Keybinds")]
@@ -147,21 +157,19 @@ public class CarController : MonoBehaviour {
         if(Input.GetKey(Key_DriveForward)) {
             //if R or N, set to gear 1
             if(gear < 2) {
-                // gear = 2;
-                // gearText.text = "1";
                 SetGear(2);
             }
             moveInput = 1;
+
+            //Muffler
+            vroomer.MufflerCheck();
         } else if(Input.GetKey(Key_DriveBackward)) {
             //if forward, set to R
             if(gear > 0) {
-                // gear = 0;
-                // gearText.text = "R";
                 SetGear(0);
             }
             moveInput = -1;
         }
-        // moveInput = Input.GetAxis("Vertical");
 
         //Braking
         brakeInput = Input.GetKey(Key_Brake);
@@ -287,21 +295,52 @@ public class CarController : MonoBehaviour {
             gear --;
         }
 
-        UpdateGearText();
-        UpdateGearStick();
-        stickShift.MoveToGear(gear);
-
-        audioSource.PlayOneShot(audioGearChange);
+        GearAnimAudio();
     }
 
     private void SetGear(int newGear) {
         gear = newGear;
 
+        GearAnimAudio();
+    }
+
+    private void GearAnimAudio() {
         UpdateGearText();
         UpdateGearStick();
         stickShift.MoveToGear(gear);
 
         audioSource.PlayOneShot(audioGearChange);
+
+        //Check for reverse
+        if(gear == 0) {
+            //lights
+            if(!hazardLightsActive) StartCoroutine(BlinkHazardLights());
+
+            //audio
+            audioHazard.Play();
+        } else {
+            //lights
+            if (indicatorArrowLeft.activeSelf) indicatorArrowLeft.SetActive(false);
+            if (indicatorArrowRight.activeSelf) indicatorArrowRight.SetActive(false);
+            hazardLightsActive = false;
+            if(hazardLightsActive) StopCoroutine(BlinkHazardLights());
+
+            //audio
+            if(audioHazard.isPlaying) audioHazard.Stop();
+        }
+    }
+
+    private IEnumerator BlinkHazardLights() {
+        hazardLightsActive = true;
+
+        while (gear == 0) {
+            // Toggle the visibility of both arrows
+            indicatorArrowLeft.SetActive(!indicatorArrowLeft.activeSelf);
+            indicatorArrowRight.SetActive(!indicatorArrowRight.activeSelf);
+
+            // Wait for a short duration
+            yield return new WaitForSeconds(blinkTime);
+        }
     }
 
     private void UpdateGearText() {
