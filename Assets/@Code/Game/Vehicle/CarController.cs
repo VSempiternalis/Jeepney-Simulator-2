@@ -202,6 +202,8 @@ public class CarController : MonoBehaviour {
 
         if(newIsOn) audioSource.Play();
         else audioSource.Stop();
+
+        GearAnimAudio(); // not sure if this belongs here, but it fixes some issues.
     }
 
     public void ToggleDriverSeat(Transform driver) {
@@ -236,7 +238,8 @@ public class CarController : MonoBehaviour {
 
             //Seating
             driver.SetParent(driverPos);
-            driver.localPosition = Vector3.zero;
+            //driver.localPosition = Vector3.zero;
+            driver.localPosition = new Vector3(0f, 0f, 0.1f);
             driver.rotation = driverPos.rotation;
 
             //Set player isDriving
@@ -312,7 +315,7 @@ public class CarController : MonoBehaviour {
         audioSource.PlayOneShot(audioGearChange);
 
         //Check for reverse
-        if(gear == 0) {
+        if(gear == 0 && isEngineOn) { 
             //lights
             if(!hazardLightsActive) StartCoroutine(BlinkHazardLights());
 
@@ -320,20 +323,19 @@ public class CarController : MonoBehaviour {
             audioHazard.Play();
         } else {
             //lights
-            if (indicatorArrowLeft.activeSelf) indicatorArrowLeft.SetActive(false);
-            if (indicatorArrowRight.activeSelf) indicatorArrowRight.SetActive(false);
+            if(indicatorArrowLeft.activeSelf) indicatorArrowLeft.SetActive(false);
+            if(indicatorArrowRight.activeSelf) indicatorArrowRight.SetActive(false);
             hazardLightsActive = false;
-            if(hazardLightsActive) StopCoroutine(BlinkHazardLights());
 
             //audio
-            if(audioHazard.isPlaying) audioHazard.Stop();
+            if (audioHazard.isPlaying) audioHazard.Stop();
         }
     }
 
     private IEnumerator BlinkHazardLights() {
         hazardLightsActive = true;
 
-        while (gear == 0) {
+        while(gear == 0 && isEngineOn) { 
             // Toggle the visibility of both arrows
             indicatorArrowLeft.SetActive(!indicatorArrowLeft.activeSelf);
             indicatorArrowRight.SetActive(!indicatorArrowRight.activeSelf);
