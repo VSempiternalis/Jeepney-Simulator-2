@@ -44,6 +44,8 @@ public class Settings : MonoBehaviour {
     [SerializeField] private TMP_Text zoomSensText;
     [SerializeField] private Slider mouseSensSlider;
     [SerializeField] private TMP_Text mouseSensText;
+    [SerializeField] private Slider renderDistSlider;
+    [SerializeField] private TMP_Text renderDistText;
 
     private void Start() {
         resolutions = Screen.resolutions;
@@ -104,6 +106,7 @@ public class Settings : MonoBehaviour {
 
         SetMouseSens(2);
         SetZoomSens(3);
+        SetRenderDist(5);
         //SetTutorialUI
     }
 
@@ -127,6 +130,8 @@ public class Settings : MonoBehaviour {
         SetMouseSens(mouseSens);
         float zoomSens = PlayerPrefs.GetFloat("Settings_ZoomSens");
         SetZoomSens(zoomSens);
+        float renderDist = PlayerPrefs.GetFloat("Settings_RenderDist", 5);
+        SetRenderDist(renderDist);
     }
 
     public void ToggleSettings() {
@@ -271,6 +276,17 @@ public class Settings : MonoBehaviour {
 
         //Saving
         PlayerPrefs.SetFloat("Settings_ZoomSens", newZoomSens);
+    }
+
+    public void SetRenderDist(float newRenderDist) {
+        float renderDist = newRenderDist*100f;
+        renderDistSlider.value = newRenderDist;
+
+        playerCam.GetComponent<Camera>().farClipPlane = renderDist;
+        renderDistText.text = renderDist.ToString();
+
+        //Saving
+        PlayerPrefs.SetFloat("Settings_RenderDist", newRenderDist);
     }
 
     #endregion
