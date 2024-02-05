@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,11 +15,15 @@ public class MainMenuManager : MonoBehaviour {
         
     }
 
-    public void StartGame(string sceneName) {
-        StartCoroutine(LoadLevel(sceneName));
+    public void StartFreeride(bool isNewGame) {
+        StartCoroutine(LoadLevel("Freeride", isNewGame));
     }
 
-    IEnumerator LoadLevel(string sceneName) {
+    public void StartCareer(bool isNewGame) {
+        StartCoroutine(LoadLevel("Career", isNewGame));
+    }
+
+    IEnumerator LoadLevel(string gameMode, bool isNewGame) {
         loadingScreen.In();
         loadingScreen.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
@@ -28,7 +31,11 @@ public class MainMenuManager : MonoBehaviour {
 
         // SceneManager.LoadScene("SCENE - Game");
 
-        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
+        AsyncOperation operation = SceneManager.LoadSceneAsync("SCENE - Game");
+        PlayerPrefs.SetString("Game_GameMode", gameMode);
+        PlayerPrefs.SetInt("Game_isNewGame", isNewGame? 1:0);
+
+        //LOADING BAR
         while(!operation.isDone) {
             float progress = Mathf.Clamp01(operation.progress/0.9f);
             print(progress);
