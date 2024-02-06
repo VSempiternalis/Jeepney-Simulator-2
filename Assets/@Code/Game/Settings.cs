@@ -46,6 +46,8 @@ public class Settings : MonoBehaviour {
     [SerializeField] private TMP_Text mouseSensText;
     [SerializeField] private Slider renderDistSlider;
     [SerializeField] private TMP_Text renderDistText;
+    [SerializeField] private Slider spawnDistSlider;
+    [SerializeField] private TMP_Text spawnDistText;
 
     private void Start() {
         resolutions = Screen.resolutions;
@@ -287,6 +289,21 @@ public class Settings : MonoBehaviour {
 
         //Saving
         PlayerPrefs.SetFloat("Settings_RenderDist", newRenderDist);
+    }
+
+    public void SetSpawnDistance(float newSpawnDist) {
+        int spawnDist = Mathf.RoundToInt(newSpawnDist);
+
+        //Save
+        PlayerPrefs.SetInt("Settings_SpawnDist", spawnDist);
+
+        //Update
+        SpawnArea.current.spawnDist = spawnDist;
+        // SpawnArea.current.GetComponent<SphereCollider>().radius = spawnDist;
+
+        //Update UI
+        spawnDistText.text = spawnDist + "";
+        spawnDistSlider.value = spawnDist;
     }
 
     #endregion
