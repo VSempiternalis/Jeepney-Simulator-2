@@ -109,6 +109,7 @@ public class Settings : MonoBehaviour {
         SetMouseSens(2);
         SetZoomSens(3);
         SetRenderDist(5);
+        SetSpawnDistance(100);
         //SetTutorialUI
     }
 
@@ -134,6 +135,8 @@ public class Settings : MonoBehaviour {
         SetZoomSens(zoomSens);
         float renderDist = PlayerPrefs.GetFloat("Settings_RenderDist", 5);
         SetRenderDist(renderDist);
+        int spawnDist = PlayerPrefs.GetInt("Settings_SpawnDist", 100);
+        SetSpawnDistance(100);
     }
 
     public void ToggleSettings() {

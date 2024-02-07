@@ -1,6 +1,9 @@
 using UnityEngine;
 
 public class Despawner : MonoBehaviour {
+    [SerializeField] private string objectType;
+    [SerializeField] private Transform pool;
+
     private int despawnDist = 100;
 
     private float nextSecUpdate;
@@ -24,16 +27,19 @@ public class Despawner : MonoBehaviour {
 
     private void Update() {
         if(despawning) {
-            // print("DESPAWNING");
-            if(Vector3.Distance(transform.position, newPos) < 0.1f) Destroy(gameObject);
-            transform.position = newPos;
-            // transform.position = Vector3.MoveTowards(transform.position, newPos, 1000f);
+            if(Vector3.Distance(transform.position, newPos) < 1f) BackToPool();
+            transform.position = newPos; //Must move to triggerexit
         }
 
         else if(Time.time >= (nextSecUpdate)) {
             nextSecUpdate ++;
             DistanceCheck();
         }
+        
+        // if(Time.time >= (nextSecUpdate)) {
+        //     nextSecUpdate ++;
+        //     DistanceCheck();
+        // }
     }
 
     private void DistanceCheck() {
@@ -43,22 +49,23 @@ public class Despawner : MonoBehaviour {
     }
 
     public void Despawn() {
-        if(despawning) return;
+        print("DESPAWNING " + name);
+        // if(despawning) return;
         // if(GetComponent<aiCarController>() != null && GetComponent<Test_script>() != null) return;
 
-        // bool test = true;
-        if(GetComponent<aiCarController>() != null) {
-            // SpawnArea.current.vicCount --;
-            GetComponent<aiCarController>().enabled = false;
-            // test = false;
-        }
-        if(GetComponent<aiCarInput>() != null) GetComponent<aiCarInput>().enabled = false;
-        if(GetComponent<Rigidbody>() != null) GetComponent<Rigidbody>().isKinematic = true;
-
-        // if(GetComponent<Test_script>() != null) {
-        //     SpawnArea.current.personCount --;
+        // // bool test = true;
+        // if(GetComponent<aiCarController>() != null) {
+        //     // SpawnArea.current.vicCount --;
+        //     GetComponent<aiCarController>().enabled = false;
         //     // test = false;
         // }
+        // if(GetComponent<aiCarInput>() != null) GetComponent<aiCarInput>().enabled = false;
+        // if(GetComponent<Rigidbody>() != null) GetComponent<Rigidbody>().isKinematic = true;
+
+        // // if(GetComponent<Test_script>() != null) {
+        // //     SpawnArea.current.personCount --;
+        // //     // test = false;
+        // // }
 
         //Dont despawn when in vehicle
         // if(transform.parent != null && transform.parent.name.Contains("Seat") && GetComponent<Test_script>() && GetComponent<Test_script>().state != "Sitting") return;
@@ -67,8 +74,10 @@ public class Despawner : MonoBehaviour {
 
         // print(gameObject.layer);
         // print(SpawnArea.current.vicCount);
-        if(gameObject.layer == 6) spawnArea.vicCount --;
-        else if(gameObject.layer == 13) spawnArea.personCount --;
+        // if(gameObject.layer == 6) spawnArea.vicCount --;
+        // else if(gameObject.layer == 13) spawnArea.personCount --;
+        if(objectType == "Vehicle") spawnArea.vicCount --;
+        else if(objectType == "Person") spawnArea.personCount --;
 
         // if(test) print(name + " despawning without decrement!");
         // print("DESPAWN: " + name + " has aiCarCon: " + (GetComponent<aiCarController>() != null));
@@ -77,8 +86,17 @@ public class Despawner : MonoBehaviour {
         newPos = transform.position;
         newPos.y += 1000f;
         despawning = true;
-        //Destroy(gameObject);
+        // BackToPool();
 
         // print("DESPAWN FR");
+    }
+
+    private void BackToPool() {
+        print("BACK TO POOL " + name);
+        transform.parent = pool;
+        transform.localPosition = Vector3.zero;
+        transform.rotation = pool.rotation;
+        gameObject.SetActive(false);
+        despawning = false;
     }
 }
