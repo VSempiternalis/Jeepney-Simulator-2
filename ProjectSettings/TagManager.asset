@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Light
+  - SPAWN - Vehicle
   layers:
   - Default
   - TransparentFX
@@ -17,10 +18,10 @@ TagManager:
   - Interactable
   - Node
   - Invisible
-  - 
-  - 
-  - 
-  - 
+  - SPAWN - Vehicle
+  - Collision Avoidance
+  - SPAWN - Person
+  - SPAWN - Passenger
   - 
   - 
   - 

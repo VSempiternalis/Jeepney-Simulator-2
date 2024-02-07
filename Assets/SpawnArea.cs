@@ -1,214 +1,217 @@
-// using UnityEngine;
-// using System.Collections;
-// using System.Collections.Generic;
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
-// public class SpawnArea : MonoBehaviour {
-//     public static SpawnArea current;
-//     public int spawnDist;
+public class SpawnArea : MonoBehaviour {
+    public static SpawnArea current;
+    public int spawnDist;
 
-//     [Space(10)]
-//     //private SpawnManager spawnManager;
-//     //private int maxSpawnCount;
-//     [Header("VEHICLES")]
-//     public bool isSpawningVehicles;
-//     [SerializeField] private float vehicleSpawnTime;
-//     public int maxVicCount;
-//     public int vicCount;
+    [Space(10)]
+    [Header("SPAWNING")]
+    private Transform world;
+    [SerializeField] private LayerMask vicSpawnLayerMask;
+    [SerializeField] private LayerMask spawnsLayerMask;
+    [SerializeField] private int vicSpawnLayer;
+    [SerializeField] private int personSpawnLayer;
+    private VehicleSpawn currentVehicleSpawn;
+    private VehicleSpawn currentPersonSpawn;
+    [SerializeField] private Transform personPool;
 
-//     [SerializeField] private Transform smallVehiclePFs;
-//     [SerializeField] private Transform largeVehiclePFs;
-//     [SerializeField] private Transform newVehiclePFs;
-//     public int vehicleSpawnChance;
-//     [Space(10)]
+    [Space(10)]
+    [Header("VEHICLES")]
+    public bool isSpawningVehicles;
+    [SerializeField] private float vehicleSpawnInterval;
+    public int maxVicCount;
+    public int vicCount;
 
-//     [Header("PERSONS")]
-//     [SerializeField] private int personSpawnTime;
-//     public int maxPersonCount;
-//     public int personCount;
+    [SerializeField] private Transform smallVehiclePFs;
+    [SerializeField] private Transform largeVehiclePFs;
+    [SerializeField] private Transform newVehiclePFs;
+    public int vehicleSpawnChance;
+    [Space(10)]
 
-//     [SerializeField] private GameObject personPF;
-//     [SerializeField] private Vector2Int personSpawnRange;
+    [Header("PERSONS")]
+    [SerializeField] private int personSpawnTime;
+    public int maxPersonCount;
+    public int personCount;
 
-//     [SerializeField] private List<Transform> landmarkSpots;
-//     [Space(10)]
+    [SerializeField] private GameObject personPF;
+    [SerializeField] private Vector2Int personSpawnRange;
 
-//     [Header("OTHER")]
-//     [SerializeField] private Transform player;
-//     [SerializeField] private float positionUpdateFreq;
+    [SerializeField] private List<Transform> landmarkSpots;
 
-//     private void Awake() {
-//         current = this;
-//     }
+    private void Awake() {
+        current = this;
+    }
 
-//     private void Start() {
-//         StartCoroutine(VehicleSpawnLoop());
-//         InvokeRepeating("UpdatePosition", 0f, positionUpdateFreq);
-//         // StartCoroutine(PersonSpawnLoop());
+    private void Start() {
+        world = GameObject.Find("WORLD").transform;
+        StartCoroutine(SpawnLoop());
+        spawnDist = PlayerPrefs.GetInt("Settings_SpawnDist", 100);
+        // StartCoroutine(PersonSpawnLoop());
 
-//         //Add all destinations
-//         foreach(Transform landmark in landmarkSpots) {
-//             PlayerInput.current.ToggleDestination(landmark.name);
-//         }
+        //Add all destinations
+        foreach(Transform landmark in landmarkSpots) {
+            // PlayerInput.current.ToggleDestination(landmark.name);
+        }
 
-//         isSpawningVehicles = true;
-//     }
+        isSpawningVehicles = true;
+    }
 
-//     // private IEnumerator VehicleSpawnLoop() {
-//     //     //WaitForSeconds wait = 
+    private IEnumerator SpawnLoop() {
+        if(vicCount >= maxVicCount) yield return null;
 
-//     //     while (true) {
-//     //         int vicLayerMask = 1 << 20;
-//     //         Collider[] vicSpots = Physics.OverlapSphere(transform.position, spawnDist.y, vicLayerMask);
+        // int vicLayerMask = 1 << 20;
 
-//     //         for(int i = 0; i < vicSpots.Length; i++) {
-//     //             Collider vicSpot = vicSpots[i];
-//     //             if(vicSpot.GetComponent<VehicleSpot>().triggerCount == 0 && Vector3.Distance(transform.position, vicSpot.transform.position) >= spawnDist.x)
-//     //                 TrySpawnVehicle(vicSpot.transform);
-//     //             else if(Vector3.Distance(transform.position, vicSpot.transform.position) > spawnDist.y)
-//     //                 vicSpot.GetComponent<VehicleSpot>().isSpawnable = true;
-//     //         }
+        while (true) {
+            Collider[] spawns = Physics.OverlapSphere(transform.position, spawnDist, spawnsLayerMask);
 
-//     //         yield return new WaitForSeconds(vehicleSpawnTime);
-//     //     }
-//     // }
+            for(int i = 0; i < spawns.Length; i++) {
+                Collider spawn = spawns[i];
+                print("COLLIDER: " + spawn.name);
 
-//     private IEnumerator VehicleSpawnLoop() {
-//         int vicLayerMask = 1 << 20;
-//         VehicleSpot currentVehicleSpot;
+                if(Vector3.Distance(transform.position, spawn.transform.position) >= spawnDist - 10) {
+                    //[VEHICLES]
+                    if(spawn.gameObject.layer == vicSpawnLayer) {
+                        currentVehicleSpawn = spawn.GetComponent<VehicleSpawn>();
 
-//         while (true) {
-//             Collider[] vicSpots = Physics.OverlapSphere(transform.position, spawnDist, vicLayerMask);
+                        if(currentVehicleSpawn.triggerCount == 0) {
+                            currentVehicleSpawn.isSpawnable = !currentVehicleSpawn.isSpawnable;
+                            TrySpawnVehicle(spawn.transform);
+                        }
+                        else if(Vector3.Distance(transform.position, spawn.transform.position) > spawnDist) {
+                            currentVehicleSpawn.isSpawnable = true;
+                        }
+                    }
+                    //[PERSONS]
+                    else if(spawn.gameObject.layer == personSpawnLayer) {
+                        print("PERSON SPAWN LAYER");
+                        TrySpawnPerson(spawn.transform);
+                    }
+                }
+            }
 
-//             for(int i = 0; i < vicSpots.Length; i++) {
-//                 Collider vicSpot = vicSpots[i];
+            yield return new WaitForSeconds(vehicleSpawnInterval);
+        }
 
-//                 if(Vector3.Distance(transform.position, vicSpot.transform.position) >= spawnDist - 10) {
-//                     currentVehicleSpot = vicSpot.GetComponent<VehicleSpot>();
-//                     // currentVehicleSpot.GetComponent<MeshRenderer>().material = null;
+        // while (true) {
+        //     Collider[] vicSpots = Physics.OverlapSphere(transform.position, spawnDist, vicSpawnLayerMask);
 
-//                     if(currentVehicleSpot.triggerCount == 0) {
-//                         currentVehicleSpot.isSpawnable = !currentVehicleSpot.isSpawnable;
-//                         TrySpawnVehicle(vicSpot.transform);
-//                     }
-//                     else if(Vector3.Distance(transform.position, vicSpot.transform.position) > spawnDist)
-//                         currentVehicleSpot.isSpawnable = true;
-//                 }
-//             }
+        //     for(int i = 0; i < vicSpots.Length; i++) {
+        //         Collider vicSpot = vicSpots[i];
 
-//             yield return new WaitForSeconds(vehicleSpawnTime);
-//         }
-//     }
+        //         if(Vector3.Distance(transform.position, vicSpot.transform.position) >= spawnDist - 10) {
+        //             currentVehicleSpawn = vicSpot.GetComponent<VehicleSpawn>();
 
-//     // private IEnumerator PersonSpawnLoop() {
-//     //     while (true) {
-//     //         int personLayerMask = 1 << 10;
-//     //         Collider[] personSpots = Physics.OverlapSphere(transform.position, spawnDist.y, personLayerMask);
+        //             if(currentVehicleSpawn.triggerCount == 0) {
+        //                 currentVehicleSpawn.isSpawnable = !currentVehicleSpawn.isSpawnable;
+        //                 TrySpawnVehicle(vicSpot.transform);
+        //             }
+        //             else if(Vector3.Distance(transform.position, vicSpot.transform.position) > spawnDist)
+        //                 currentVehicleSpawn.isSpawnable = true;
+        //         }
+        //     }
 
-//     //         for(int i = 0; i < personSpots.Length; i++) {
-//     //             if(personSpots[i].GetComponent<SpawnHandler>().isSpawnable) {
-//     //                 TrySpawnPerson(personSpots[i].transform);
-//     //                 personSpots[i].GetComponent<SpawnHandler>().isSpawnable = false;
-//     //             }
-//     //         }
+        //     yield return new WaitForSeconds(vehicleSpawnInterval);
+        // }
+    }
 
-//     //         yield return new WaitForSeconds(personSpawnTime);
-//     //     }
-//     // }
+    private void TrySpawnPerson(Transform spawn) {
+        print("TRY SPAWN PERSON");
+        if(personCount >= maxPersonCount) return;
 
-//     private void UpdatePosition() {
-//         transform.position = player.position;
-//     }
+        //set number of persons to spawn on spawn transform
+        int toSpawn = Random.Range(personSpawnRange.x, personSpawnRange.y + 1);
 
-//     private void TrySpawnPerson(Transform spot) {
-//         if(personCount >= maxPersonCount) return;
+        //Spawn people
+        for(int i = 0; i < toSpawn; i++) {
+            if(personPool.childCount == 0) return;
+            
+            print("Spawning");
+            //Set random variables
+            float spawnX = Random.Range(spawn.position.x - (spawn.localScale.x/2), spawn.position.x + (spawn.localScale.x/2));
+            float spawnZ = Random.Range(spawn.position.z - (spawn.localScale.z/2), spawn.position.z + (spawn.localScale.z/2));
+            float rotY = Random.Range(0, 361);
 
-//         //set number of persons to spawn
-//         int toSpawn = Random.Range(personSpawnRange.x, personSpawnRange.y + 1);
+            int newPersonIndex = Random.Range(0, personPool.childCount);
+            GameObject newPerson = personPool.GetChild(newPersonIndex).gameObject;
+            print("Spawning " + name);
+            // newPerson = Instantiate(personPF, new Vector3(spawnX, spawn.position.y, spawnZ), Quaternion.identity);
+            newPerson.transform.position = new Vector3(spawnX, spawn.position.y, spawnZ);
+            newPerson.transform.Rotate(new Vector3(0, rotY, 0));
+            newPerson.transform.parent = world;
+            newPerson.SetActive(true);
 
-//         //Spawn people
-//         for(int i = 0; i < toSpawn; i++) {
-//             //Set random variables
-//             float spawnX = Random.Range(spot.position.x - (spot.localScale.x/2), spot.position.x + (spot.localScale.x/2));
-//             float spawnZ = Random.Range(spot.position.z - (spot.localScale.z/2), spot.position.z + (spot.localScale.z/2));
-//             float rotY = Random.Range(0, 361);
+            // newPerson.GetComponent<PersonController>().from = spot.parent.name;
+            // newPerson.GetComponent<PersonController>().to = GetDestination(spot.parent.name);
 
-//             GameObject newPerson = Instantiate(personPF, new Vector3(spawnX, spot.position.y, spawnZ), Quaternion.identity);
-//             newPerson.SetActive(true);
-//             newPerson.transform.Rotate(new Vector3(0, rotY, 0));
+            //spawnManager.spawnCount ++;
+        }
+    }
 
-//             newPerson.GetComponent<PersonController>().from = spot.parent.name;
-//             newPerson.GetComponent<PersonController>().to = GetDestination(spot.parent.name);
+    private string GetDestination(string currentLandmark) {
+        string destination = "";
 
-//             //spawnManager.spawnCount ++;
-//         }
-//     }
+        while(true) {
+            int destIndex = Random.Range(0, landmarkSpots.Count);
+            if(currentLandmark != landmarkSpots[destIndex].name) {
+                destination = landmarkSpots[destIndex].name;
+                break;
+            }
+        }
 
-//     private string GetDestination(string currentLandmark) {
-//         string destination = "";
+        return destination;
+    }
 
-//         while(true) {
-//             int destIndex = Random.Range(0, landmarkSpots.Count);
-//             if(currentLandmark != landmarkSpots[destIndex].name) {
-//                 destination = landmarkSpots[destIndex].name;
-//                 break;
-//             }
-//         }
+    private void TrySpawnVehicle(Transform spot) {
+        //Spawn roll
+        int spawnRoll = Random.Range(0, 101);
+        if(spawnRoll >= vehicleSpawnChance) return;
 
-//         return destination;
-//     }
+        Vector3 spawnPos = spot.position;
+        
+        //Get vehicles pool to use
+        Transform vehicles;
+        if(spot.GetComponent<VehicleSpawn>().onlySpawnSmallVics) vehicles = smallVehiclePFs;
+        else {
+            int pfIndex = Random.Range(0, 3);
+            if(pfIndex == 1) vehicles = smallVehiclePFs;
+            else if(pfIndex == 2) vehicles = largeVehiclePFs;
+            else {
+                vehicles = newVehiclePFs;
+                spawnPos.y += 1;
+            }
+        }
 
-//     private void TrySpawnVehicle(Transform spot) {
-//         // if(!spot.GetComponent<VehicleSpot>().isSpawnable) return;
-//         if(vicCount >= maxVicCount) return;
+        print("CHECK");
+        if(vehicles.childCount == 0) return;
 
-//         //Spawn roll
-//         int spawnRoll = Random.Range(0, 101);
-//         if(spawnRoll >= vehicleSpawnChance) return;
-//         // print("SPAWNING: " + spawnRoll + "/" + vehicleSpawnChance);
+        //OBJECT POOLING
+        print("SPAWN");
+        int vicIndex = Random.Range(0, vehicles.childCount);
+        GameObject newVic = vehicles.GetChild(vicIndex).gameObject;
+        newVic.transform.position = spawnPos;
+        newVic.transform.rotation = spot.rotation;
+        newVic.transform.parent = world;
+        newVic.SetActive(true);
+        //Collider
+        // newVic.GetComponent<BoxCollider>().enabled = true;
+        //Audio
+        //Code
 
-//         //Node check
-//         //if(spot.GetComponent<VehicleSpot>().node == null) return;
+        //OLD (Spawning/despawning) ================================================
+        // int vicIndex = Random.Range(0, vehicles.childCount);
+        // print("SPAWN POS: " + spawnPos);
+        // GameObject prefab = vehicles.GetChild(vicIndex).gameObject;
+        // GameObject newVehicle = Instantiate(prefab, world);
+        // newVehicle.transform.localPosition = spawnPos;
+        // newVehicle.transform.rotation = spot.rotation;
+        // newVehicle.SetActive(true);
 
-//         //set number of persons to spawn
-//         // int pfIndex = Random.Range(0, vehiclePFs.Count);
-//         // GameObject prefab = vehiclePFs[pfIndex];
-//         Transform vehicles;
+        //Set nodes
+        if(spot.GetComponent<VehicleSpawn>().node == null) newVic.GetComponent<aiCarController>().isActive = false;
+        newVic.GetComponent<aiCarController>().nextNode = spot.GetComponent<VehicleSpawn>().node;
 
-//         Vector3 spawnPos = spot.position;
-
-//         if(spot.GetComponent<VehicleSpot>().onlySpawnSmallVics) vehicles = smallVehiclePFs;
-//         else {
-//             int pfIndex = Random.Range(0, 3);
-//             if(pfIndex == 1) vehicles = smallVehiclePFs;
-//             else if(pfIndex == 2) vehicles = largeVehiclePFs;
-//             else {
-//                 vehicles = newVehiclePFs;
-//                 spawnPos.y += 1;
-//             }
-//         }
-
-//         int vicIndex = Random.Range(0, vehicles.childCount);
-//         GameObject prefab = vehicles.GetChild(vicIndex).gameObject;
-
-//         GameObject newVehicle = Instantiate(prefab, spot.position, spot.rotation);
-//         newVehicle.SetActive(true);
-
-//         //Set nodes
-//         if(spot.GetComponent<VehicleSpot>().node == null) newVehicle.GetComponent<aiCarController>().isActive = false;
-//         newVehicle.GetComponent<aiCarController>().nextNode = spot.GetComponent<VehicleSpot>().node;
-
-//         vicCount ++;
-//     }
-
-// //==============================================================================================================
-
-//     // Try spawn on enter
-//     private void OnTriggerEnter(Collider other) {
-//         if(other.gameObject.layer == 10) TrySpawnPerson(other.transform); //10 = Person spawn spot
-//         // else if(other.gameObject.layer == 20 && other.GetComponent<VehicleSpot>().triggerCount == 0 && Vector3.Distance(transform.position, other.transform.position) >= spawnDist - 20) TrySpawnVehicle(other.transform); //20 = Vehicle Spot
-//     }
-
-//     // private void OnTriggerStay(Collider other) {
-//     //     if(other.gameObject.layer == 20 && other.GetComponent<VehicleSpot>().triggerCount == 0 && Vector3.Distance(transform.position, other.transform.position) > 90) TrySpawnVehicle(other.transform); //20 = Vehicle Spot
-//     // }
-// }
+        vicCount ++;
+    }
+}
