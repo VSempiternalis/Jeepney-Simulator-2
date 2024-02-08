@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using TGStylizedWorld;
 
 public class SpawnArea : MonoBehaviour {
     public static SpawnArea current;
@@ -73,6 +74,7 @@ public class SpawnArea : MonoBehaviour {
                 if(Vector3.Distance(transform.position, spawn.transform.position) >= spawnDist - 10) {
                     //[VEHICLES]
                     if(spawn.gameObject.layer == vicSpawnLayer) {
+                        print("VEHICLE SPAWN LAYER");
                         currentVehicleSpawn = spawn.GetComponent<VehicleSpawn>();
 
                         if(currentVehicleSpawn.triggerCount == 0) {
@@ -141,6 +143,7 @@ public class SpawnArea : MonoBehaviour {
             newPerson.transform.Rotate(new Vector3(0, rotY, 0));
             newPerson.transform.parent = world;
             newPerson.SetActive(true);
+            newPerson.GetComponent<TGCharacterAppearance>().Start();
 
             // newPerson.GetComponent<PersonController>().from = spot.parent.name;
             // newPerson.GetComponent<PersonController>().to = GetDestination(spot.parent.name);
