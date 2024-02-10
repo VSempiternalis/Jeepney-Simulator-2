@@ -1,14 +1,22 @@
 using UnityEngine;
 
 public class PlayerDriveInput : MonoBehaviour {
-    public bool isDriving;
+    public static PlayerDriveInput current;
     public CarController carCon;
+
+    public bool isDriving;
+    public bool isTakingPassengers;
 
     [SerializeField] private FirstPersonMovement fpm;
     [SerializeField] private Jump jump;
     [SerializeField] private Crouch crouch;
     // [SerializeField] private FirstPersonAudio fpa;
     [SerializeField] private GameObject fpa;
+    [SerializeField] private Transform playerModel;
+
+    private void Awake() {
+        current = this;
+    }
 
     private void Start() {
     }
@@ -29,5 +37,10 @@ public class PlayerDriveInput : MonoBehaviour {
         carCon = newCarCon;
         GetComponent<Rigidbody>().isKinematic = isDriving;
         GetComponent<CapsuleCollider>().isTrigger = isDriving;
+
+        Vector3 newPos = playerModel.localPosition;
+        float newY = isDriving? 0.25f : 0;
+        newPos.y = newY;
+        playerModel.localPosition = newPos;
     }
 }
