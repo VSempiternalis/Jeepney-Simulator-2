@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour {
     public bool isPassengerPickups;
@@ -8,6 +10,12 @@ public class GameManager : MonoBehaviour {
 
     //CAREER
     public bool isHardMode;
+
+    [Space(10)]
+    [Header("LOADING SCREEN")]
+    [SerializeField] private uiAnimGroup loadingScreen;
+    [SerializeField] private RectTransform loadingProgress;
+    [SerializeField] private float loadTransitionTime = 2f;
 
     private void Start() {
         string gameMode = PlayerPrefs.GetString("Game_GameMode");
@@ -66,4 +74,35 @@ public class GameManager : MonoBehaviour {
     private void LoadCareer() {
     
     }
+
+    #region EXITS
+
+    public void ExitToMain() {
+        StartCoroutine(ExitToMainMenu());
+    }
+
+    IEnumerator ExitToMainMenu() {
+        loadingScreen.In();
+        loadingScreen.GetComponent<CanvasGroup>().blocksRaycasts = true;
+
+        yield return new WaitForSeconds(loadTransitionTime);
+
+        // SceneManager.LoadScene("SCENE - Game");
+
+        AsyncOperation operation = SceneManager.LoadSceneAsync("SCENE - MainMenu");
+
+        //LOADING BAR
+        while(!operation.isDone) {
+            float progress = Mathf.Clamp01(operation.progress/0.9f);
+            print(progress);
+            loadingProgress.LeanScaleX(progress, 1f);
+            yield return null;
+        }
+    }
+
+    public void ExitToDesktop() {
+        Application.Quit();
+    }
+
+    #endregion
 }
