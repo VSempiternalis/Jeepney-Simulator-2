@@ -331,12 +331,13 @@ public class CarController : MonoBehaviour {
                 // if(RPM < idleRPM + 200 )
                 wheelRPM = Mathf.Abs(wheel.wheelCollider.rpm) * gearRatios[gear] * differentialRatio;
                 RPM = Mathf.Lerp(RPM, Mathf.Max(idleRPM, wheelRPM), Time.deltaTime * 3f);
-                torque = (horsePowerToRPMCurve.Evaluate(RPM/redLine)*motorPower/RPM)*gearRatios[gear]*differentialRatio*5252f;//*clutch
+                torque = (horsePowerToRPMCurve.Evaluate(RPM / redLine) * motorPower / RPM) * gearRatios[gear] * differentialRatio * 5252f;//*clutch
                 wheel.wheelCollider.motorTorque = moveInput * torque;
             }
             // if(wheel.axle == Axle.Rear) wheel.wheelCollider.motorTorque = moveInput * maxAcceleration;
         }
     }
+
 
     private void Steer() {
         foreach(Wheel wheel in wheels) {
