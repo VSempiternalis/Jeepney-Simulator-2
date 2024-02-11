@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class CarController : MonoBehaviour {
     [SerializeField] private GameObject headlights;
@@ -226,6 +227,7 @@ public class CarController : MonoBehaviour {
     // PASSENGERS ============================================================================
 
     public void TakeSeat(Transform passenger) {
+        print("Taking seat");
         UpdateSeatsTaken();
 
         //Get free seats
@@ -243,9 +245,13 @@ public class CarController : MonoBehaviour {
         Transform seatSpot = seatSpots[seatIndex];
 
         //Setup
-        passenger.position = seatSpot.position;
-        passenger.rotation = seatSpot.rotation;
+        print("seatspot: " + seatSpot.name);
         passenger.SetParent(seatSpot);
+        passenger.localPosition = Vector3.zero;
+        passenger.rotation = seatSpot.rotation;
+        // passenger.position = seatSpot.position;
+        // passenger.rotation = seatSpot.rotation;
+        // passenger.SetParent(seatSpot);
         passengerCount ++;
 
         //KEEP IN TO AVOID CAR "HITTING SOMETHING" BUG. IDK WHY THIS HAPPENS OR WHY THIS EVEN WORKS BUT IT DOES
@@ -258,8 +264,9 @@ public class CarController : MonoBehaviour {
     }
 
     private void UpdateSeatsTaken() {
+        print("Updating seats taken");
         for(int i = 0; i < seatSpots.Count; i++) {
-            if(seatSpots[i].childCount == 0) seatsTaken[i] = 0;
+            if(seatSpots[i].childCount == 1) seatsTaken[i] = 0;
             else seatsTaken[i] = 1;
         }
     }

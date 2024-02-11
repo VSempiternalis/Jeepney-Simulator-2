@@ -3,6 +3,7 @@
 public class FirstPersonLook : MonoBehaviour
 {
     [SerializeField] private Rigidbody rb;
+    [SerializeField] private Head head;
 
     public bool isOn = true;
     [SerializeField]
@@ -35,9 +36,11 @@ public class FirstPersonLook : MonoBehaviour
         Vector2 rawFrameVelocity = Vector2.Scale(mouseDelta, Vector2.one * sensitivity);
         frameVelocity = Vector2.Lerp(frameVelocity, rawFrameVelocity, 1 / smoothing);
         velocity += frameVelocity;
-        if(pdi.isDriving) velocity.y = Mathf.Clamp(velocity.y, -90, 60);
-        else if(rb.velocity.magnitude >= 4f) velocity.y = Mathf.Clamp(velocity.y, -90, 10);
-        else velocity.y = Mathf.Clamp(velocity.y, -90, 55);
+
+        // if(pdi.isDriving) velocity.y = Mathf.Clamp(velocity.y, -90, 60);
+        // else if(rb.velocity.magnitude >= 4f) velocity.y = Mathf.Clamp(velocity.y, -90, 10);
+        // else velocity.y = Mathf.Clamp(velocity.y, -90, 55);
+        velocity.y = Mathf.Clamp(velocity.y, -90, head.GetClamp());
 
         // Rotate camera up-down and controller left-right from velocity.
         transform.localRotation = Quaternion.AngleAxis(-velocity.y, Vector3.right);
