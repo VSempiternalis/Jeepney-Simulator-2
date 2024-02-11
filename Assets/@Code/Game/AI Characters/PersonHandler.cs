@@ -112,7 +112,7 @@ public class PersonHandler : MonoBehaviour {
         if(state == "Idle") return;
 
         // else if(state == "Paying") PayFare();
-        else if(state == "Wandering") Wander();
+        // else if(state == "Wandering") Wander();
         else if(state == "Moving to vehicle") MoveToVehicle();
         // else if(state == "Waiting to drop") WaitToDrop();
         // else if(state == "Dropping") Dropping();
@@ -126,8 +126,8 @@ public class PersonHandler : MonoBehaviour {
             } 
             else if(state == "Waiting to pay") {
                 if(Time.time >= payTime) {
-                    if(payPoint.GetComponent<StorageHandler>().value > 0) StartPayTimer(); //reset pay if money still on paymat
-                    else PayFare();
+                    // if(payPoint.GetComponent<StorageHandler>().value > 0) StartPayTimer();
+                    // else PayFare();
                 }
         //     } else if(state == "Waiting for change") {
         //         // if(changePoint.GetComponent<StorageHandler>().value > 0 && changePoint.GetComponent<StorageHandler>().value <= change) {
@@ -153,14 +153,14 @@ public class PersonHandler : MonoBehaviour {
         }
     }
 
-    #region LONG FUNCTIONS ==========================================================================================
+    // LONG FUNCTIONS ==========================================================================================
 
     private void Wait() {
-        if(Time.time >= waitTime) MakeWander();
+        // if(Time.time >= waitTime) MakeWander();
 
-        if(!player.isTakingPassengers || !isPassenger) return;
-        else if(!player.isTakingPassengers && !player.carCon.HasFreeSeats()) return;
-        else if(!DestinationsManager.current.destinations.Contains(to)) return;
+        // if(!player.isTakingPassengers || !isPassenger) return;
+        // else if(!player.isTakingPassengers && !player.carCon.HasFreeSeats()) return;
+        // else if(!player.destinations.Contains(to)) return;
 
         //[Call jeep when close]
         distToPlayer = Vector3.Distance(transform.position, player.transform.position);
@@ -179,25 +179,6 @@ public class PersonHandler : MonoBehaviour {
         }
     }
 
-    private void Wander() {
-        MoveToNextPos();
-
-        if(posDestinations.Count == 0) MakeWait();
-    }
-
-    private void MoveToNextPos() {
-        FacePos(posDestinations[0]);
-
-        //if destination reached
-        if(Vector3.Distance(transform.position, posDestinations[0]) < reachDist) {
-            posDestinations.RemoveAt(0);
-            return;
-        }
-
-        Vector3 newPos = new Vector3(posDestinations[0].x, transform.position.y, posDestinations[0].z);
-        transform.position = Vector3.MoveTowards(transform.position, newPos, moveSpeed * Time.deltaTime);
-    }
-
     private void MoveToVehicle() {
         if(destinations.Count > 3) destinations.RemoveRange(3, destinations.Count-4);
 
@@ -210,9 +191,24 @@ public class PersonHandler : MonoBehaviour {
         }
 
         if(nextNode) MoveToNextDest();
+
+        // if(destinations.Count == 0) {
+        //     SetState("Waiting");
+        //     return;
+        //     // EnterVehicle();
+        // }
+
+        // check if near entrance
+        // foreach(Transform point in carCon.points) {
+        //     if(point.name.Contains("Entrance") && Vector3.Distance(transform.position, point.position) < reachDist) {
+        //         EnterVehicle();
+        //     }
+        // }
     }
     
     private void MoveToNextDest() {
+        print("MOVE TO NEXT DEST: " + nextNode + " " + Time.time);
+        // Face(destinations[0]);
         Face(nextNode);
         
         //if destination reached
@@ -224,14 +220,19 @@ public class PersonHandler : MonoBehaviour {
             else nextNode = null;
             return;
         }
+        // if(Vector3.Distance(transform.position, destinations[0].position) < reachDist) {
+        //     if(destinations[0].GetComponent<MoveNode>()) destinations[0] = destinations[0].GetComponent<MoveNode>().nextNode;
+        //     else destinations.RemoveAt(0);
+        //     return;
+        // }
 
         Vector3 newPos = new Vector3(nextNode.position.x, transform.position.y, nextNode.position.z);
         transform.position = Vector3.MoveTowards(transform.position, newPos, moveSpeed * Time.fixedDeltaTime);
+        // Vector3 newPos = new Vector3(destinations[0].position.x, transform.position.y, destinations[0].position.z);
+        // transform.position = Vector3.MoveTowards(transform.position, newPos, moveSpeed);
     }
 
-    #endregion
-
-    #region SINGLE FRAME FUNCTIONS =================================================================================================
+    // SINGLE FRAME FUNCTIONS =================================================================================================
 
     private void Arrived() {
         if(state == "Dropping" || state == "Waiting for change") return;
@@ -259,18 +260,13 @@ public class PersonHandler : MonoBehaviour {
         //Disable collider when moving to vehicle
         // GetComponent<CapsuleCollider>().isTrigger = false;
         // GetComponent<Rigidbody>().isKinematic = false;
+        // state = "Moving to vehicle";
         SetState("Moving to vehicle");
     }
 
     private void Face(Transform target) {
-        // print("Facing: " + target.name);
+        print("Facing: " + target.name);
         Vector3 newLook = new Vector3(target.position.x, transform.position.y, target.position.z);
-        transform.LookAt(newLook, Vector3.up);
-    }
-
-    private void FacePos(Vector3 targetPos) {
-        // print("Facing: " + target.name);
-        Vector3 newLook = new Vector3(targetPos.x, transform.position.y, targetPos.z);
         transform.LookAt(newLook, Vector3.up);
     }
 
@@ -284,76 +280,13 @@ public class PersonHandler : MonoBehaviour {
         // popup.SayChange("(Unpaid)");
         destinations.Clear();
 
-        StartPayTimer();
+        // StartPayTimer();
         SetState("Waiting to pay");
         
-        AddDestination();
+        // AddDestination();
     }
 
-    public void AddDestination() {
-        DestinationsUIManager.current.AddDestination(to);
-    }
-
-    #endregion
-
-    #region MONEY
-
-    private void GetChange(int amount) {
-        change -= amount;
-        if(change <= 0) {
-            // popup.SayChange("");
-            state = "Waiting to arrive";
-            changePoint.GetComponent<ChangeHandler>().RemoveChangee(this);
-        } else {
-            // popup.SayChange("P" + change); 
-        }
-    }
-
-    private void StartPayTimer() {
-        payTime = Mathf.RoundToInt(Time.time) + Random.Range(payTimeRange.x, payTimeRange.y);
-    }
-
-    private void PayFare() {
-        //[+] voiceHandler.Say("Pay");
-
-        // popup.Say(sayHandler.GetSay("Pay"), true);
-
-        int paid = 0;
-
-        for(int i = money.Count; i > 0; i--) {
-            while(paid < fare) {
-                int spawnRoll = Random.Range(0, 101);
-
-                if(spawnRoll <= moneySpawnProbabilities[i-1]) {
-                    GameObject newMoney = Instantiate(money[i-1]);
-                    Vector3 setpos = new Vector3(transform.parent.position.x, transform.parent.position.y + 1f, transform.parent.position.z);
-                    newMoney.transform.position = setpos;
-                    print("Trying to add item");
-                    payPoint.GetComponent<StorageHandler>().AddItem(newMoney);
-                    print("new money");
-                    newMoney.name = "Money - P" + newMoney.GetComponent<Value>().value;
-
-                    paid += newMoney.GetComponent<Value>().value;
-                } else break;
-            }
-        }
-
-        change = paid - fare;
-        if(change > 0) {
-            // popup.SayChange("P" + change);
-            state = "Waiting for change"; //waitingForChange = true;
-
-            //Add changee to changehandler
-            changePoint.GetComponent<ChangeHandler>().AddChangee(this);
-        } else {
-            // popup.SayChange("");
-            state = "Waiting to arrive";
-        }
-    }
-
-    #endregion
-
-    #region STATE SETTERS ==================================================================================================================
+    // STATE SETTERS ==================================================================================================================
 
     private void MakeWait() {
         waitTime = Time.time + Random.Range(waitTimeRange.x, waitTimeRange.y + 1);
@@ -379,15 +312,15 @@ public class PersonHandler : MonoBehaviour {
         //Stand
         if(state == "Idle" || state == "Waiting") ani.SetInteger("State", 0);
         //Walk
-        else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering") ani.SetInteger("State", 10);
+        else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering") ani.SetInteger("State", 1);
         //Sit
-        else if(state == "Waiting to pay") ani.SetInteger("State", 20);
+        else if(state == "Waiting to pay") ani.SetInteger("State", 2);
     }
 
-    #endregion
+    // TRIGGERS ======================================================================================================
 
-    #region TRIGGERS ======================================================================================================
-  
+    
+    
     private void OnTriggerEnter(Collider other) {
         if(other.gameObject.layer == dropAreaLayer && other.name.Contains(to) && state == "Waiting to arrive") {
             // voiceHandler.Say("Stop");
@@ -405,6 +338,4 @@ public class PersonHandler : MonoBehaviour {
         if(other.gameObject.layer == dropAreaLayer && other.name.Contains(to) && state == "Waiting to drop") state = "Waiting to arrive";
         else if(other.gameObject.layer == 10) currentSpot = null;
     }
-
-    #endregion
 }

@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Crouch : MonoBehaviour
@@ -26,13 +25,6 @@ public class Crouch : MonoBehaviour
     public bool IsCrouched { get; private set; }
     public event System.Action CrouchStart, CrouchEnd;
 
-    public KeyCode Key_Crouch;
-
-    private void Start() {
-        Keybinds.current.onKeyChangeEvent += OnKeyChangeEvent;
-
-        OnKeyChangeEvent();
-    }
 
     void Reset()
     {
@@ -40,10 +32,6 @@ public class Crouch : MonoBehaviour
         movement = GetComponentInParent<FirstPersonMovement>();
         headToLower = movement.GetComponentInChildren<Camera>().transform;
         colliderToLower = movement.GetComponentInChildren<CapsuleCollider>();
-    }
-
-    private void OnKeyChangeEvent() {
-        Key_Crouch = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Crouch", "LeftControl"));
     }
 
     void LateUpdate()

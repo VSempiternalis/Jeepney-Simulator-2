@@ -145,8 +145,8 @@ public class SpawnArea : MonoBehaviour {
             newPerson.SetActive(true);
             newPerson.GetComponent<TGCharacterAppearance>().Start();
 
-            newPerson.GetComponent<PersonHandler>().from = spawn.parent.name;
-            newPerson.GetComponent<PersonHandler>().to = GetDestination(spawn.parent.name);
+            // newPerson.GetComponent<PersonController>().from = spot.parent.name;
+            // newPerson.GetComponent<PersonController>().to = GetDestination(spot.parent.name);
 
             //spawnManager.spawnCount ++;
         }
