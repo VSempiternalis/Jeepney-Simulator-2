@@ -23,7 +23,8 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
     }
 
     public void AddItem(GameObject newItem) {
-        //Remove from storage
+        print("Adding item: " + newItem.name);
+        //Remove new item from storage if stored
         // print("newItem.GetComponent<ItemHandler>().storage: " + newItem.GetComponent<ItemHandler>().storage);
         // print("newItem.GetComponent<ItemHandler>().storage.GetComponent<StorageHandler>(): " + newItem.GetComponent<ItemHandler>().storage.GetComponent<StorageHandler>());
         if(newItem.GetComponent<ItemHandler>().storage != null && newItem.GetComponent<ItemHandler>().storage.GetComponent<StorageHandler>()) {
