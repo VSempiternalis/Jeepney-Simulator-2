@@ -39,7 +39,8 @@ public class SpawnArea : MonoBehaviour {
     [SerializeField] private GameObject personPF;
     [SerializeField] private Vector2Int personSpawnRange;
 
-    [SerializeField] private List<Transform> landmarkSpots;
+    [SerializeField] private List<Transform> landmarkSpawnParents;
+    [SerializeField] private Transform landmarkSpawns;
 
     private void Awake() {
         current = this;
@@ -52,8 +53,12 @@ public class SpawnArea : MonoBehaviour {
         // StartCoroutine(PersonSpawnLoop());
 
         //Add all destinations
-        foreach(Transform landmark in landmarkSpots) {
+        foreach(Transform landmark in landmarkSpawnParents) {
             // PlayerInput.current.ToggleDestination(landmark.name);
+        }
+
+        foreach(Transform landmark in landmarkSpawns) {
+            landmarkSpawnParents.Add(landmark);
         }
 
         isSpawningVehicles = true;
@@ -155,10 +160,11 @@ public class SpawnArea : MonoBehaviour {
     private string GetDestination(string currentLandmark) {
         string destination = "";
 
+        //MUST HAVE MORE THAN ONE LANDMARKSPAWNPARENT
         while(true) {
-            int destIndex = Random.Range(0, landmarkSpots.Count);
-            if(currentLandmark != landmarkSpots[destIndex].name) {
-                destination = landmarkSpots[destIndex].name;
+            int destIndex = Random.Range(0, landmarkSpawnParents.Count);
+            if(currentLandmark != landmarkSpawnParents[destIndex].name) {
+                destination = landmarkSpawnParents[destIndex].name;
                 break;
             }
         }

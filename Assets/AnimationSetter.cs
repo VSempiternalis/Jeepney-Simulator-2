@@ -1,5 +1,6 @@
 using UnityEngine;
 
+//For NPCs that arent passengers/just posing
 public class AnimationSetter : MonoBehaviour {
     [SerializeField] private Animator ani;
     [SerializeField] private int animationInt;
@@ -15,7 +16,9 @@ ANIMATION INDEX
 NPCs
 0-9: Idle
 10-19: Walking
-20-29: Sitting
+20-39: Sitting
+40-49: Stopping
+50-59: Calling jeep/Hailing
 
 PLAYER
 0: Idle

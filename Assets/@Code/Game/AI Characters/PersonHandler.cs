@@ -31,10 +31,13 @@ public class PersonHandler : MonoBehaviour {
     [SerializeField] private Vector2 payTimeRange;
     private float payTime;
     [SerializeField] private bool isPassenger;
+    // [SerializeField] private float rotationTime;
+    [SerializeField] private float yUp;
 
     [Space(10)]
     [Header("LAYERS")]
     [SerializeField] private int dropAreaLayer;
+    [SerializeField] private int spawnAreaLayer;
 
     [Space(10)]
     [Header("DESTINATION")]
@@ -158,15 +161,16 @@ public class PersonHandler : MonoBehaviour {
     private void Wait() {
         if(Time.time >= waitTime) MakeWander();
 
-        if(!player.isTakingPassengers || !isPassenger) return;
-        else if(!player.isTakingPassengers && !player.carCon.HasFreeSeats()) return;
-        else if(!DestinationsManager.current.destinations.Contains(to)) return;
+        if(!player.isTakingPassengers || !isPassenger || !player.carCon.HasFreeSeats()) return;
+        // else if(!player.isTakingPassengers && ) return;
+        // else if(!DestinationsManager.current.destinations.Contains(to)) return;
 
         //[Call jeep when close]
         distToPlayer = Vector3.Distance(transform.position, player.transform.position);
         if(distToPlayer <= callDist && player.isDriving && player.isTakingPassengers && player.carCon.HasFreeSeats()) {
             // popup.Say(sayHandler.GetSay("Call"), false);
-            transform.LookAt(player.transform, Vector3.up);
+            // transform.LookAt(player.transform, Vector3.up);
+            FacePos(player.transform.position);
             //[HAIL]
             //GetComponent<Test_script>().Hail();
             carCon = player.carCon;
@@ -176,6 +180,9 @@ public class PersonHandler : MonoBehaviour {
                 print("Past magnitude thresh");
                 MakeMoveToVehicle();
             }
+        } else {
+            //face player
+            //hail anim
         }
     }
 
@@ -187,15 +194,17 @@ public class PersonHandler : MonoBehaviour {
 
     private void MoveToNextPos() {
         FacePos(posDestinations[0]);
+        float originalYRotation = transform.rotation.eulerAngles.y;
 
         //if destination reached
         if(Vector3.Distance(transform.position, posDestinations[0]) < reachDist) {
             posDestinations.RemoveAt(0);
+            transform.rotation = Quaternion.Euler(0f, originalYRotation, 0f);
             return;
         }
 
-        Vector3 newPos = new Vector3(posDestinations[0].x, transform.position.y, posDestinations[0].z);
-        transform.position = Vector3.MoveTowards(transform.position, newPos, moveSpeed * Time.deltaTime);
+        Vector3 newPos = new Vector3(posDestinations[0].x, transform.position.y + yUp, posDestinations[0].z);
+        transform.position = Vector3.MoveTowards(transform.position, newPos, moveSpeed * Time.fixedDeltaTime);
     }
 
     private void MoveToVehicle() {
@@ -213,7 +222,7 @@ public class PersonHandler : MonoBehaviour {
     }
     
     private void MoveToNextDest() {
-        Face(nextNode);
+        FacePos(nextNode.position);
         
         //if destination reached
         if(Vector3.Distance(transform.position, nextNode.position) < reachDist) {
@@ -225,7 +234,7 @@ public class PersonHandler : MonoBehaviour {
             return;
         }
 
-        Vector3 newPos = new Vector3(nextNode.position.x, transform.position.y, nextNode.position.z);
+        Vector3 newPos = new Vector3(nextNode.position.x, transform.position.y + yUp, nextNode.position.z);
         transform.position = Vector3.MoveTowards(transform.position, newPos, moveSpeed * Time.fixedDeltaTime);
     }
 
@@ -262,16 +271,39 @@ public class PersonHandler : MonoBehaviour {
         SetState("Moving to vehicle");
     }
 
-    private void Face(Transform target) {
-        // print("Facing: " + target.name);
-        Vector3 newLook = new Vector3(target.position.x, transform.position.y, target.position.z);
-        transform.LookAt(newLook, Vector3.up);
-    }
+    // private void Face(Transform target) {
+    //     // print("Facing: " + target.name);
+    //     Vector3 newLook = new Vector3(target.position.x, transform.position.y, target.position.z);
+    //     transform.LookAt(newLook, Vector3.up);
+    // }
 
     private void FacePos(Vector3 targetPos) {
         // print("Facing: " + target.name);
-        Vector3 newLook = new Vector3(targetPos.x, transform.position.y, targetPos.z);
-        transform.LookAt(newLook, Vector3.up);
+        // Vector3 newLook = new Vector3(targetPos.x, transform.position.y, targetPos.z);
+        // transform.LookAt(newLook, Vector3.up);
+
+        // Quaternion targetRotation = Quaternion.LookRotation(newLook - transform.position, Vector3.up);
+        // LeanTween.rotate(transform.gameObject, targetRotation.eulerAngles, rotationTime).setEase(LeanTweenType.easeOutSine);
+
+        // Vector3 direction = (targetPos - transform.position).normalized;
+        // Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+        // transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+    
+        // Calculate direction to target ignoring y-axis
+        Vector3 direction = (new Vector3(targetPos.x, transform.position.y, targetPos.z) - transform.position).normalized;
+
+        // Calculate target rotation only around y-axis
+        Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+
+        // Preserve current x and z rotations
+        float currentXRotation = transform.rotation.eulerAngles.x;
+        float currentZRotation = transform.rotation.eulerAngles.z;
+
+        // Create new rotation with preserved x and z rotations and only change in y rotation
+        Quaternion newYRotation = Quaternion.Euler(currentXRotation, targetRotation.eulerAngles.y, currentZRotation);
+
+        // Smoothly rotate only around y-axis
+        transform.rotation = Quaternion.Slerp(transform.rotation, newYRotation, rotationSpeed * Time.fixedDeltaTime);
     }
 
     private void EnterVehicle() {
@@ -362,12 +394,13 @@ public class PersonHandler : MonoBehaviour {
     }
 
     private void MakeWander() {
+        print("wandering");
         if(currentSpot == null) return;
 
         float moveX = Random.Range(currentSpot.position.x - (currentSpot.localScale.x/2), currentSpot.position.x + (currentSpot.localScale.x/2));
         float moveZ = Random.Range(currentSpot.position.z - (currentSpot.localScale.z/2), currentSpot.position.z + (currentSpot.localScale.z/2));
 
-        posDestinations.Add(new Vector3(moveX, currentSpot.position.y-0.5f, moveZ));
+        posDestinations.Add(new Vector3(moveX, currentSpot.position.y + yUp, moveZ));
         SetState("Wandering");
     }
 
@@ -376,12 +409,17 @@ public class PersonHandler : MonoBehaviour {
         state = newState;
 
         //ANIMATION
+        int anim = 0;
+        
         //Stand
-        if(state == "Idle" || state == "Waiting") ani.SetInteger("State", 0);
+        if(state == "Idle" || state == "Waiting") anim = Random.Range(0, 8);
         //Walk
-        else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering") ani.SetInteger("State", 10);
+        else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering") anim = Random.Range(14, 20);
         //Sit
-        else if(state == "Waiting to pay") ani.SetInteger("State", 20);
+        else if(state == "Waiting to pay") anim = Random.Range(20, 30);
+
+        print("Anim: " + anim);
+        ani.SetInteger("State", anim);
     }
 
     #endregion
@@ -392,7 +430,7 @@ public class PersonHandler : MonoBehaviour {
         if(other.gameObject.layer == dropAreaLayer && other.name.Contains(to) && state == "Waiting to arrive") {
             // voiceHandler.Say("Stop");
         }
-        else if(other.gameObject.layer == 10) currentSpot = other.transform;
+        else if(other.gameObject.layer == spawnAreaLayer) currentSpot = other.transform;
     }
 
     private void OnTriggerStay(Collider other) {
@@ -403,7 +441,7 @@ public class PersonHandler : MonoBehaviour {
 
     private void OnTriggerExit(Collider other) {
         if(other.gameObject.layer == dropAreaLayer && other.name.Contains(to) && state == "Waiting to drop") state = "Waiting to arrive";
-        else if(other.gameObject.layer == 10) currentSpot = null;
+        else if(other.gameObject.layer == spawnAreaLayer) currentSpot = null;
     }
 
     #endregion
