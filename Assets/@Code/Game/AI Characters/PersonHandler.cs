@@ -161,7 +161,7 @@ public class PersonHandler : MonoBehaviour {
     private void Wait() {
         if(Time.time >= waitTime) MakeWander();
 
-        if(!player.isTakingPassengers || !isPassenger || !player.carCon.HasFreeSeats()) return;
+        if(!player.isTakingPassengers || !isPassenger || (player.carCon && !player.carCon.HasFreeSeats())) return;
         // else if(!player.isTakingPassengers && ) return;
         // else if(!DestinationsManager.current.destinations.Contains(to)) return;
 
