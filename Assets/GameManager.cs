@@ -60,11 +60,11 @@ public class GameManager : MonoBehaviour {
 
     private void LoadFreeride() {
         //load saved progress
-        print("LOADING SAVED FREERIDE!");
-        print("isPassengerPickups: " + isPassengerPickups);
-        print("isEvents: " + isEvents);
-        print("populationCount: " + populationCount);
-        print("trafficCount: " + trafficCount);
+        // print("LOADING SAVED FREERIDE!");
+        // print("isPassengerPickups: " + isPassengerPickups);
+        // print("isEvents: " + isEvents);
+        // print("populationCount: " + populationCount);
+        // print("trafficCount: " + trafficCount);
     }
 
     private void NewCareer() {

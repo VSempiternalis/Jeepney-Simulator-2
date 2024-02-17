@@ -202,7 +202,7 @@ public class Settings : MonoBehaviour {
         RenderSettings.fog = isFog;
 
         //Saving
-        print("SAVING Fog: " + isFog);
+        // print("SAVING Fog: " + isFog);
         PlayerPrefs.SetInt("Settings_ActiveFog", isFog? 1:0);
 
         //Update UI
@@ -214,7 +214,7 @@ public class Settings : MonoBehaviour {
         ppVolume.GetComponent<Volume>().enabled = isPP;
 
         //Saving
-        print("SAVING PP: " + isPP);
+        // print("SAVING PP: " + isPP);
         PlayerPrefs.SetInt("Settings_ActivePP", isPP? 1:0);
 
         //Update UI
@@ -251,7 +251,7 @@ public class Settings : MonoBehaviour {
     }
 
     public void SetFOV(float newFOV) {
-        print("Setting fov to: " + newFOV);
+        // print("Setting fov to: " + newFOV);
         playerCam.GetComponent<Zoom>().defaultFOV = newFOV;
         playerCam.GetComponent<Camera>().fieldOfView = newFOV;
         fovText.text = newFOV.ToString();
@@ -259,7 +259,7 @@ public class Settings : MonoBehaviour {
 
         //Saving
         PlayerPrefs.SetFloat("Settings_FOV", newFOV);
-        print("Saving FOV from: " + newFOV + " to: " + PlayerPrefs.GetFloat(""));
+        // print("Saving FOV from: " + newFOV + " to: " + PlayerPrefs.GetFloat(""));
     }
 
     #endregion

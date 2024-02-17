@@ -264,7 +264,7 @@ public class CarController : MonoBehaviour {
     }
 
     private void UpdateSeatsTaken() {
-        print("Updating seats taken");
+        // print("Updating seats taken");
         for(int i = 0; i < seatSpots.Count; i++) {
             if(seatSpots[i].childCount == 1) seatsTaken[i] = 0;
             else seatsTaken[i] = 1;
@@ -288,7 +288,7 @@ public class CarController : MonoBehaviour {
             //cameras
 
             driver.position = pointDriverExit.position;
-            driver.rotation = driverPos.rotation;
+            // driver.rotation = driverPos.rotation;
             // driver.SetParent(GameObject.Find("WORLD").transform);
             driver.SetParent(null);
 
@@ -316,7 +316,7 @@ public class CarController : MonoBehaviour {
             driver.SetParent(driverPos);
             //driver.localPosition = Vector3.zero;
             driver.localPosition = new Vector3(0f, 0f, 0.1f);
-            driver.rotation = driverPos.rotation;
+            // driver.rotation = driverPos.rotation;
 
             //Set player isDriving
             driver.GetComponent<PlayerDriveInput>().SetIsDriving(true, this);

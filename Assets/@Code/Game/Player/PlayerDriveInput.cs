@@ -12,8 +12,7 @@ public class PlayerDriveInput : MonoBehaviour {
     public bool isDriving;
     public bool isTakingPassengers;
 
-    // [SerializeField] private FirstPersonAudio fpa;
-    [SerializeField] private GameObject fpa;
+    [SerializeField] private GameObject fpa; //firstpersonaudio
     [SerializeField] private Transform playerModel;
 
     private void Awake() {
@@ -27,16 +26,12 @@ public class PlayerDriveInput : MonoBehaviour {
         if(isDriving) carCon.GetInput();
     }
 
-    public void SetIsDriving(bool newIsDriving, CarController newCarCon) {
-        isDriving = newIsDriving;
-
+    public void SetIsSitting(bool newIsSitting) {
         fpm.enabled = !isDriving;
         jump.enabled = !isDriving;
         crouch.enabled = !isDriving;
-        // fpa.enabled = !isDriving;
         fpa.SetActive(!isDriving);
 
-        carCon = newCarCon;
         GetComponent<Rigidbody>().isKinematic = isDriving;
         GetComponent<CapsuleCollider>().isTrigger = isDriving;
 
@@ -44,6 +39,15 @@ public class PlayerDriveInput : MonoBehaviour {
         float newY = isDriving? 0.25f : 0;
         newPos.y = newY;
         playerModel.localPosition = newPos;
+
+        // if(!isDriving) SetIsDriving(false, null);
+    }
+
+    public void SetIsDriving(bool newIsDriving, CarController newCarCon) {
+        isDriving = newIsDriving;
+        carCon = newCarCon;
+
+        SetIsSitting(isDriving);
 
         head.isDriving = isDriving;
         head.CheckState();
