@@ -24,6 +24,7 @@ public class PlayerAnimator : MonoBehaviour {
         // float speed = rb.velocity.magnitude;
 
         if(newState == "Driving") ani.SetInteger("State", 101);
+        else if(newState == "Sitting") ani.SetInteger("State", 20);
         else if(newState == "Crouching") ani.SetInteger("State", 102);
         else if(newState == "Crouch walking") ani.SetInteger("State", 103);
         else if(newState == "Running") ani.SetInteger("State", 100);

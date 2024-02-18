@@ -9,6 +9,7 @@ public class PlayerDriveInput : MonoBehaviour {
     [SerializeField] private Crouch crouch;
     // [SerializeField] private Head head;
 
+    public bool isSitting;
     public bool isDriving;
     public bool isTakingPassengers;
 
@@ -26,30 +27,39 @@ public class PlayerDriveInput : MonoBehaviour {
         if(isDriving) carCon.GetInput();
     }
 
-    public void SetIsSitting(bool newIsSitting) {
-        fpm.enabled = !isDriving;
-        jump.enabled = !isDriving;
-        crouch.enabled = !isDriving;
-        fpa.SetActive(!isDriving);
+    public void SetIsSitting(bool newIsSitting, bool isDriversSeat) {
+        print("sitting");
+        isSitting = newIsSitting;
+        
+        fpm.enabled = !isSitting;
+        jump.enabled = !isSitting;
+        crouch.enabled = !isSitting;
+        fpa.SetActive(!isSitting);
 
-        GetComponent<Rigidbody>().isKinematic = isDriving;
-        GetComponent<CapsuleCollider>().isTrigger = isDriving;
+        GetComponent<Rigidbody>().isKinematic = isSitting;
+        GetComponent<CapsuleCollider>().isTrigger = isSitting;
 
         Vector3 newPos = playerModel.localPosition;
-        float newY = isDriving? 0.25f : 0;
+        float newY = isSitting? 0.25f : 0;
         newPos.y = newY;
         playerModel.localPosition = newPos;
 
         // if(!isDriving) SetIsDriving(false, null);
+
+        if(isDriversSeat) {
+            head.isDriving = isDriving;
+            head.CheckState();
+        } else {
+            head.isDriving = false;
+            head.isSitting = isSitting;
+            head.CheckState();
+        }
     }
 
     public void SetIsDriving(bool newIsDriving, CarController newCarCon) {
         isDriving = newIsDriving;
         carCon = newCarCon;
 
-        SetIsSitting(isDriving);
-
-        head.isDriving = isDriving;
-        head.CheckState();
+        SetIsSitting(isDriving, true);
     }
 }

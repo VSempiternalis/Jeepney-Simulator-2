@@ -28,6 +28,8 @@ public class DoorHandler : MonoBehaviour, IInteractable, ITooltipable {
         if(!hasPivot) pivot = transform;
 
         initialXRot = pivot.transform.localRotation.eulerAngles.x;
+
+        if(GetComponent<AudioHandler>() != null) audioHandler = GetComponent<AudioHandler>(); 
     }
 
     private void Update() {
