@@ -39,8 +39,8 @@ ModelImporter:
       name: Drive
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 0
-      lastFrame: 300
+      firstFrame: 1
+      lastFrame: 2
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

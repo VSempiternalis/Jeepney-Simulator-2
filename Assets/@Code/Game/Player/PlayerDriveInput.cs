@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
+// using UnityEngine.Animations.Rigging;
 
 public class PlayerDriveInput : MonoBehaviour {
     public static PlayerDriveInput current;
@@ -15,16 +17,23 @@ public class PlayerDriveInput : MonoBehaviour {
 
     [SerializeField] private GameObject fpa; //firstpersonaudio
     [SerializeField] private Transform playerModel;
+    // [SerializeField] private Rig drivingRig;
+    [SerializeField] private TwoBoneIKConstraint leftHandIK;
+    [SerializeField] private TwoBoneIKConstraint rightHandIK;
 
     private void Awake() {
         current = this;
     }
 
     private void Start() {
+
     }
 
     private void Update() {
         if(isDriving) carCon.GetInput();
+        
+        leftHandIK.weight = isDriving? 1.0f:0f;
+        rightHandIK.weight = isDriving? 1.0f:0f;
     }
 
     public void SetIsSitting(bool newIsSitting, bool isDriversSeat) {
@@ -59,6 +68,10 @@ public class PlayerDriveInput : MonoBehaviour {
     public void SetIsDriving(bool newIsDriving, CarController newCarCon) {
         isDriving = newIsDriving;
         carCon = newCarCon;
+        // leftHandIK.weight = isDriving? 1.0f:0f;
+        // rightHandIK.weight = isDriving? 1.0f:0f;
+        // leftHandIK.data.targetPositionWeight = isDriving? 1.0f:0f;
+        // rightHandIK.data.targetPositionWeight = isDriving? 1.0f:0f;
 
         SetIsSitting(isDriving, true);
     }

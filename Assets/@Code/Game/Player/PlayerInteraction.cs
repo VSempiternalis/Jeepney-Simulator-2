@@ -5,7 +5,7 @@ public class PlayerInteraction : MonoBehaviour {
     [SerializeField] private Camera playerCam;
     
     private GameObject itemOver;
-    private float reachDist = 1.5f;
+    [SerializeField] private float reachDist = 1.5f;
 
     private bool lMouseDown;
     private bool rMouseDown;
@@ -18,6 +18,13 @@ public class PlayerInteraction : MonoBehaviour {
     [SerializeField] private float lClickTime = 0f;
     [SerializeField] private float rClickTime = 0f;
     private float clickHoldThresh = 0.2f;
+    [SerializeField] private LayerMask interactionMask;
+    [SerializeField] private float raycastOffset;
+
+    [Space(10)]
+    [Header("LAYERS")]
+    [SerializeField] private int layerInteractable;
+    [SerializeField] private int layerItem;
 
     private void Start() {
         
@@ -76,21 +83,30 @@ public class PlayerInteraction : MonoBehaviour {
         if(itemOver && itemOver.GetComponent<Outline>()) itemOver.GetComponent<Outline>().OutlineWidth = 0;
         itemOver = null;
 
+        Vector3 raycastOrigin = playerCam.transform.position + (Vector3.up * raycastOffset);
         Ray ray = playerCam.ScreenPointToRay(Input.mousePosition);
-        var hits = Physics.RaycastAll(ray, reachDist);
 
-        //[Look for item in hits]
-        foreach(RaycastHit hit in hits) {
-            if(hit.collider && (hit.collider.gameObject.layer == 8)){ //Make sure collider is layer 8 (Interactable)
+        RaycastHit hit;
+        Debug.DrawRay(raycastOrigin, ray.direction, Color.red);
+        if(Physics.Raycast(raycastOrigin, ray.direction, out hit, reachDist, interactionMask)) {
+            if (hit.collider) { // Check if the collider is on the Interactable layer
                 itemOver = hit.collider.gameObject;
             }
         }
+
+        //[Look for item in hits]
+        // var hits = Physics.RaycastAll(ray, reachDist);
+        // foreach(RaycastHit hit in hits) {
+        //     if(hit.collider && (hit.collider.gameObject.layer == layerInteractable)){ //Make sure collider is layer layerInteractable (Interactable)
+        //         itemOver = hit.collider.gameObject;
+        //     }
+        // }
 
         if(itemOver && itemOver.GetComponent<Outline>()) itemOver.GetComponent<Outline>().OutlineWidth = 5;
     }
 
     private void Interaction() {
-        if(itemOver && itemOver.layer == 8) {
+        if(itemOver && itemOver.layer == layerInteractable) {
             if(lMouseDown && itemOver.GetComponent<IInteractable>() != null) itemOver.GetComponent<IInteractable>().Interact(gameObject);
         }
     }
