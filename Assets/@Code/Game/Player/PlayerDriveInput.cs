@@ -16,10 +16,15 @@ public class PlayerDriveInput : MonoBehaviour {
     public bool isTakingPassengers;
 
     [SerializeField] private GameObject fpa; //firstpersonaudio
+
+    [Space(10)]
+    [Header("SEATING")]
+    [SerializeField] private Transform player;
     [SerializeField] private Transform playerModel;
-    // [SerializeField] private Rig drivingRig;
     [SerializeField] private TwoBoneIKConstraint leftHandIK;
     [SerializeField] private TwoBoneIKConstraint rightHandIK;
+    [SerializeField] private Vector3 localDrivePos;
+    [SerializeField] private Vector3 localSitPos;
 
     private void Awake() {
         current = this;
@@ -36,43 +41,60 @@ public class PlayerDriveInput : MonoBehaviour {
         rightHandIK.weight = isDriving? 1.0f:0f;
     }
 
-    public void SetIsSitting(bool newIsSitting, bool isDriversSeat) {
-        print("sitting");
+    public void SetIsSitting(bool newIsSitting, bool isDriversSeat, Transform seat) {
+        print("set is sitting");
         isSitting = newIsSitting;
+        if(!isDriversSeat) isDriving = false;
         
         fpm.enabled = !isSitting;
         jump.enabled = !isSitting;
         crouch.enabled = !isSitting;
         fpa.SetActive(!isSitting);
 
+        // transform.SetParent(seat);
+        // transform.localPosition = Vector3.zero;
         GetComponent<Rigidbody>().isKinematic = isSitting;
         GetComponent<CapsuleCollider>().isTrigger = isSitting;
 
-        Vector3 newPos = playerModel.localPosition;
-        float newY = isSitting? 0.25f : 0;
-        newPos.y = newY;
-        playerModel.localPosition = newPos;
+        // Vector3 newPos = playerModel.localPosition;
+        // float newY = isSitting? 0.25f : 0;
+        // newPos.y = newY;
+        // playerModel.localPosition = newPos;
 
-        // if(!isDriving) SetIsDriving(false, null);
+        //PLAYER MODEL
+        if(isSitting) {
+            playerModel.SetParent(seat);
+            playerModel.localEulerAngles = Vector3.zero;
+            if(isDriving) playerModel.localPosition = localDrivePos;
+            else playerModel.localPosition = seat.GetComponent<SeatHandler>().localPosModel;
+        } else {
+            playerModel.SetParent(player);
+            playerModel.localEulerAngles = Vector3.zero;
+            playerModel.localPosition = Vector3.zero;
+        }
 
         if(isDriversSeat) {
             head.isDriving = isDriving;
+            head.isSitting = false;
             head.CheckState();
+            // transform.localPosition = new Vector3(0f, 0f, -0.15f);
         } else {
             head.isDriving = false;
             head.isSitting = isSitting;
             head.CheckState();
+            // transform.localPosition = new Vector3(0f, 0f, -0.15f);
         }
     }
 
-    public void SetIsDriving(bool newIsDriving, CarController newCarCon) {
+    public void SetIsDriving(bool newIsDriving, CarController newCarCon, Transform seat) {
+        print("set is driving");
         isDriving = newIsDriving;
         carCon = newCarCon;
-        // leftHandIK.weight = isDriving? 1.0f:0f;
-        // rightHandIK.weight = isDriving? 1.0f:0f;
-        // leftHandIK.data.targetPositionWeight = isDriving? 1.0f:0f;
-        // rightHandIK.data.targetPositionWeight = isDriving? 1.0f:0f;
+        if(carCon) {
+            carCon.moveInput = 0;
+            carCon.steerInput = 0; 
+        }
 
-        SetIsSitting(isDriving, true);
+        SetIsSitting(isDriving, true, seat);
     }
 }

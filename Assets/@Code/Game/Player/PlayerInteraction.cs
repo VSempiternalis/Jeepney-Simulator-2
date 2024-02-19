@@ -22,9 +22,15 @@ public class PlayerInteraction : MonoBehaviour {
     [SerializeField] private float raycastOffset;
 
     [Space(10)]
+    [Header("ITEMS")]
+    [SerializeField] private Transform rightHand;
+    private RaycastHit hit;
+
+    [Space(10)]
     [Header("LAYERS")]
     [SerializeField] private int layerInteractable;
     [SerializeField] private int layerItem;
+    [SerializeField] private int layerStorage;
 
     private void Start() {
         
@@ -86,7 +92,6 @@ public class PlayerInteraction : MonoBehaviour {
         Vector3 raycastOrigin = playerCam.transform.position + (Vector3.up * raycastOffset);
         Ray ray = playerCam.ScreenPointToRay(Input.mousePosition);
 
-        RaycastHit hit;
         Debug.DrawRay(raycastOrigin, ray.direction, Color.red);
         if(Physics.Raycast(raycastOrigin, ray.direction, out hit, reachDist, interactionMask)) {
             if (hit.collider) { // Check if the collider is on the Interactable layer
@@ -106,8 +111,43 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     private void Interaction() {
-        if(itemOver && itemOver.layer == layerInteractable) {
-            if(lMouseDown && itemOver.GetComponent<IInteractable>() != null) itemOver.GetComponent<IInteractable>().Interact(gameObject);
+        if(!itemOver) return;
+
+        //LEFT CLICK
+        if(lMouseDown) {
+            if(itemOver.layer == layerInteractable) {
+                if(itemOver.GetComponent<IInteractable>() != null) itemOver.GetComponent<IInteractable>().Interact(gameObject);
+            } else if(itemOver.layer == layerItem) {
+                TakeItemOver();
+            } 
         }
+
+        //RIGHT CLICK
+        else if(rMouseDown) {
+            if(itemOver.layer == layerStorage && rightHand.childCount > 0) {
+                PlaceItem();
+            }
+        }
+    }
+
+    private void TakeItemOver() {
+        rightHand.GetComponent<StorageHandler>().AddItemRandom(itemOver);
+
+        //audio
+    }
+
+    private void PlaceItem() {
+        print("placing item");
+        //Place item on itemover(storage)
+        GameObject dropItem = rightHand.GetChild(0).gameObject;
+
+        if(itemOver.GetComponent<StorageHandler>()) {
+            StorageHandler storage = itemOver.GetComponent<StorageHandler>();
+            storage.AddItem(dropItem, hit.point);
+        }
+
+        //+ UpdateOnhandUI();
+    
+        //audio
     }
 }

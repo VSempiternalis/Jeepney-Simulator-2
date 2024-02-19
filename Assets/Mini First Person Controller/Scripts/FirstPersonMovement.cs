@@ -26,6 +26,7 @@ public class FirstPersonMovement : MonoBehaviour
     public KeyCode Key_Crouch;
 
     [SerializeField] private Head head;
+    [SerializeField] private bool onlyMoveWhenGrounded;
 
     void Awake() {
         // Get the rb on this.
@@ -39,7 +40,7 @@ public class FirstPersonMovement : MonoBehaviour
     }
 
     void FixedUpdate() {
-        if((!groundCheck || groundCheck.isGrounded)) {
+        if(!onlyMoveWhenGrounded || (onlyMoveWhenGrounded && (!groundCheck || groundCheck.isGrounded))) {
             // Update IsRunning from input.
             IsRunning = canRun && Input.GetKey(Key_Run) && Input.GetKey(Key_Forward);
 

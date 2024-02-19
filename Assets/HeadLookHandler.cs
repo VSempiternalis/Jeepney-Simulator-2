@@ -19,7 +19,6 @@ public class HeadLookHandler : MonoBehaviour {
         } else if(currentDist < lookDist) {
             targetWeight = 1;
         } else {
-            print(lookDist/currentDist);
             targetWeight = lookDist/currentDist;
         }
 

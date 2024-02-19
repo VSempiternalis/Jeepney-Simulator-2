@@ -15,7 +15,7 @@ public class DriversSeat : MonoBehaviour, IInteractable, ITooltipable {
     }
 
     public void Interact(GameObject interactor) {
-        carCon.ToggleDriverSeat(interactor.transform);
+        // carCon.ToggleDriverSeat(interactor.transform, transform);
 
         audioSource.Play();
     }

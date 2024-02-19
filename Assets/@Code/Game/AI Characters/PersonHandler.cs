@@ -361,7 +361,7 @@ public class PersonHandler : MonoBehaviour {
                     Vector3 setpos = new Vector3(transform.parent.position.x, transform.parent.position.y + 1f, transform.parent.position.z);
                     newMoney.transform.position = setpos;
                     print("Trying to add item");
-                    payPoint.GetComponent<StorageHandler>().AddItem(newMoney);
+                    payPoint.GetComponent<StorageHandler>().AddItemRandom(newMoney);
                     print("new money");
                     newMoney.name = "Money - P" + newMoney.GetComponent<Value>().value;
 

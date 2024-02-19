@@ -4,8 +4,9 @@ public class SeatHandler : MonoBehaviour, IInteractable, ITooltipable {
     [SerializeField] private string header;
     [SerializeField] private string text;
 
-    [SerializeField] private Vector3 sitLocalPos;
-    [SerializeField] private Vector3 exitLocalPos;
+    [SerializeField] private CarController carCon;
+    public Vector3 localPosPlayer;
+    public Vector3 localPosModel;
     [SerializeField] private Transform exitPoint;
 
     [SerializeField] private AudioSource audioSource;
@@ -19,28 +20,22 @@ public class SeatHandler : MonoBehaviour, IInteractable, ITooltipable {
     }
 
     public void Interact(GameObject interactor) {
+        print("interacting");
         Transform player = interactor.transform;
         if(transform.childCount > 1) {
-            print("exiting");
             //EXIT
-            // player.localPosition = exitLocalPos;
             player.position = exitPoint.position;
-            // player.rotation = transform.rotation;
-            // player.SetParent(GameObject.Find("WORLD").transform);
             player.SetParent(null);
 
-            // player.GetComponent<Rigidbody>().isKinematic = false;
-            // player.GetComponent<CapsuleCollider>().isTrigger = false;
-            player.GetComponent<PlayerDriveInput>().SetIsSitting(false, false);
+            if(carCon) player.GetComponent<PlayerDriveInput>().SetIsDriving(false, null, transform);
+            else player.GetComponent<PlayerDriveInput>().SetIsSitting(false, false, transform);
         } else {
-            player.GetComponent<PlayerDriveInput>().SetIsSitting(true, false);
-
-            print("entering");
             //ENTER
+            if(carCon) player.GetComponent<PlayerDriveInput>().SetIsDriving(true, carCon, transform);
+            else player.GetComponent<PlayerDriveInput>().SetIsSitting(true, false, transform);
+
             player.SetParent(transform);
-            //player.localPosition = Vector3.zero;
-            player.localPosition = sitLocalPos;
-            // player.rotation = transform.rotation;
+            player.localPosition = localPosPlayer;
         }
 
         if(audioSource) audioSource.Play();

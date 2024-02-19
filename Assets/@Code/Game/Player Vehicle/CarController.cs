@@ -19,8 +19,8 @@ public class CarController : MonoBehaviour {
 
     public Vector3 centerOfMass;
 
-    private float moveInput;
-    private float steerInput;
+    public float moveInput;
+    public float steerInput;
     private bool brakeInput;
 
     private Rigidbody carRb;
@@ -282,52 +282,52 @@ public class CarController : MonoBehaviour {
         GearAnimAudio(); // not sure if this belongs here, but it fixes some issues.
     }
 
-    public void ToggleDriverSeat(Transform driver) {
-        //EXIT
-        if(driverPos.childCount > 0 && driverPos.GetChild(0) == driver) {
-            //cameras
+    // public void ToggleDriverSeat(Transform driver, Transform seat) {
+    //     //EXIT
+    //     if(driverPos.childCount > 0 && driverPos.GetChild(0) == driver) {
+    //         //cameras
 
-            driver.position = pointDriverExit.position;
-            // driver.rotation = driverPos.rotation;
-            // driver.SetParent(GameObject.Find("WORLD").transform);
-            driver.SetParent(null);
+    //         driver.position = pointDriverExit.position;
+    //         driver.rotation = driverPos.rotation;
+    //         // driver.SetParent(GameObject.Find("WORLD").transform);
+    //         driver.SetParent(null);
 
-            driver.GetComponent<PlayerDriveInput>().SetIsDriving(false, null);
-            driver.GetComponent<Rigidbody>().isKinematic = false;
-            driver.GetComponent<CapsuleCollider>().isTrigger = false;
+    //         driver.GetComponent<PlayerDriveInput>().SetIsDriving(false, null, seat);
+    //         // driver.GetComponent<Rigidbody>().isKinematic = false;
+    //         // driver.GetComponent<CapsuleCollider>().isTrigger = false;
 
-            //Reset rb drag (KEEP THIS IN. LITERALLY FIXES GEAR JAM)
-            // GetComponent<Rigidbody>().drag = freeDrag;
-            // GetComponent<Rigidbody>().drag = brakeDrag;
-            //Reset move input to (hopefully) fix car moving on its own on exit
-            moveInput = 0;
-            steerInput = 0; 
+    //         //Reset rb drag (KEEP THIS IN. LITERALLY FIXES GEAR JAM)
+    //         // GetComponent<Rigidbody>().drag = freeDrag;
+    //         // GetComponent<Rigidbody>().drag = brakeDrag;
+    //         //Reset move input to (hopefully) fix car moving on its own on exit
+    //         moveInput = 0;
+    //         steerInput = 0; 
 
-            //destinations ui
+    //         //destinations ui
 
-            //gear
+    //         //gear
 
-        } 
-        //ENTER
-        else { 
-            //cameras
+    //     } 
+    //     //ENTER
+    //     else { 
+    //         //cameras
 
-            //Seating
-            driver.SetParent(driverPos);
-            //driver.localPosition = Vector3.zero;
-            driver.localPosition = new Vector3(0f, 0f, 0.1f);
-            // driver.rotation = driverPos.rotation;
+    //         //Seating
+    //         // driver.SetParent(driverPos);
+    //         // driver.localPosition = Vector3.zero;
 
-            //Set player isDriving
-            driver.GetComponent<PlayerDriveInput>().SetIsDriving(true, this);
+    //         //Set player isDriving
+    //         driver.GetComponent<PlayerDriveInput>().SetIsDriving(true, this, seat);
+
+    //         // driver.localPosition = new Vector3(0f, 0f, -0.15f);
         
-            // GetComponent<Rigidbody>().drag = freeDrag;
+    //         // GetComponent<Rigidbody>().drag = freeDrag;
 
-            //Update destinations UI
+    //         //Update destinations UI
 
-            //Update gear
-        }
-    }
+    //         //Update gear
+    //     }
+    // }
 
     private void Move() {
         if(!isEngineOn) return;

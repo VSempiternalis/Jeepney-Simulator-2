@@ -15,14 +15,36 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
     }
 
     private void OnTriggerEnter(Collider other) {
-        if(other.gameObject.CompareTag("Money")) print("Trigger");
+        // if(other.gameObject.CompareTag("Money")) print("Trigger");
     }
 
     private void AddValue(int newValue) {
         value += newValue;
     }
 
-    public void AddItem(GameObject newItem) {
+    public void AddItem(GameObject newItem, Vector3 placePos) {
+        //Remove new item from storage if stored
+        ItemHandler newItemHandler = newItem.GetComponent<ItemHandler>();
+        if(newItemHandler.storage != null && newItemHandler.storage.GetComponent<StorageHandler>()) {
+            newItemHandler.storage.GetComponent<StorageHandler>().RemoveItem(newItem);
+        }
+
+        items.Add(newItem);
+        newItemHandler.storage = transform;
+        if(newItem.GetComponent<Value>()) AddValue(newItem.GetComponent<Value>().value);
+
+        float rotY = Random.Range(0, 361); //Technically, it should be 360 but whatever
+
+        newItem.transform.Rotate(new Vector3(0, rotY, 0));
+        newItem.transform.rotation = Quaternion.identity;
+
+        newItem.transform.SetParent(transform);
+        LeanTween.move(newItem, new Vector3(placePos.x, placePos.y + newItemHandler.yPlaceOffset, placePos.z), 0.1f).setEaseInOutExpo();
+
+        if(audioHandler) audioHandler.Play(0);
+    }
+
+    public void AddItemRandom(GameObject newItem) {
         print("Adding item: " + newItem.name);
         //Remove new item from storage if stored
         // print("newItem.GetComponent<ItemHandler>().storage: " + newItem.GetComponent<ItemHandler>().storage);
@@ -33,7 +55,7 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
 
         items.Add(newItem);
         newItem.GetComponent<ItemHandler>().storage = transform;
-        AddValue(newItem.GetComponent<Value>().value);
+        if(newItem.GetComponent<Value>()) AddValue(newItem.GetComponent<Value>().value);
         //Set random position within placeArea
         // float spawnX = Random.Range(transform.localPosition.x - (transform.localScale.x/2), transform.localPosition.x + (transform.localScale.x/2));
         // float spawnZ = Random.Range(transform.localPosition.z - (transform.localScale.z/2), transform.localPosition.z + (transform.localScale.z/2));
@@ -51,12 +73,12 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
 
         newItem.transform.SetParent(transform);
 
-        audioHandler.Play(0);
+        if(audioHandler) audioHandler.Play(0);
     }
 
     public void RemoveItem(GameObject removeItem) {
         removeItem.GetComponent<ItemHandler>().storage = null;
-        AddValue(-removeItem.GetComponent<Value>().value);
+        if(removeItem.GetComponent<Value>()) AddValue(-removeItem.GetComponent<Value>().value);
         items.Remove(removeItem);
     }
 

@@ -1,7 +1,8 @@
 using UnityEngine;
 
-public class ItemHandler : MonoBehaviour {
+public class ItemHandler : MonoBehaviour, IInteractable {
     public Transform storage;
+    public float yPlaceOffset;
 
     public void TakeItem(Transform newParent) {
         //Put in hand
@@ -16,5 +17,9 @@ public class ItemHandler : MonoBehaviour {
 
         //Set new storage
         GetComponent<ItemHandler>().storage = transform.parent;
+    }
+
+    public void Interact(GameObject interactor) {
+
     }
 }
