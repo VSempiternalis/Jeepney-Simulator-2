@@ -5,6 +5,7 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
     public int value;
     public List<GameObject> items;
     private AudioHandler audioHandler;
+    [SerializeField] private Transform goober; //hitpos to localPos
 
     private void Start() {
         audioHandler = GetComponent<AudioHandler>();
@@ -23,6 +24,8 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
     }
 
     public void AddItem(GameObject newItem, Vector3 placePos) {
+        goober.position = placePos;
+
         //Remove new item from storage if stored
         ItemHandler newItemHandler = newItem.GetComponent<ItemHandler>();
         if(newItemHandler.storage != null && newItemHandler.storage.GetComponent<StorageHandler>()) {
@@ -36,10 +39,11 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
         float rotY = Random.Range(0, 361); //Technically, it should be 360 but whatever
 
         newItem.transform.Rotate(new Vector3(0, rotY, 0));
-        newItem.transform.rotation = Quaternion.identity;
+        // newItem.transform.rotation = Quaternion.identity;
 
         newItem.transform.SetParent(transform);
-        LeanTween.move(newItem, new Vector3(placePos.x, placePos.y + newItemHandler.yPlaceOffset, placePos.z), 0.1f).setEaseInOutExpo();
+        LeanTween.moveLocal(newItem, new Vector3(goober.localPosition.x, goober.localPosition.y + newItemHandler.yPlaceOffset, goober.localPosition.z), 0.25f).setEaseInOutExpo();
+        // LeanTween.move(newItem, new Vector3(placePos.x, placePos.y + newItemHandler.yPlaceOffset, placePos.z), 0.25f).setEaseInOutExpo();
 
         if(audioHandler) audioHandler.Play(0);
     }
@@ -66,10 +70,10 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
         
         // newItem.transform.localPosition = new Vector3(spawnX, transform.localPosition.y - 0.5f, spawnZ);
         // newItem.transform.localPosition = new Vector3(spawnX, transform.localPosition.y  + transform.localScale.y, spawnZ);
-        LeanTween.moveLocal(newItem, new Vector3(spawnX, transform.localPosition.y, spawnZ), 0.5f).setEaseInOutExpo();
+        LeanTween.moveLocal(newItem, new Vector3(spawnX, transform.localPosition.y, spawnZ), 0.25f).setEaseInOutExpo();
         // newItem.transform.Rotate(new Vector3(0, 0, 0));
         newItem.transform.Rotate(new Vector3(0, rotY, 0));
-        newItem.transform.rotation = Quaternion.identity;
+        // newItem.transform.rotation = Quaternion.identity;
 
         newItem.transform.SetParent(transform);
 

@@ -39,7 +39,10 @@ public class CarController : MonoBehaviour {
     [SerializeField] private Transform pointDriverExit;
     public List<Transform> points;
     [SerializeField] private Transform payPoint;
-    [SerializeField] private Transform changePoint;
+    [SerializeField] private ChangeHandler changePoint;
+    public Transform pointPassengerEntrance;
+    public Transform pointPassengerExitLeft;
+    public Transform pointPassengerExitRight;
 
     [Space(10)]
     [Header("STEERING")]
@@ -259,8 +262,9 @@ public class CarController : MonoBehaviour {
         seatSpot.gameObject.SetActive(true);
 
         //Set points
-        passenger.GetComponent<PersonHandler>().payPoint = payPoint;
+        passenger.GetComponent<PersonHandler>().payPoint = payPoint.GetComponent<StorageHandler>();
         passenger.GetComponent<PersonHandler>().changePoint = changePoint;
+        passenger.GetComponent<PersonHandler>().changePointStorage = changePoint.GetComponent<StorageHandler>();
     }
 
     private void UpdateSeatsTaken() {
@@ -269,6 +273,17 @@ public class CarController : MonoBehaviour {
             if(seatSpots[i].childCount == 1) seatsTaken[i] = 0;
             else seatsTaken[i] = 1;
         }
+    }
+
+    public void PassengerExit(Transform passenger) {
+        Transform seatSpot = passenger.parent;
+
+        passenger.parent = GameObject.Find("WORLD").transform;
+        Vector3 dropPos = pointPassengerEntrance.position;
+        dropPos.y += 0.5f;
+        passenger.position = dropPos;
+
+        passengerCount --;
     }
 
     // DRIVING ============================================================================
@@ -281,53 +296,6 @@ public class CarController : MonoBehaviour {
 
         GearAnimAudio(); // not sure if this belongs here, but it fixes some issues.
     }
-
-    // public void ToggleDriverSeat(Transform driver, Transform seat) {
-    //     //EXIT
-    //     if(driverPos.childCount > 0 && driverPos.GetChild(0) == driver) {
-    //         //cameras
-
-    //         driver.position = pointDriverExit.position;
-    //         driver.rotation = driverPos.rotation;
-    //         // driver.SetParent(GameObject.Find("WORLD").transform);
-    //         driver.SetParent(null);
-
-    //         driver.GetComponent<PlayerDriveInput>().SetIsDriving(false, null, seat);
-    //         // driver.GetComponent<Rigidbody>().isKinematic = false;
-    //         // driver.GetComponent<CapsuleCollider>().isTrigger = false;
-
-    //         //Reset rb drag (KEEP THIS IN. LITERALLY FIXES GEAR JAM)
-    //         // GetComponent<Rigidbody>().drag = freeDrag;
-    //         // GetComponent<Rigidbody>().drag = brakeDrag;
-    //         //Reset move input to (hopefully) fix car moving on its own on exit
-    //         moveInput = 0;
-    //         steerInput = 0; 
-
-    //         //destinations ui
-
-    //         //gear
-
-    //     } 
-    //     //ENTER
-    //     else { 
-    //         //cameras
-
-    //         //Seating
-    //         // driver.SetParent(driverPos);
-    //         // driver.localPosition = Vector3.zero;
-
-    //         //Set player isDriving
-    //         driver.GetComponent<PlayerDriveInput>().SetIsDriving(true, this, seat);
-
-    //         // driver.localPosition = new Vector3(0f, 0f, -0.15f);
-        
-    //         // GetComponent<Rigidbody>().drag = freeDrag;
-
-    //         //Update destinations UI
-
-    //         //Update gear
-    //     }
-    // }
 
     private void Move() {
         if(!isEngineOn) return;

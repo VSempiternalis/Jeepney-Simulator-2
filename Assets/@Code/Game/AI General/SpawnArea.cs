@@ -50,6 +50,7 @@ public class SpawnArea : MonoBehaviour {
         world = GameObject.Find("WORLD").transform;
         StartCoroutine(SpawnLoop());
         spawnDist = PlayerPrefs.GetInt("Settings_SpawnDist", 100);
+        transform.localScale = new Vector3(spawnDist, spawnDist, spawnDist);
         // StartCoroutine(PersonSpawnLoop());
 
         //Add all destinations
@@ -79,7 +80,6 @@ public class SpawnArea : MonoBehaviour {
                 if(Vector3.Distance(transform.position, spawn.transform.position) >= spawnDist - 10) {
                     //[VEHICLES]
                     if(spawn.gameObject.layer == vicSpawnLayer) {
-                        print("VEHICLE SPAWN LAYER");
                         currentVehicleSpawn = spawn.GetComponent<VehicleSpawn>();
 
                         if(currentVehicleSpawn.triggerCount == 0) {
@@ -91,10 +91,10 @@ public class SpawnArea : MonoBehaviour {
                         }
                     }
                     //[PERSONS]
-                    else if(spawn.gameObject.layer == personSpawnLayer) {
-                        print("PERSON SPAWN LAYER");
-                        TrySpawnPerson(spawn.transform);
-                    }
+                    // else if(spawn.gameObject.layer == personSpawnLayer) {
+                    //     print("PERSON SPAWN LAYER");
+                    //     TrySpawnPerson(spawn.transform);
+                    // }
                 }
             }
 
@@ -124,7 +124,7 @@ public class SpawnArea : MonoBehaviour {
     }
 
     private void TrySpawnPerson(Transform spawn) {
-        print("TRY SPAWN PERSON");
+        print("tryspawnperson");
         if(personCount >= maxPersonCount) return;
 
         //set number of persons to spawn on spawn transform
@@ -134,7 +134,6 @@ public class SpawnArea : MonoBehaviour {
         for(int i = 0; i < toSpawn; i++) {
             if(personPool.childCount == 0) return;
             
-            print("Spawning");
             //Set random variables
             float spawnX = Random.Range(spawn.position.x - (spawn.localScale.x/2), spawn.position.x + (spawn.localScale.x/2));
             float spawnZ = Random.Range(spawn.position.z - (spawn.localScale.z/2), spawn.position.z + (spawn.localScale.z/2));
@@ -142,7 +141,6 @@ public class SpawnArea : MonoBehaviour {
 
             int newPersonIndex = Random.Range(0, personPool.childCount);
             GameObject newPerson = personPool.GetChild(newPersonIndex).gameObject;
-            print("Spawning " + newPerson.name);
             // newPerson = Instantiate(personPF, new Vector3(spawnX, spawn.position.y, spawnZ), Quaternion.identity);
             newPerson.transform.position = new Vector3(spawnX, spawn.position.y, spawnZ);
             newPerson.transform.Rotate(new Vector3(0, rotY, 0));
@@ -192,35 +190,28 @@ public class SpawnArea : MonoBehaviour {
             }
         }
 
-        print("CHECK");
         if(vehicles.childCount == 0) return;
 
         //OBJECT POOLING
-        print("SPAWN");
         int vicIndex = Random.Range(0, vehicles.childCount);
         GameObject newVic = vehicles.GetChild(vicIndex).gameObject;
         newVic.transform.position = spawnPos;
         newVic.transform.rotation = spot.rotation;
         newVic.transform.parent = world;
         newVic.SetActive(true);
-        //Collider
-        // newVic.GetComponent<BoxCollider>().enabled = true;
-        //Audio
-        //Code
 
-        //OLD (Spawning/despawning) ================================================
-        // int vicIndex = Random.Range(0, vehicles.childCount);
-        // print("SPAWN POS: " + spawnPos);
-        // GameObject prefab = vehicles.GetChild(vicIndex).gameObject;
-        // GameObject newVehicle = Instantiate(prefab, world);
-        // newVehicle.transform.localPosition = spawnPos;
-        // newVehicle.transform.rotation = spot.rotation;
-        // newVehicle.SetActive(true);
+        //Audio
 
         //Set nodes
         if(spot.GetComponent<VehicleSpawn>().node == null) newVic.GetComponent<aiCarController>().isActive = false;
         newVic.GetComponent<aiCarController>().nextNode = spot.GetComponent<VehicleSpawn>().node;
 
         vicCount ++;
+    }
+    
+    // Try spawn on enter
+    private void OnTriggerEnter(Collider other) {
+        print("trigger: " + other.name);
+        if(other.gameObject.layer == personSpawnLayer) TrySpawnPerson(other.transform);
     }
 }

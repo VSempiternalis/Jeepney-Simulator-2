@@ -26,6 +26,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5512867488126185998}
   m_Father: {fileID: 0}
@@ -42,7 +43,7 @@ GameObject:
   - component: {fileID: 5512867488126185998}
   - component: {fileID: 5512867488126185993}
   - component: {fileID: 5512867488126185992}
-  - component: {fileID: 4265649236816625947}
+  - component: {fileID: 7218460022435434661}
   m_Layer: 0
   m_Name: Road_Suburban_Sidewalk_Ramp
   m_TagString: Untagged
@@ -60,6 +61,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3281045184367254256}
   m_RootOrder: 0
@@ -83,6 +85,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -113,8 +116,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4265649236816625947
-MeshCollider:
+--- !u!65 &7218460022435434661
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -123,7 +126,6 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -8557651367649275752, guid: 30571f7faa26845428c98c71d1f478b1, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 3.9990041, y: 0.10200106, z: 4.0000005}
+  m_Center: {x: -2.0004978, y: 0.050999466, z: -2.0000002}

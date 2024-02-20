@@ -16,7 +16,7 @@ public class PersonHandler : MonoBehaviour {
     [Header("STATS")]
     public string state;
     private float dropStartTime;
-    private float reachDist = 0.35f;
+    public float reachDist = 0.35f;
     public string personType;
 
     [Space(10)]
@@ -42,6 +42,7 @@ public class PersonHandler : MonoBehaviour {
     [Space(10)]
     [Header("DESTINATION")]
     private Transform nextNode;
+    private DropSpot dropSpot;
     private List<Transform> destinations = new List<Transform>();
     private List<Vector3> posDestinations = new List<Vector3>();
     public string from;
@@ -50,8 +51,9 @@ public class PersonHandler : MonoBehaviour {
 
     [Space(10)]
     [Header("PAYMENT")]
-    public Transform payPoint;
-    public Transform changePoint;
+    public StorageHandler payPoint;
+    public ChangeHandler changePoint;
+    public StorageHandler changePointStorage;
     [SerializeField] private int fare = 12;
     [SerializeField] private GameObject coin1PF;
     [SerializeField] private GameObject coin5PF;
@@ -117,46 +119,66 @@ public class PersonHandler : MonoBehaviour {
         // else if(state == "Paying") PayFare();
         else if(state == "Wandering") Wander();
         else if(state == "Moving to vehicle") MoveToVehicle();
-        // else if(state == "Waiting to drop") WaitToDrop();
-        // else if(state == "Dropping") Dropping();
+        else if(state == "Waiting to drop") WaitToDrop();
+        else if(state == "Dropping") Dropping();
+        // else if(state == "Moving to pos") MoveToPos();
 
         if(Time.time >= (nextSecUpdate)) {
             nextSecUpdate ++;
-        //     PatienceCheck();
+            // PatienceCheck();
             
             if(state == "Waiting") {
                 Wait();
             } 
             else if(state == "Waiting to pay") {
                 if(Time.time >= payTime) {
-                    if(payPoint.GetComponent<StorageHandler>().value > 0) StartPayTimer(); //reset pay if money still on paymat
+                    if(payPoint.value > 0) StartPayTimer(); //reset pay if money still on paymat
                     else PayFare();
                 }
-        //     } else if(state == "Waiting for change") {
-        //         // if(changePoint.GetComponent<StorageHandler>().value > 0 && changePoint.GetComponent<StorageHandler>().value <= change) {
-        //         if(changePoint.GetComponent<StorageHandler>().value > 0 && changePoint.GetComponent<ChangeHandler>().currentChangee == this) {
-        //             // GetChange(changePoint.GetComponent<StorageHandler>().value);
-        //             // changePoint.GetComponent<StorageHandler>().Clear();
-        //             List<GameObject> removeList = new List<GameObject>();
-        //             foreach(GameObject item in changePoint.GetComponent<StorageHandler>().items) {
-        //                 if(item.GetComponent<Value>() && item.GetComponent<Value>().value <= change) {
-        //                     GetChange(item.GetComponent<Value>().value);
-        //                     removeList.Add(item);
-        //                 }
-        //             }
+            } else if(state == "Waiting for change") {
+                // if(changePointStorage.value > 0 && changePoint.GetComponent<StorageHandler>().value <= change) {
+                if(changePointStorage.value > 0 && changePoint.currentChangee == this) {
+                    // GetChange(changePointStorage.value);
+                    // changePointStorage.Clear();
+                    List<GameObject> removeList = new List<GameObject>();
+                    foreach(GameObject item in changePointStorage.items) {
+                        if(item.GetComponent<Value>() && item.GetComponent<Value>().value <= change) {
+                            GetChange(item.GetComponent<Value>().value);
+                            removeList.Add(item);
+                        }
+                    }
 
-        //             //[] Remove items taken
-        //             foreach(GameObject item in removeList) {
-        //                 changePoint.GetComponent<StorageHandler>().RemoveItem(item);
-        //                 Destroy(item);
-        //             }
-        //             changePoint.GetComponent<ChangeHandler>().UpdateText();
-        //         }
+                    //[] Remove items taken
+                    foreach(GameObject item in removeList) {
+                        changePointStorage.RemoveItem(item);
+                        Destroy(item);
+                    }
+                    changePoint.UpdateText();
+                }
             }
         }
     }
 
+    // private void PatienceCheck() {
+    //     if(state == "Waiting to arrive" || state == "Waiting to pay" || state == "Waiting for change") {
+    //         patience --;
+
+    //         if(patience <= 0) {
+    //             patience = 0;
+    //         } else if(patience <= maxPatience/4) {
+
+    //         } else if(patience <= maxPatience/2) {
+    //             //say something
+    //             //turn bar to yellow
+    //         }
+    //     }
+    // }
+
     #region LONG FUNCTIONS ==========================================================================================
+
+    // private void MoveToPos() {
+    //     MoveToNextPos();
+    // }
 
     private void Wait() {
         if(Time.time >= waitTime) MakeWander();
@@ -211,14 +233,25 @@ public class PersonHandler : MonoBehaviour {
         if(destinations.Count > 3) destinations.RemoveRange(3, destinations.Count-4);
 
         if(!carCon.HasFreeSeats()) {
-            SetState("Waiting");
+            ReturnToCurrentSpot();
+            // SetState("Waiting");
             return;
         } else if(Vector3.Distance(transform.position, carCon.transform.position) > callDist) {
-            SetState("Waiting");
+            ReturnToCurrentSpot();
+            // SetState("Waiting");
             return;
         }
 
         if(nextNode) MoveToNextDest();
+    }
+
+    private void ReturnToCurrentSpot() {
+        float dropX = Random.Range(currentSpot.position.x - (currentSpot.localScale.x/2), currentSpot.position.x + (currentSpot.localScale.x/2));
+        float dropZ = Random.Range(currentSpot.position.z - (currentSpot.localScale.z/2), currentSpot.position.z + (currentSpot.localScale.z/2));
+        float dropY = currentSpot.position.y;
+
+        posDestinations.Add(new Vector3(dropX, dropY, dropZ));
+        SetState("Wandering");
     }
     
     private void MoveToNextDest() {
@@ -237,18 +270,76 @@ public class PersonHandler : MonoBehaviour {
         Vector3 newPos = new Vector3(nextNode.position.x, transform.position.y + yUp, nextNode.position.z);
         transform.position = Vector3.MoveTowards(transform.position, newPos, moveSpeed * Time.fixedDeltaTime);
     }
+    
+    private void WaitToDrop() {
+        if(carCon && carCon.GetComponent<Rigidbody>().velocity.magnitude <= magnitudeThresh) {
+            ExitVehicle();
+        }
+    }
 
     #endregion
 
     #region SINGLE FRAME FUNCTIONS =================================================================================================
 
+    public void Reset() {
+        SetState("Waiting");
+        posDestinations.Clear();
+    }
+
+    public void ExitVehicle() {
+        DestinationsUIManager.current.RemoveDestination(to);
+
+        posDestinations.Clear();
+
+        Vector3 dropPos = dropSpot.GetDropPos();
+        Vector3 exitPos = new Vector3();
+
+        if(Vector3.Distance(carCon.pointPassengerExitLeft.position, dropPos) < Vector3.Distance(carCon.pointPassengerExitRight.position, dropPos)) exitPos = carCon.pointPassengerExitLeft.position;
+        else exitPos = carCon.pointPassengerExitRight.position;
+        posDestinations.Add(exitPos);
+        posDestinations.Add(dropPos);
+        
+        carCon.PassengerExit(transform);
+        carCon = null;
+        GetComponent<CapsuleCollider>().isTrigger = false;
+        GetComponent<Rigidbody>().isKinematic = false;
+
+        //Rate
+        // float rating;
+        // if(patience <= 0) rating = 1;
+        // else if(patience <= maxPatience/4) rating = 2;
+        // else if(patience <= maxPatience/3) rating = 3;
+        // else if(patience <= maxPatience/2) rating = 4;
+        // else rating = 5;
+
+        // Juber.current.AddReview(rating);
+        
+        dropStartTime = Time.time;
+        SetState("Dropping");
+    }
+    
+    private void Dropping() {
+        MoveToNextPos(); 
+
+        if(posDestinations.Count == 0 || posDestinations[0].y > transform.position.y + (reachDist)) {
+            // posDestinations.Clear();
+            // GetComponent<Despawner>().Despawn();
+            SetState("Idle");
+        } 
+        // else if(Time.time >= dropStartTime + 10f) {
+        //     // GetComponent<Despawner>().Despawn();
+        //     SetState("Idle");
+        // }
+    }
+
     private void Arrived() {
         if(state == "Dropping" || state == "Waiting for change") return;
-        else if(state == "Waiting to pay") {
-            //TESTING
-            // PayFare();
-            return;
-        } else if(state == "Waiting to arrive") state = "Waiting to drop";
+        // else if(state == "Waiting to pay") {
+        //     //TESTING
+        //     // PayFare();
+        //     return;
+        // } 
+        else if(state == "Waiting to arrive") state = "Waiting to drop";
     }
 
     private void MakeMoveToVehicle() {
@@ -335,7 +426,7 @@ public class PersonHandler : MonoBehaviour {
         if(change <= 0) {
             // popup.SayChange("");
             state = "Waiting to arrive";
-            changePoint.GetComponent<ChangeHandler>().RemoveChangee(this);
+            changePoint.RemoveChangee(this);
         } else {
             // popup.SayChange("P" + change); 
         }
@@ -361,7 +452,7 @@ public class PersonHandler : MonoBehaviour {
                     Vector3 setpos = new Vector3(transform.parent.position.x, transform.parent.position.y + 1f, transform.parent.position.z);
                     newMoney.transform.position = setpos;
                     print("Trying to add item");
-                    payPoint.GetComponent<StorageHandler>().AddItemRandom(newMoney);
+                    payPoint.AddItemRandom(newMoney);
                     print("new money");
                     newMoney.name = "Money - P" + newMoney.GetComponent<Value>().value;
 
@@ -376,7 +467,7 @@ public class PersonHandler : MonoBehaviour {
             state = "Waiting for change"; //waitingForChange = true;
 
             //Add changee to changehandler
-            changePoint.GetComponent<ChangeHandler>().AddChangee(this);
+            changePoint.AddChangee(this);
         } else {
             // popup.SayChange("");
             state = "Waiting to arrive";
@@ -414,9 +505,9 @@ public class PersonHandler : MonoBehaviour {
         //Stand
         if(state == "Idle" || state == "Waiting") anim = Random.Range(0, 8);
         //Walk
-        else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering") anim = Random.Range(14, 20);
+        else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering" || state == "Dropping" || state == "Moving to pos") anim = Random.Range(14, 20);
         //Sit
-        else if(state == "Waiting to pay") anim = Random.Range(20, 30);
+        else if(state == "Waiting to pay") anim = Random.Range(20, 29);
 
         print("Anim: " + anim);
         ani.SetInteger("State", anim);
@@ -434,14 +525,17 @@ public class PersonHandler : MonoBehaviour {
     }
 
     private void OnTriggerStay(Collider other) {
-        if(other.gameObject.layer == dropAreaLayer && other.name.Contains(to)) Arrived(); //Drop;
-        else if(other.gameObject.layer == 8 && other.name.Contains(to)) { //Area
+        if(other.gameObject.layer == dropAreaLayer && other.name.Contains(to)) {
+            dropSpot = other.GetComponent<DropSpot>();
+            Arrived(); //Drop;
         }
+        // else if(other.gameObject.layer == 8 && other.name.Contains(to)) { //Area
+        // }
     }
 
     private void OnTriggerExit(Collider other) {
         if(other.gameObject.layer == dropAreaLayer && other.name.Contains(to) && state == "Waiting to drop") state = "Waiting to arrive";
-        else if(other.gameObject.layer == spawnAreaLayer) currentSpot = null;
+        // else if(other.gameObject.layer == spawnAreaLayer) currentSpot = null;
     }
 
     #endregion

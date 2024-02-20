@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 
 public class ChangeHandler : MonoBehaviour, ITooltipable, IScrollable {
-    private List<PersonHandler> changees = new List<PersonHandler>();
+    public List<PersonHandler> changees = new List<PersonHandler>();
     public PersonHandler currentChangee;
     private LineRenderer lr;
     [SerializeField] private TMP_Text changeText;
@@ -16,19 +16,7 @@ public class ChangeHandler : MonoBehaviour, ITooltipable, IScrollable {
     }
 
     private void Update() {
-        if(currentChangee == null) {
-            // lr.SetPosition(0,transform.position);
-            // lr.SetPosition(1,transform.position);
-        } else {
-            foreach(PersonHandler changee in changees) {
-                // changee.GetComponent<Outline>().enabled = false;
-            }
-            // currentChangee.GetComponent<Outline>().enabled = true;
-            // lr.SetPosition(0, transform.position);
-            // Vector3 setpos = new Vector3(currentChangee.transform.parent.position.x, currentChangee.transform.parent.position.y + 0.5f, currentChangee.transform.parent.position.z);
-            // lr.SetPosition(1, setpos);
-        }
-        // lr.SetPosition(1, currentChangee.transform.parent.position);
+        
     }
 
     public void AddChangee(PersonHandler changee) {

@@ -77,7 +77,10 @@ public class Despawner : MonoBehaviour {
         // if(gameObject.layer == 6) spawnArea.vicCount --;
         // else if(gameObject.layer == 13) spawnArea.personCount --;
         if(objectType == "Vehicle") spawnArea.vicCount --;
-        else if(objectType == "Person") spawnArea.personCount --;
+        else if(objectType == "Person") {
+            spawnArea.personCount --;
+            GetComponent<PersonHandler>().Reset();
+        }
 
         // if(test) print(name + " despawning without decrement!");
         // print("DESPAWN: " + name + " has aiCarCon: " + (GetComponent<aiCarController>() != null));

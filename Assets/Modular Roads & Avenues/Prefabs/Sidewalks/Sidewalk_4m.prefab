@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4791742640847147881}
   - component: {fileID: 4791742640847147863}
   - component: {fileID: 4791742640847147862}
-  - component: {fileID: 5449823952219979612}
+  - component: {fileID: 2472611570234802511}
   m_Layer: 0
   m_Name: Sidewalk_4m
   m_TagString: Untagged
@@ -29,6 +29,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2957151175046723246}
   m_RootOrder: 0
@@ -52,6 +53,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -82,8 +84,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5449823952219979612
-MeshCollider:
+--- !u!65 &2472611570234802511
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -92,10 +94,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 6199689077519366992, guid: 1d9d1ad2618c31d42b45eadba0924cd8, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 4, y: 0.10000142, z: 4}
+  m_Center: {x: -2, y: 0.0500007, z: -2}
 --- !u!1 &5213627837262399563
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,6 +123,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4791742640847147881}
   m_Father: {fileID: 0}

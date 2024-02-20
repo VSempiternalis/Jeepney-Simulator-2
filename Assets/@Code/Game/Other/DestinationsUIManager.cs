@@ -102,7 +102,7 @@ public class DestinationsUIManager : MonoBehaviour {
         }
 
         //Audio
-        playerAudio.Play(7);
+        // playerAudio.Play(7);
     }
 
     public void Clear() {

@@ -19,6 +19,7 @@ NPCs
 20-39: Sitting
 40-49: Stopping
 50-59: Calling jeep/Hailing
+90: Guard
 
 PLAYER
 0: Idle

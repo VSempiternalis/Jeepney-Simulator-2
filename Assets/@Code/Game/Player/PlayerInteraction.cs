@@ -1,5 +1,6 @@
-using UnityEditor;
+using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerInteraction : MonoBehaviour {
     [SerializeField] private Camera playerCam;
@@ -23,6 +24,7 @@ public class PlayerInteraction : MonoBehaviour {
 
     [Space(10)]
     [Header("ITEMS")]
+    [SerializeField] private int maxItemsOnHand;
     [SerializeField] private Transform rightHand;
     private RaycastHit hit;
 
@@ -32,8 +34,31 @@ public class PlayerInteraction : MonoBehaviour {
     [SerializeField] private int layerItem;
     [SerializeField] private int layerStorage;
 
+    [Space(10)]
+    [Header("UI")]
+    [SerializeField] private TMP_Text areaUI;
+    [SerializeField] private GameObject dropUI;
+    [SerializeField] private GameObject onhandItemPF;
+    [SerializeField] private Transform onhandUI;
+    [SerializeField] private TMP_Text tooltipHeader;
+    [SerializeField] private TMP_Text tooltipText;
+    [SerializeField] private GameObject gameHUD;
+
+    // [Space(10)]
+    // [Header("Keybinds")]
+    // private KeyCode Key_DriveForward;
+    // private KeyCode Key_DriveBackward;
+    // private KeyCode Key_SteerLeft;
+    // private KeyCode Key_SteerRight;
+    // private KeyCode Key_Headlights;
+    // private KeyCode Key_Horn;
+    // private KeyCode Key_Brake;
+    // private KeyCode Key_GearUp;
+    // private KeyCode Key_GearDown;
+    // private KeyCode Key_TowTruck;
+
     private void Start() {
-        
+        // OnKeyChangeEvent();
     }
 
     private void Update() {
@@ -99,39 +124,80 @@ public class PlayerInteraction : MonoBehaviour {
             }
         }
 
-        //[Look for item in hits]
-        // var hits = Physics.RaycastAll(ray, reachDist);
-        // foreach(RaycastHit hit in hits) {
-        //     if(hit.collider && (hit.collider.gameObject.layer == layerInteractable)){ //Make sure collider is layer layerInteractable (Interactable)
-        //         itemOver = hit.collider.gameObject;
-        //     }
-        // }
-
         if(itemOver && itemOver.GetComponent<Outline>()) itemOver.GetComponent<Outline>().OutlineWidth = 5;
     }
 
     private void Interaction() {
+        //MAP
+        if(tabDown) {
+            //AUDIO
+            // audioHandler.Play(1);
+
+            // MapManager.current.Toggle();
+        } 
+        //HIDE UI
+        else if(f12Down) {
+            gameHUD.SetActive(!gameHUD.activeSelf);
+        }
+        
         if(!itemOver) return;
 
         //LEFT CLICK
         if(lMouseDown) {
+            //INTERACTABLE
             if(itemOver.layer == layerInteractable) {
                 if(itemOver.GetComponent<IInteractable>() != null) itemOver.GetComponent<IInteractable>().Interact(gameObject);
-            } else if(itemOver.layer == layerItem) {
+            } 
+            //ITEM
+            else if(itemOver.layer == layerItem) {
                 TakeItemOver();
             } 
         }
-
         //RIGHT CLICK
         else if(rMouseDown) {
             if(itemOver.layer == layerStorage && rightHand.childCount > 0) {
                 PlaceItem();
             }
         }
+        //MID CLICK
+        else if(mMouseDown) {
+            if(itemOver.layer == layerStorage) {
+                for(int i = 0; i < maxItemsOnHand; i++) {
+                    List<GameObject> items = itemOver.GetComponent<StorageHandler>().items;
+                    // print("i: " + i + " items: " + items.Count + " right hand items: " + rightHand.childCount);
+                    if(items.Count == 0 || rightHand.childCount == maxItemsOnHand) break;
+
+                    rightHand.GetComponent<StorageHandler>().AddItemRandom(items[0]);
+                    UpdateOnhandUI();
+                }
+                //AUDIO
+                // audioHandler.Play(0);
+            }
+        }
+        //LEFT HOLD
+        else if(lMouseHold) {
+            if(itemOver.layer == layerItem) TakeItemOver();
+        } 
+        //RIGHT HOLD
+        else if(rMouseHold) {
+            if(itemOver.layer == layerStorage && rightHand.childCount > 0) PlaceItem();
+            // else if(itemOver.GetComponent<IPayable>() != null && rightHand.childCount > 0) PayItem();
+        }
+
+        //MOUSE SCROLL
+        if(mouseScroll != 0 && itemOver.GetComponent<IScrollable>() != null) {
+            itemOver.GetComponent<IScrollable>().Scroll(mouseScroll);
+        }
     }
 
     private void TakeItemOver() {
+        if(rightHand.childCount >= maxItemsOnHand) {
+            // Fader.current.YawnGray(0.5f, "My hands are full", 0.5f);
+            return;
+        }
         rightHand.GetComponent<StorageHandler>().AddItemRandom(itemOver);
+
+        UpdateOnhandUI();
 
         //audio
     }
@@ -146,8 +212,61 @@ public class PlayerInteraction : MonoBehaviour {
             storage.AddItem(dropItem, hit.point);
         }
 
-        //+ UpdateOnhandUI();
+        UpdateOnhandUI();
     
         //audio
     }
+
+    private void UpdateOnhandUI() {
+        ClearOnhandUI();
+
+        //Repopulate onhand ui
+        for(int i = 0; i < rightHand.childCount; i++) {
+            string itemName = rightHand.GetChild(i).name;
+            GameObject onhandItem = Instantiate(onhandItemPF);
+            onhandItem.transform.GetChild(0).GetComponent<TMP_Text>().text = itemName;
+            onhandItem.name = itemName;
+            onhandItem.transform.SetParent(onhandUI);
+            onhandItem.SetActive(true);
+
+            onhandUI.gameObject.SetActive(false);
+            onhandUI.gameObject.SetActive(true);
+
+            // if(i == 0) onhandItem.GetComponent<VerticalLayoutGroup>().padding.right = 40;
+            // else onhandItem.GetComponent<VerticalLayoutGroup>().padding.right = 20;
+        }
+    }
+
+    private void ClearOnhandUI() {
+        List<Transform> removeList = new List<Transform>();
+
+        foreach(Transform onhandItem in onhandUI) {
+            removeList.Add(onhandItem);
+        }
+        foreach(Transform remove in removeList) {
+            Destroy(remove.gameObject);
+        }
+    }
+
+    public bool CanScroll() {
+        bool returnBool = true;
+
+        if(itemOver && itemOver.GetComponent<ChangeHandler>() && itemOver.GetComponent<ChangeHandler>().changees.Count > 1) returnBool = false;
+
+        return returnBool;
+    }
+
+    // private void OnKeyChangeEvent() {
+    //     //Set keys
+    //     Key_DriveForward = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_DriveForward", "W"));;
+    //     Key_DriveBackward = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_DriveBackward", "S"));;
+    //     Key_SteerLeft = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_SteerLeft", "A"));;
+    //     Key_SteerRight = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_SteerRight", "D"));;
+    //     Key_Headlights = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Headlights", "R"));;
+    //     Key_Horn = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Horn", "F"));;
+    //     Key_Brake = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Brake", "Space"));;
+    //     Key_GearUp = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GearUp", "LeftShift"));;
+    //     Key_GearDown = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GearDown", "LeftControl"));;
+    //     Key_TowTruck = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_TowTruck", "T"));;
+    // }
 }
