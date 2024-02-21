@@ -42,7 +42,7 @@ public class PlayerInteraction : MonoBehaviour {
     [SerializeField] private Transform onhandUI;
     [SerializeField] private TMP_Text tooltipHeader;
     [SerializeField] private TMP_Text tooltipText;
-    [SerializeField] private GameObject gameHUD;
+    [SerializeField] private uiAnimGroup gameHUD;
 
     // [Space(10)]
     // [Header("Keybinds")]
@@ -137,7 +137,9 @@ public class PlayerInteraction : MonoBehaviour {
         } 
         //HIDE UI
         else if(f12Down) {
-            gameHUD.SetActive(!gameHUD.activeSelf);
+            // gameHUD.SetActive(!gameHUD.activeSelf);
+            if(gameHUD.GetComponent<CanvasGroup>().alpha > 0) gameHUD.Out();
+            else gameHUD.In();
         }
         
         if(!itemOver) return;

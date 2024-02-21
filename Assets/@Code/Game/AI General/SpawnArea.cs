@@ -211,7 +211,6 @@ public class SpawnArea : MonoBehaviour {
     
     // Try spawn on enter
     private void OnTriggerEnter(Collider other) {
-        print("trigger: " + other.name);
         if(other.gameObject.layer == personSpawnLayer) TrySpawnPerson(other.transform);
     }
 }

@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEngine.Rendering;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
+using System;
 
 public class Settings : MonoBehaviour {
     public AudioMixer audioMixer;
@@ -35,6 +37,8 @@ public class Settings : MonoBehaviour {
     [SerializeField] private Toggle shadowsToggle; //post processing
     [SerializeField] private GameObject reflectionProbe;
     [SerializeField] private Toggle reflectionProbeToggle; //post processing
+    [SerializeField] private TMP_Text reflectionProbeSizeText;
+    [SerializeField] private Slider reflectionProbeSizeSlider;
     [SerializeField] private TMP_Text fovText;
     [SerializeField] private Slider fovSlider;
 
@@ -104,6 +108,7 @@ public class Settings : MonoBehaviour {
         SetPP(true);
         SetShadows(true);
         SetReflectionProbe(false);
+        SetReflectionProbeSize(3f);
         SetFOV(80);
 
         SetMouseSens(2);
@@ -127,6 +132,7 @@ public class Settings : MonoBehaviour {
         SetPP(PlayerPrefs.GetInt("Settings_ActivePP") == 1? true : false);
         SetShadows(PlayerPrefs.GetInt("Settings_ActiveShadows") == 1? true : false);
         SetReflectionProbe(PlayerPrefs.GetInt("Settings_ReflectionProbe") == 1? true : false);
+        SetReflectionProbeSize(PlayerPrefs.GetFloat("Settings_ReflectionProbeSize"));
         SetFOV(PlayerPrefs.GetFloat("Settings_FOV"));
 
         float mouseSens = PlayerPrefs.GetFloat("Settings_MouseSens");
@@ -237,17 +243,27 @@ public class Settings : MonoBehaviour {
 
     public void SetReflectionProbe(bool isOn) {
         reflectionProbe.SetActive(isOn);
-        // sun.shadows = isOn? LightShadows.Hard : LightShadows.None;
-        // foreach(Camera cam in GameObject.FindObjectsOfType<Camera>()) {
-        //     cam.allowHDR = isOn;
-        //     cam.allowMSAA = isOn;    
-        // }
 
         //Saving
         PlayerPrefs.SetInt("Settings_ReflectionProbe", isOn? 1:0);
 
         //Update UI
         reflectionProbeToggle.isOn = isOn;
+    }
+
+    public void SetReflectionProbeSize(float sizeIndex) {
+        int realSize = (int)Mathf.Pow(2, sizeIndex+4);
+        print("Setting size: " + realSize);
+        reflectionProbe.GetComponent<ReflectionProbe>().resolution = realSize;
+        reflectionProbe.GetComponent<ReflectionProbe>().enabled = false;
+        reflectionProbe.GetComponent<ReflectionProbe>().enabled = true;
+
+        //Saving
+        PlayerPrefs.SetFloat("Settings_ReflectionProbeSize", sizeIndex);
+
+        //Update UI
+        reflectionProbeSizeText.text = realSize.ToString();
+        reflectionProbeSizeSlider.value = sizeIndex;
     }
 
     public void SetFOV(float newFOV) {

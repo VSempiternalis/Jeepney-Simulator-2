@@ -507,7 +507,7 @@ public class PersonHandler : MonoBehaviour {
         //Walk
         else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering" || state == "Dropping" || state == "Moving to pos") anim = Random.Range(14, 20);
         //Sit
-        else if(state == "Waiting to pay") anim = Random.Range(20, 29);
+        else if(state == "Waiting to pay") anim = Random.Range(20, 28);
 
         print("Anim: " + anim);
         ani.SetInteger("State", anim);

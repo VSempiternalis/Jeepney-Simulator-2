@@ -95,7 +95,7 @@ public class CarController : MonoBehaviour {
     [SerializeField] private float blinkTime;
 
     [Space(10)]
-    [Header("Keybinds")]
+    [Header("KEYBINDS")]
     private KeyCode Key_DriveForward;
     private KeyCode Key_DriveBackward;
     private KeyCode Key_SteerLeft;
@@ -106,6 +106,10 @@ public class CarController : MonoBehaviour {
     private KeyCode Key_GearUp;
     private KeyCode Key_GearDown;
     private KeyCode Key_TowTruck;
+
+    [Space(10)]
+    [Header("OTHERS")]
+    [SerializeField] private ParticleSystem smokeParticles;
 
     [Space(10)]
     [Header("WHEEL AND AXLES")]
@@ -203,6 +207,9 @@ public class CarController : MonoBehaviour {
 
         //Braking
         brakeInput = Input.GetKey(Key_Brake);
+        
+        //Lights
+        if(Input.GetKeyDown(Key_Headlights)) headlights.SetActive(!headlights.activeSelf);
 
         //Steering
         if(Input.GetKey(Key_SteerLeft)) steerInput = -1;
@@ -290,6 +297,9 @@ public class CarController : MonoBehaviour {
 
     public void SetEngine(bool newIsOn) {
         isEngineOn = newIsOn;
+        if(isEngineOn) smokeParticles.Play();
+        else smokeParticles.Stop();
+        // smokeParticles.SetActive(isEngineOn);
 
         if(newIsOn) audioSource.Play();
         else audioSource.Stop();
@@ -312,7 +322,6 @@ public class CarController : MonoBehaviour {
             // if(wheel.axle == Axle.Rear) wheel.wheelCollider.motorTorque = moveInput * maxAcceleration;
         }
     }
-
 
     private void Steer() {
         foreach(Wheel wheel in wheels) {
