@@ -7,6 +7,7 @@ public class SeatHandler : MonoBehaviour, IInteractable, ITooltipable {
     [SerializeField] private CarController carCon;
     public Vector3 localPosPlayer;
     public Vector3 localPosModel;
+    public int modelYRot;
     [SerializeField] private Transform exitPoint;
 
     [SerializeField] private AudioSource audioSource;
@@ -16,7 +17,7 @@ public class SeatHandler : MonoBehaviour, IInteractable, ITooltipable {
     }
 
     private void Update() {
-        
+
     }
 
     public void Interact(GameObject interactor) {
@@ -36,6 +37,8 @@ public class SeatHandler : MonoBehaviour, IInteractable, ITooltipable {
 
             player.SetParent(transform);
             player.localPosition = localPosPlayer;
+            player.localEulerAngles = Vector3.zero;
+            print("!player y rot: " + player.localRotation.y);
         }
 
         if(audioSource) audioSource.Play();

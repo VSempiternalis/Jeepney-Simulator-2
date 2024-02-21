@@ -38,7 +38,8 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
 
         float rotY = Random.Range(0, 361); //Technically, it should be 360 but whatever
 
-        newItem.transform.Rotate(new Vector3(0, rotY, 0));
+        newItem.transform.eulerAngles = new Vector3(0, rotY, 0);
+        // newItem.transform.Rotate(new Vector3(0, rotY, 0));
         // newItem.transform.rotation = Quaternion.identity;
 
         newItem.transform.SetParent(transform);
@@ -72,7 +73,8 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
         // newItem.transform.localPosition = new Vector3(spawnX, transform.localPosition.y  + transform.localScale.y, spawnZ);
         LeanTween.moveLocal(newItem, new Vector3(spawnX, transform.localPosition.y, spawnZ), 0.25f).setEaseInOutExpo();
         // newItem.transform.Rotate(new Vector3(0, 0, 0));
-        newItem.transform.Rotate(new Vector3(0, rotY, 0));
+        newItem.transform.eulerAngles = new Vector3(0, rotY, 0);
+        // newItem.transform.Rotate(new Vector3(0, rotY, 0));
         // newItem.transform.rotation = Quaternion.identity;
 
         newItem.transform.SetParent(transform);

@@ -127,8 +127,17 @@ public class SpawnArea : MonoBehaviour {
         print("tryspawnperson");
         if(personCount >= maxPersonCount) return;
 
-        //set number of persons to spawn on spawn transform
-        int toSpawn = Random.Range(personSpawnRange.x, personSpawnRange.y + 1);
+        int toSpawn;
+        Crosswalk crosswalk = null;
+
+        //CROSSWALK
+        if(spawn.GetComponent<Crosswalk>()) {
+            crosswalk = spawn.GetComponent<Crosswalk>();
+            toSpawn = crosswalk.GetSpawn();
+        } else {
+            //set number of persons to spawn on spawn transform
+            toSpawn = Random.Range(personSpawnRange.x, personSpawnRange.y + 1);
+        }
 
         //Spawn people
         for(int i = 0; i < toSpawn; i++) {
@@ -141,7 +150,6 @@ public class SpawnArea : MonoBehaviour {
 
             int newPersonIndex = Random.Range(0, personPool.childCount);
             GameObject newPerson = personPool.GetChild(newPersonIndex).gameObject;
-            // newPerson = Instantiate(personPF, new Vector3(spawnX, spawn.position.y, spawnZ), Quaternion.identity);
             newPerson.transform.position = new Vector3(spawnX, spawn.position.y, spawnZ);
             newPerson.transform.Rotate(new Vector3(0, rotY, 0));
             newPerson.transform.parent = world;
@@ -151,7 +159,7 @@ public class SpawnArea : MonoBehaviour {
             newPerson.GetComponent<PersonHandler>().from = spawn.parent.name;
             newPerson.GetComponent<PersonHandler>().to = GetDestination(spawn.parent.name);
 
-            //spawnManager.spawnCount ++;
+            if(crosswalk != null) newPerson.GetComponent<PersonHandler>().CrossRoad(crosswalk.otherCrosswalk);
         }
     }
 

@@ -478,6 +478,16 @@ public class PersonHandler : MonoBehaviour {
 
     #region STATE SETTERS ==================================================================================================================
 
+    public void CrossRoad(Transform otherCrosswalk) {
+        print(name + " crossing road");
+
+        float moveX = Random.Range(otherCrosswalk.position.x - (otherCrosswalk.localScale.x/2), otherCrosswalk.position.x + (otherCrosswalk.localScale.x/2));
+        float moveZ = Random.Range(otherCrosswalk.position.z - (otherCrosswalk.localScale.z/2), otherCrosswalk.position.z + (otherCrosswalk.localScale.z/2));
+
+        posDestinations.Add(new Vector3(moveX, otherCrosswalk.position.y + yUp, moveZ));
+        SetState("Wandering");
+    }
+
     private void MakeWait() {
         waitTime = Time.time + Random.Range(waitTimeRange.x, waitTimeRange.y + 1);
 
@@ -510,6 +520,7 @@ public class PersonHandler : MonoBehaviour {
         else if(state == "Waiting to pay") anim = Random.Range(20, 28);
 
         print("Anim: " + anim);
+        if(ani == null) ani = GetComponent<Animator>();
         ani.SetInteger("State", anim);
     }
 
