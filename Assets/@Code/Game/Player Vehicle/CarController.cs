@@ -217,7 +217,7 @@ public class CarController : MonoBehaviour {
 
         if(steerInput != 0) {
             Vector3 newRot = swStandardRot;
-            newRot.z = steerInput * 90;
+            newRot.z = steerInput * 70;
 
             if(rotationTweenId != -1) LeanTween.cancel(rotationTweenId);
 
