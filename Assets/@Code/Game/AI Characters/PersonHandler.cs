@@ -54,7 +54,7 @@ public class PersonHandler : MonoBehaviour {
     public StorageHandler payPoint;
     public ChangeHandler changePoint;
     public StorageHandler changePointStorage;
-    [SerializeField] private int fare = 12;
+    [SerializeField] private int fare = 13;
     [SerializeField] private GameObject coin1PF;
     [SerializeField] private GameObject coin5PF;
     [SerializeField] private GameObject coin10PF;
@@ -69,6 +69,13 @@ public class PersonHandler : MonoBehaviour {
     [Header("ANIMATION")]
     private Animator ani;
 
+    [Space(10)]
+    [Header("CROSSING")]
+    [SerializeField] private Vector2 crossWaitTimeRange;
+    private float crossWaitTime;
+    private Transform crossRoad;
+
+    [Space(10)]
     private float nextSecUpdate;
     private PlayerDriveInput player;
     [SerializeField] private float distToPlayer;
@@ -86,7 +93,7 @@ public class PersonHandler : MonoBehaviour {
         money.Add(cash20PF);
         money.Add(cash50PF);
 
-        MakeWait();
+        if(state != "Waiting to cross") MakeWait();
 
         //SET MOVESPEED
         moveSpeed = Random.Range(moveSpeedRange.x, moveSpeedRange.y);
@@ -121,6 +128,8 @@ public class PersonHandler : MonoBehaviour {
         else if(state == "Moving to vehicle") MoveToVehicle();
         else if(state == "Waiting to drop") WaitToDrop();
         else if(state == "Dropping") Dropping();
+        else if(state == "Waiting to cross") WaitToCross();
+        else if(state == "Crossing") Crossing();
         // else if(state == "Moving to pos") MoveToPos();
 
         if(Time.time >= (nextSecUpdate)) {
@@ -179,6 +188,17 @@ public class PersonHandler : MonoBehaviour {
     // private void MoveToPos() {
     //     MoveToNextPos();
     // }
+
+    private void WaitToCross() {
+        if(Time.time >= crossWaitTime) {
+            SetState("Crossing");
+        }
+    }
+
+    private void Crossing() {
+        MoveToNextPos();
+        if(posDestinations.Count == 0) CrossRoad(crossRoad.GetComponent<Crosswalk>().otherCrosswalk.transform);
+    }
 
     private void Wait() {
         if(Time.time >= waitTime) MakeWander();
@@ -281,18 +301,13 @@ public class PersonHandler : MonoBehaviour {
 
     #region SINGLE FRAME FUNCTIONS =================================================================================================
 
-    public void Reset() {
-        SetState("Waiting");
-        posDestinations.Clear();
-    }
-
     public void ExitVehicle() {
         DestinationsUIManager.current.RemoveDestination(to);
 
         posDestinations.Clear();
 
-        Vector3 dropPos = dropSpot.GetDropPos();
         Vector3 exitPos = new Vector3();
+        Vector3 dropPos = dropSpot.GetDropPos();
 
         if(Vector3.Distance(carCon.pointPassengerExitLeft.position, dropPos) < Vector3.Distance(carCon.pointPassengerExitRight.position, dropPos)) exitPos = carCon.pointPassengerExitLeft.position;
         else exitPos = carCon.pointPassengerExitRight.position;
@@ -451,9 +466,7 @@ public class PersonHandler : MonoBehaviour {
                     GameObject newMoney = Instantiate(money[i-1]);
                     Vector3 setpos = new Vector3(transform.parent.position.x, transform.parent.position.y + 1f, transform.parent.position.z);
                     newMoney.transform.position = setpos;
-                    print("Trying to add item");
                     payPoint.AddItemRandom(newMoney);
-                    print("new money");
                     newMoney.name = "Money - P" + newMoney.GetComponent<Value>().value;
 
                     paid += newMoney.GetComponent<Value>().value;
@@ -478,24 +491,31 @@ public class PersonHandler : MonoBehaviour {
 
     #region STATE SETTERS ==================================================================================================================
 
-    public void CrossRoad(Transform otherCrosswalk) {
-        print(name + " crossing road");
-
-        float moveX = Random.Range(otherCrosswalk.position.x - (otherCrosswalk.localScale.x/2), otherCrosswalk.position.x + (otherCrosswalk.localScale.x/2));
-        float moveZ = Random.Range(otherCrosswalk.position.z - (otherCrosswalk.localScale.z/2), otherCrosswalk.position.z + (otherCrosswalk.localScale.z/2));
-
-        posDestinations.Add(new Vector3(moveX, otherCrosswalk.position.y + yUp, moveZ));
-        SetState("Wandering");
+    public void Reset() {
+        print("Resetting: " + name);
+        MakeWait();
+        posDestinations.Clear();
     }
 
-    private void MakeWait() {
+    public void CrossRoad(Transform otherCrosswalk) {
+        print(name + " crossing road");
+        crossRoad = otherCrosswalk;
+        crossWaitTime = Time.time + Random.Range(crossWaitTimeRange.x, crossWaitTimeRange.y + 1);
+
+        float moveX = Random.Range(crossRoad.position.x - (crossRoad.localScale.x/2), crossRoad.position.x + (crossRoad.localScale.x/2));
+        float moveZ = Random.Range(crossRoad.position.z - (crossRoad.localScale.z/2), crossRoad.position.z + (crossRoad.localScale.z/2));
+
+        posDestinations.Add(new Vector3(moveX, crossRoad.position.y + yUp, moveZ));
+        SetState("Waiting to cross");
+    }
+
+    public void MakeWait() {
         waitTime = Time.time + Random.Range(waitTimeRange.x, waitTimeRange.y + 1);
 
         SetState("Waiting");
     }
 
     private void MakeWander() {
-        print("wandering");
         if(currentSpot == null) return;
 
         float moveX = Random.Range(currentSpot.position.x - (currentSpot.localScale.x/2), currentSpot.position.x + (currentSpot.localScale.x/2));
@@ -506,20 +526,19 @@ public class PersonHandler : MonoBehaviour {
     }
 
     private void SetState(string newState) {
-        print("setting state to: " + newState);
+        // print("setting state to: " + newState);
         state = newState;
 
         //ANIMATION
         int anim = 0;
         
         //Stand
-        if(state == "Idle" || state == "Waiting") anim = Random.Range(0, 8);
+        if(state == "Idle" || state == "Waiting" || state == "Waiting to cross") anim = Random.Range(0, 8);
         //Walk
-        else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering" || state == "Dropping" || state == "Moving to pos") anim = Random.Range(14, 20);
+        else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering" || state == "Dropping" || state == "Moving to pos" || state == "Crossing") anim = Random.Range(14, 20);
         //Sit
         else if(state == "Waiting to pay") anim = Random.Range(20, 28);
 
-        print("Anim: " + anim);
         if(ani == null) ani = GetComponent<Animator>();
         ani.SetInteger("State", anim);
     }

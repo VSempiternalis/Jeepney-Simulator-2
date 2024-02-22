@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class NodeHandler : MonoBehaviour {
     [SerializeField] private List<NodeHandler> connections;
     public float speedMod;
+    [SerializeField] private int vehicleLayer;
 
     private void Start() {
         //Clear empty connections
@@ -37,7 +38,7 @@ public class NodeHandler : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        if(other.gameObject.layer == 6) {
+        if(other.gameObject.layer == vehicleLayer) {
             if(other.gameObject.GetComponent<aiCarInput>()) CallNextNode(other.gameObject.GetComponent<aiCarInput>()); 
             else if(other.transform.parent.GetComponent<aiCarInput>()) CallNextNode(other.transform.parent.GetComponent<aiCarInput>());
         }

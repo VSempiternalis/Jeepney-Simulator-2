@@ -72,26 +72,15 @@ public class Despawner : MonoBehaviour {
         
         //[!] if(GetComponent<PersonController>() != null && (GetComponent<PersonController>().state == "Waiting to drop" || GetComponent<PersonController>().state == "Waiting for change" || GetComponent<PersonController>().state == "Waiting to pay")) return;
 
-        // print(gameObject.layer);
-        // print(SpawnArea.current.vicCount);
-        // if(gameObject.layer == 6) spawnArea.vicCount --;
-        // else if(gameObject.layer == 13) spawnArea.personCount --;
         if(objectType == "Vehicle") spawnArea.vicCount --;
         else if(objectType == "Person") {
             spawnArea.personCount --;
             GetComponent<PersonHandler>().Reset();
         }
 
-        // if(test) print(name + " despawning without decrement!");
-        // print("DESPAWN: " + name + " has aiCarCon: " + (GetComponent<aiCarController>() != null));
-        // print("DESPAWN: " + name + " has aiCarCon: " + GetComponent<aiCarController>() != null);
-
         newPos = transform.position;
         newPos.y += 1000f;
         despawning = true;
-        // BackToPool();
-
-        // print("DESPAWN FR");
     }
 
     private void BackToPool() {

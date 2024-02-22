@@ -62,8 +62,6 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     private void Update() {
-        
-        print("player y rot: " + transform.localRotation.y);
         GetInput();
 
         SetItemOver();

@@ -1,11 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
-using TMPro;
+using System;
 
 
 public class aiCarController : MonoBehaviour {
     [Header("VARIABLES")]
-    [SerializeField] private List<AxleInfo> axleInfos;
+    // [SerializeField] private List<AxleInfo> axleInfos;
+    [SerializeField] private Vector2 maxMotorTorqueRange;
     public float maxMotorTorque;
     [SerializeField] private float maxSteeringAngle;
     [SerializeField] private float brakeDrag;
@@ -34,10 +35,30 @@ public class aiCarController : MonoBehaviour {
     //COLLISION
     private float velocityThresh = 3f;
 
+    [Space(10)]
+    [Header("WHEEL AND AXLES")]
+    public List<Wheel> wheels;
+
+    [Serializable] public struct Wheel {
+        public GameObject wheelModel;
+        public WheelCollider wheelCollider;
+        public Axle axle;
+    }
+
+    public enum Axle {
+        Front,
+        Rear
+    }
+
     private void Start() {
-        maxMotorTorque = gearFactor;
+        maxMotorTorque = UnityEngine.Random.Range(maxMotorTorqueRange.x, maxMotorTorqueRange.y + 1);
+        // maxMotorTorque = gearFactor;
         GetComponent<Rigidbody>().drag = freeDrag;
         audioSource = GetComponent<AudioSource>();
+    }
+
+    private void Update() {
+        AnimateWheels();
     }
 
     private void FixedUpdate() {
@@ -53,27 +74,41 @@ public class aiCarController : MonoBehaviour {
 
         motor = maxMotorTorque * moveInput.y;
 
-        foreach(AxleInfo axleInfo in axleInfos) {
-            if(axleInfo.steering) {
-                axleInfo.leftWheel.steerAngle = steering;
-                axleInfo.rightWheel.steerAngle = steering;
-            }
-            if(axleInfo.motor) {
-                axleInfo.leftWheel.motorTorque = motor;
-                axleInfo.rightWheel.motorTorque = motor;
-            }
+        // foreach(AxleInfo axleInfo in axleInfos) {
+        //     if(axleInfo.steering) {
+        //         axleInfo.leftWheel.steerAngle = steering;
+        //         axleInfo.rightWheel.steerAngle = steering;
+        //     }
+        //     if(axleInfo.motor) {
+        //         axleInfo.leftWheel.motorTorque = motor;
+        //         axleInfo.rightWheel.motorTorque = motor;
+        //     }
 
-            //TURN STEER WHEELS
-            // if(!axleInfo.steering) return;
-            // axleInfo.leftWheel.transform.GetChild(0).Rotate(new Vector3(axleInfo.leftWheel.steerAngle, 0, 0));
-            // axleInfo.rightWheel.transform.GetChild(0).Rotate(new Vector3(0, 0, 0));
+        //     //TURN STEER WHEELS
+        //     // if(!axleInfo.steering) return;
+        //     // axleInfo.leftWheel.transform.GetChild(0).Rotate(new Vector3(axleInfo.leftWheel.steerAngle, 0, 0));
+        //     // axleInfo.rightWheel.transform.GetChild(0).Rotate(new Vector3(0, 0, 0));
+        // }
+
+        foreach(Wheel wheel in wheels) {
+            wheel.wheelCollider.motorTorque = motor;
         }
 
         //MOVE BY NODE
         if(moveInput.y > 0) TurnToDest();
-        //transform.rotation = Quaternion.RotateTowards(transform.rotation, nextNode.transform.rotation)
+        // transform.rotation = Quaternion.RotateTowards(transform.rotation, nextNode.transform.rotation, 1);
 
-        //UpdateWheels();
+        // UpdateWheels();
+    }
+
+    private void AnimateWheels() {
+        foreach(Wheel wheel in wheels) {
+            Quaternion rot;
+            Vector3 pos;
+            wheel.wheelCollider.GetWorldPose(out pos, out rot);
+            wheel.wheelModel.transform.position = pos;
+            // wheel.wheelModel.transform.rotation = rot;
+        }
     }
 
     private void TurnToDest() {
@@ -138,13 +173,13 @@ public class aiCarController : MonoBehaviour {
         moveInput = newMoveInput;
     }
 
-    [System.Serializable]
-    public class AxleInfo {
-        public WheelCollider leftWheel;
-        public WheelCollider rightWheel;
-        public bool motor;
-        public bool steering;
-    }
+    // [System.Serializable]
+    // public class AxleInfo {
+    //     public WheelCollider leftWheel;
+    //     public WheelCollider rightWheel;
+    //     public bool motor;
+    //     public bool steering;
+    // }
 
     private void OnCollisionEnter(Collision other) {
         int layer = other.gameObject.layer;
