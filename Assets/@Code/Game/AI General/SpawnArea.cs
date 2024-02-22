@@ -125,7 +125,7 @@ public class SpawnArea : MonoBehaviour {
 
     private void TrySpawnPerson(Transform spawn) {
         print("tryspawnperson");
-        if(personCount >= maxPersonCount) return;
+        if(personCount >= maxPersonCount || personPool.childCount == 0) return;
 
         int toSpawn;
         Crosswalk crosswalk = null;
@@ -141,8 +141,6 @@ public class SpawnArea : MonoBehaviour {
 
         //Spawn people
         for(int i = 0; i < toSpawn; i++) {
-            if(personPool.childCount == 0) return;
-            
             //Set random variables
             float spawnX = Random.Range(spawn.position.x - (spawn.localScale.x/2), spawn.position.x + (spawn.localScale.x/2));
             float spawnZ = Random.Range(spawn.position.z - (spawn.localScale.z/2), spawn.position.z + (spawn.localScale.z/2));
@@ -160,6 +158,7 @@ public class SpawnArea : MonoBehaviour {
             newPerson.GetComponent<PersonHandler>().to = GetDestination(spawn.parent.name);
 
             if(crosswalk != null) newPerson.GetComponent<PersonHandler>().CrossRoad(crosswalk.otherCrosswalk);
+            else newPerson.GetComponent<PersonHandler>().MakeWait();
         }
     }
 
