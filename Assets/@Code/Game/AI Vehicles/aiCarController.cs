@@ -20,8 +20,6 @@ public class aiCarController : MonoBehaviour {
 
     [Space(10)]
     [Header("COMPONENTS")]
-    [SerializeField] private List<WheelCollider> wheelColliders;
-    [SerializeField] private List<Transform> visualWheels;
     private AudioSource audioSource;
     [SerializeField] private AudioClip audioCrash;
 
@@ -96,9 +94,6 @@ public class aiCarController : MonoBehaviour {
 
         //MOVE BY NODE
         if(moveInput.y > 0) TurnToDest();
-        // transform.rotation = Quaternion.RotateTowards(transform.rotation, nextNode.transform.rotation, 1);
-
-        // UpdateWheels();
     }
 
     private void AnimateWheels() {
@@ -107,42 +102,18 @@ public class aiCarController : MonoBehaviour {
             Vector3 pos;
             wheel.wheelCollider.GetWorldPose(out pos, out rot);
             wheel.wheelModel.transform.position = pos;
-            // wheel.wheelModel.transform.rotation = rot;
         }
     }
 
     private void TurnToDest() {
         if(nextNode == null) return;
-        //transform.LookAt(nextNode.transform, Vector3.up);
         Vector3 thisPos = transform.position;
         Vector3 direction = nextNode.transform.position - thisPos;
         float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
         Quaternion q = Quaternion.AngleAxis(angle, Vector3.up);
-
-        //float dotProduct = Vector3.Dot(transform.TransformDirection(Vector2.up), direction);
-
-        // float snapThresh = 0.1f; //Snap threshold
-        // if(((dotProduct < snapThresh && dotProduct > 0 && dotProduct < 1) || (dotProduct > -snapThresh && dotProduct < 0 && dotProduct > -1)) && turning) {
-        //     transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        //     moveStartPos = transform.position;
-
-        //     //keep canvas readable
-        //     if(canvas != null) canvas.transform.rotation = Quaternion.identity;
-
-        //     NextState();
-        // }
+        
         transform.rotation = Quaternion.Slerp(transform.rotation, q, turnSpeed);
         turning = true;
-    }
-
-    private void UpdateWheels() {
-        for(int i = 0; i < wheelColliders.Count; i ++) {
-            Vector3 pos;
-            Quaternion rot;
-            wheelColliders[i].GetWorldPose(out pos, out rot);
-            visualWheels[i].position = pos;
-            visualWheels[i].rotation = rot;
-        }
     }
 
     public void Brake() {
