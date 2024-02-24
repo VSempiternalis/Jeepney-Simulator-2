@@ -72,7 +72,10 @@ public class Despawner : MonoBehaviour {
         
         //[!] if(GetComponent<PersonController>() != null && (GetComponent<PersonController>().state == "Waiting to drop" || GetComponent<PersonController>().state == "Waiting for change" || GetComponent<PersonController>().state == "Waiting to pay")) return;
 
-        if(objectType == "Vehicle") spawnArea.vicCount --;
+        if(objectType == "Vehicle") {
+            spawnArea.vicCount --;
+            GetComponent<aiCarController>().Reset();
+        }
         else if(objectType == "Person") {
             spawnArea.personCount --;
             GetComponent<PersonHandler>().Reset();

@@ -521,7 +521,8 @@ public class PersonHandler : MonoBehaviour {
         float moveX = Random.Range(currentSpot.position.x - (currentSpot.localScale.x/2), currentSpot.position.x + (currentSpot.localScale.x/2));
         float moveZ = Random.Range(currentSpot.position.z - (currentSpot.localScale.z/2), currentSpot.position.z + (currentSpot.localScale.z/2));
 
-        posDestinations.Add(new Vector3(moveX, currentSpot.position.y + yUp, moveZ));
+        posDestinations.Add(new Vector3(moveX, currentSpot.position.y, moveZ));
+        // posDestinations.Add(new Vector3(moveX, currentSpot.position.y + yUp, moveZ));
         SetState("Wandering");
     }
 

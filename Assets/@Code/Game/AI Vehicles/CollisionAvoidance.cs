@@ -6,7 +6,7 @@ public class CollisionAvoidance : MonoBehaviour {
     public int triggerCount;
     private int emptyCheckTime = 5;
     [SerializeField] private List<GameObject> triggers = new List<GameObject>();
-    [SerializeField] private int checkCount;
+    // [SerializeField] private int checkCount;
     [SerializeField] private LayerMask layerMask;
 
     private void Start() {
@@ -14,8 +14,8 @@ public class CollisionAvoidance : MonoBehaviour {
         // InvokeRepeating("EmptyCheck", 0f, emptyCheckTime);
     }
 
-    private void EmptyCheck() {
-        checkCount ++;
+    public void EmptyCheck() {
+        // checkCount ++;
         triggerCount = 0;
         gameObject.SetActive(false);
         gameObject.SetActive(true);

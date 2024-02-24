@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Light
   - SPAWN - Vehicle
+  - StreetLamp
+  - LampLens
+  - HouseWindow
   layers:
   - Default
   - TransparentFX
@@ -26,7 +29,7 @@ TagManager:
   - Storage
   - Item
   - NPC
-  - 
+  - STOPPER
   - 
   - 
   - 

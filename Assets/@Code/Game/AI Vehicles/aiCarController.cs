@@ -22,6 +22,7 @@ public class aiCarController : MonoBehaviour {
     [Header("COMPONENTS")]
     private AudioSource audioSource;
     [SerializeField] private AudioClip audioCrash;
+    [SerializeField] private CollisionAvoidance ca;
 
     [Space(10)]
     [Header("NODES")]
@@ -61,8 +62,9 @@ public class aiCarController : MonoBehaviour {
 
     private void FixedUpdate() {
         if(nextNode == null) {
-            Destroy(GetComponent<aiCarInput>());
-            Destroy(GetComponent<aiCarController>());
+            return;
+            // Destroy(GetComponent<aiCarInput>());
+            // Destroy(GetComponent<aiCarController>());
         }
         if(!isActive) return;
 
@@ -72,22 +74,6 @@ public class aiCarController : MonoBehaviour {
 
         motor = maxMotorTorque * moveInput.y;
 
-        // foreach(AxleInfo axleInfo in axleInfos) {
-        //     if(axleInfo.steering) {
-        //         axleInfo.leftWheel.steerAngle = steering;
-        //         axleInfo.rightWheel.steerAngle = steering;
-        //     }
-        //     if(axleInfo.motor) {
-        //         axleInfo.leftWheel.motorTorque = motor;
-        //         axleInfo.rightWheel.motorTorque = motor;
-        //     }
-
-        //     //TURN STEER WHEELS
-        //     // if(!axleInfo.steering) return;
-        //     // axleInfo.leftWheel.transform.GetChild(0).Rotate(new Vector3(axleInfo.leftWheel.steerAngle, 0, 0));
-        //     // axleInfo.rightWheel.transform.GetChild(0).Rotate(new Vector3(0, 0, 0));
-        // }
-
         foreach(Wheel wheel in wheels) {
             wheel.wheelCollider.motorTorque = motor;
         }
@@ -96,12 +82,20 @@ public class aiCarController : MonoBehaviour {
         if(moveInput.y > 0) TurnToDest();
     }
 
+    public void Reset() {
+        ca.EmptyCheck();
+    }
+
     private void AnimateWheels() {
         foreach(Wheel wheel in wheels) {
-            Quaternion rot;
-            Vector3 pos;
-            wheel.wheelCollider.GetWorldPose(out pos, out rot);
-            wheel.wheelModel.transform.position = pos;
+            if(wheel.wheelCollider && wheel.wheelModel) {
+                Quaternion rot;
+                Vector3 pos;
+
+                wheel.wheelCollider.GetWorldPose(out pos, out rot);
+                wheel.wheelModel.transform.position = pos;
+                wheel.wheelModel.transform.rotation = rot;
+            }
         }
     }
 
@@ -159,7 +153,7 @@ public class aiCarController : MonoBehaviour {
             float relativeVelocity = other.relativeVelocity.magnitude;
             
             if (relativeVelocity > velocityThresh) 
-                audioSource.PlayOneShot(audioCrash);
+                if(audioSource) audioSource.PlayOneShot(audioCrash);
         }
     }
 }

@@ -46,9 +46,11 @@ public class aiCarInput : MonoBehaviour {
         }
 
         //CHECK IF NEAR NEXT NODE
-        distToNode = (Vector3.Distance(transform.position, carCon.nextNode.transform.position));
-        if(Vector3.Distance(transform.position, carCon.nextNode.transform.position) <= distToNodeThresh) {
-            NextNode();
+        if(carCon.nextNode) {
+            distToNode = (Vector3.Distance(transform.position, carCon.nextNode.transform.position));
+            if(Vector3.Distance(transform.position, carCon.nextNode.transform.position) <= distToNodeThresh) {
+                NextNode();
+            }
         }
 
         //moveInput.x = 1;
