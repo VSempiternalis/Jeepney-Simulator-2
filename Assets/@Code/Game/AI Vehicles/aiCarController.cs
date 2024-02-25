@@ -11,7 +11,7 @@ public class aiCarController : MonoBehaviour {
     [SerializeField] private float maxSteeringAngle;
     [SerializeField] private float brakeDrag;
     [SerializeField] private float freeDrag;
-    public bool isActive = true;
+    private bool isActive = true;
     public bool isBraking;
 
     private Vector2 moveInput;
@@ -23,6 +23,7 @@ public class aiCarController : MonoBehaviour {
     private AudioSource audioSource;
     [SerializeField] private AudioClip audioCrash;
     [SerializeField] private CollisionAvoidance ca;
+    [SerializeField] private ParticleSystem smokeParticles;
 
     [Space(10)]
     [Header("NODES")]
@@ -84,6 +85,12 @@ public class aiCarController : MonoBehaviour {
 
     public void Reset() {
         ca.EmptyCheck();
+    }
+
+    public void SetActive(bool newIsActive) {
+        isActive = newIsActive;
+        if(isActive) smokeParticles.Play();
+        else smokeParticles.Stop();
     }
 
     private void AnimateWheels() {

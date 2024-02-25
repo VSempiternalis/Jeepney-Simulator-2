@@ -210,8 +210,8 @@ public class SpawnArea : MonoBehaviour {
         //Audio
 
         //Set nodes
-        newVic.GetComponent<aiCarController>().isActive = true;
-        if(spot.GetComponent<VehicleSpawn>().node == null) newVic.GetComponent<aiCarController>().isActive = false;
+        newVic.GetComponent<aiCarController>().SetActive(true);
+        if(spot.GetComponent<VehicleSpawn>().node == null) newVic.GetComponent<aiCarController>().SetActive(false);
         newVic.GetComponent<aiCarController>().nextNode = spot.GetComponent<VehicleSpawn>().node;
 
         vicCount ++;

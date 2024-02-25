@@ -49,7 +49,7 @@ public class Despawner : MonoBehaviour {
     }
 
     public void Despawn() {
-        print("DESPAWNING " + name);
+        // print("DESPAWNING " + name);
         // if(despawning) return;
         // if(GetComponent<aiCarController>() != null && GetComponent<Test_script>() != null) return;
 
@@ -87,7 +87,7 @@ public class Despawner : MonoBehaviour {
     }
 
     private void BackToPool() {
-        print("BACK TO POOL " + name);
+        // print("BACK TO POOL " + name);
         transform.parent = pool;
         transform.localPosition = Vector3.zero;
         transform.rotation = pool.rotation;

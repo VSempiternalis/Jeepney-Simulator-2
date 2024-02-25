@@ -50,7 +50,7 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
     }
 
     public void AddItemRandom(GameObject newItem) {
-        print("Adding item: " + newItem.name);
+        // print("Adding item: " + newItem.name);
         //Remove new item from storage if stored
         // print("newItem.GetComponent<ItemHandler>().storage: " + newItem.GetComponent<ItemHandler>().storage);
         // print("newItem.GetComponent<ItemHandler>().storage.GetComponent<StorageHandler>(): " + newItem.GetComponent<ItemHandler>().storage.GetComponent<StorageHandler>());

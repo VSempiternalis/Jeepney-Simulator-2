@@ -7,7 +7,14 @@ public class AnimationSetter : MonoBehaviour {
 
     private void Start() {
         ani = GetComponent<Animator>();
-        ani.SetInteger("State", animationInt);       
+        InvokeRepeating(nameof(CheckAnimationState), 0f, 1f);
+    }
+
+    // Method to check animation state every second
+    private void CheckAnimationState() {
+        if (ani.GetInteger("State") != animationInt) {
+            ani.SetInteger("State", animationInt); 
+        }
     }
 }
 

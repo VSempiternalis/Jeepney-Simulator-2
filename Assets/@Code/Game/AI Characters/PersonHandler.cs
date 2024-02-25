@@ -217,7 +217,7 @@ public class PersonHandler : MonoBehaviour {
             //GetComponent<Test_script>().Hail();
             carCon = player.carCon;
 
-            print("Car mag: " + carCon.GetComponent<Rigidbody>().velocity.magnitude + " mag thresh: " + magnitudeThresh);
+            // print("Car mag: " + carCon.GetComponent<Rigidbody>().velocity.magnitude + " mag thresh: " + magnitudeThresh);
             if(carCon.GetComponent<Rigidbody>().velocity.magnitude <= magnitudeThresh) {
                 print("Past magnitude thresh");
                 MakeMoveToVehicle();
@@ -308,6 +308,7 @@ public class PersonHandler : MonoBehaviour {
 
         Vector3 exitPos = new Vector3();
         Vector3 dropPos = dropSpot.GetDropPos();
+        print(name + " DROPPING! Dropspot: " + dropSpot.name + " drop pos: " + dropPos);
 
         if(Vector3.Distance(carCon.pointPassengerExitLeft.position, dropPos) < Vector3.Distance(carCon.pointPassengerExitRight.position, dropPos)) exitPos = carCon.pointPassengerExitLeft.position;
         else exitPos = carCon.pointPassengerExitRight.position;
@@ -492,13 +493,13 @@ public class PersonHandler : MonoBehaviour {
     #region STATE SETTERS ==================================================================================================================
 
     public void Reset() {
-        print("Resetting: " + name);
+        // print("Resetting: " + name);
         MakeWait();
         posDestinations.Clear();
     }
 
     public void CrossRoad(Transform otherCrosswalk) {
-        print(name + " crossing road");
+        // print(name + " crossing road");
         crossRoad = otherCrosswalk;
         crossWaitTime = Time.time + Random.Range(crossWaitTimeRange.x, crossWaitTimeRange.y + 1);
 
