@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Door Left
+  m_Name: Door Right
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_ValidKeywords:
   - _METALLICSPECGLOSSMAP
@@ -15,7 +15,7 @@ Material:
   - _OCCLUSIONMAP
   m_InvalidKeywords: []
   m_LightmapFlags: 6
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap:
@@ -25,11 +25,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: f2ad9e9d90e945b4c8c5e8e1f20b708d, type: 3}
+        m_Texture: {fileID: 2800000, guid: dad58597d51c32549be93a4c3806b84e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: db1caed5a86d96f44bc847d68417b58f, type: 3}
+        m_Texture: {fileID: 2800000, guid: ff5cd2c0f869dd94fa98327676b3cf7a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -49,15 +49,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: f2ad9e9d90e945b4c8c5e8e1f20b708d, type: 3}
+        m_Texture: {fileID: 2800000, guid: dad58597d51c32549be93a4c3806b84e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
-        m_Texture: {fileID: 2800000, guid: 68da291aa8ce35744a064ef7cbc1b7d2, type: 3}
+        m_Texture: {fileID: 2800000, guid: 54f7aad92232936498033b0450f7ec53, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
-        m_Texture: {fileID: 2800000, guid: 663c3d4bdbb5a304b91280b9b3019efd, type: 3}
+        m_Texture: {fileID: 2800000, guid: 246f65a192580934484c4b5f8325e4f2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
@@ -109,8 +109,8 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.70980394, g: 0.74509805, b: 0.35686275, a: 1}
-    - _Color: {r: 0.70980394, g: 0.74509805, b: 0.35686272, a: 1}
+    - _BaseColor: {r: 0.711688, g: 0.745283, b: 0.35506406, a: 1}
+    - _Color: {r: 0.711688, g: 0.745283, b: 0.355064, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
