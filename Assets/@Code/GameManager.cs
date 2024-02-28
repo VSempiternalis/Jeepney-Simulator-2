@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using TMPro;
 
 public class GameManager : MonoBehaviour {
     public bool isPassengerPickups;
@@ -8,9 +9,15 @@ public class GameManager : MonoBehaviour {
     public int populationCount;
     public int trafficCount;
     public int dayCount;
+    public int deposit;
 
     //CAREER
     public bool isHardMode;
+
+    [Space(10)]
+    [Header("OFFICE PANEL")]
+    [SerializeField] private GameObject freeridePanel;
+    [SerializeField] private TMP_Text freerideSettingsText;
 
     [Space(10)]
     [Header("LOADING SCREEN")]
@@ -41,14 +48,22 @@ public class GameManager : MonoBehaviour {
 
     private void LoadFreerideSettings() {
         dayCount = PlayerPrefs.GetInt("Freeride_DayCount", 1);
+        deposit = PlayerPrefs.GetInt("Freeride_Deposit", 0);
         isPassengerPickups = PlayerPrefs.GetInt("Freeride_IsPassengerPickup", 1) == 1? true:false;
+        isEvents = PlayerPrefs.GetInt("Freeride_IsEvents", 1) == 1? true:false;
         populationCount = PlayerPrefs.GetInt("Freeride_PopulationCount", 50);
         trafficCount = PlayerPrefs.GetInt("Freeride_TrafficCount", 25);
-        isEvents = PlayerPrefs.GetInt("Freeride_IsEvents", 1) == 1? true:false;
 
         SpawnArea.current.maxVicCount = trafficCount;
         SpawnArea.current.maxPersonCount = populationCount;
         PlayerDriveInput.current.isTakingPassengers = isPassengerPickups;
+
+        freerideSettingsText.text = dayCount + "\n" +
+            "P" + deposit + "\n" +
+            (isPassengerPickups? "ON":"OFF") + "\n" +
+            (isEvents? "ON":"OFF") + "\n" +
+            populationCount + "\n" +
+            trafficCount + "\n";
     }
 
     private void LoadCareerSettings() {

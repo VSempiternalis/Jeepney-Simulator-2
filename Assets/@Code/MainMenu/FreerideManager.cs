@@ -1,11 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class FreerideManager : MonoBehaviour {
     [SerializeField] private Toggle togglePassengerPickups;
     [SerializeField] private Toggle toggleEvents;
     [SerializeField] private Slider sliderPopulationCount;
     [SerializeField] private Slider sliderTrafficCount;
+
+    [SerializeField] private TMP_Text dayText;
 
     private void Start() {
         
@@ -20,6 +23,14 @@ public class FreerideManager : MonoBehaviour {
         SetEvents(toggleEvents.isOn);
         SetPopulationCount(Mathf.RoundToInt(sliderPopulationCount.value));
         SetTrafficCount(Mathf.RoundToInt(sliderTrafficCount.value));
+    }
+
+    public void SetDay(int newDay) {
+        PlayerPrefs.SetInt("Freeride_DayCount", newDay);
+    }
+
+    public void SetDeposit(int newDeposit) {
+        PlayerPrefs.SetInt("Freeride_Deposit", newDeposit);
     }
 
     public void SetPassengerPickups(bool newVal) {
