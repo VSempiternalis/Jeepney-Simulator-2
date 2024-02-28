@@ -267,6 +267,7 @@ public class Settings : MonoBehaviour {
     }
 
     public void SetFOV(float newFOV) {
+        if(!playerCam) return;
         // print("Setting fov to: " + newFOV);
         playerCam.GetComponent<Zoom>().defaultFOV = newFOV;
         playerCam.GetComponent<Camera>().fieldOfView = newFOV;
@@ -283,6 +284,7 @@ public class Settings : MonoBehaviour {
     #region GAME
 
     public void SetMouseSens(float newMouseSens) {
+        if(!playerCam) return;
         playerCam.GetComponent<FirstPersonLook>().sensitivity = newMouseSens;
         mouseSensText.text = Mathf.Round(newMouseSens*10.0f) * 0.01f + "";
         mouseSensSlider.value = newMouseSens;
@@ -292,6 +294,7 @@ public class Settings : MonoBehaviour {
     }
 
     public void SetZoomSens(float newZoomSens) {
+        if(!playerCam) return;
         playerCam.GetComponent<Zoom>().sensitivity = newZoomSens;
         zoomSensText.text = newZoomSens.ToString();
         zoomSensSlider.value = newZoomSens;
@@ -301,6 +304,7 @@ public class Settings : MonoBehaviour {
     }
 
     public void SetRenderDist(float newRenderDist) {
+        if(!playerCam) return;
         float renderDist = newRenderDist*100f;
         renderDistSlider.value = newRenderDist;
 

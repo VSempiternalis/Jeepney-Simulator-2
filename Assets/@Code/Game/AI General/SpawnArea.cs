@@ -6,6 +6,7 @@ using TGStylizedWorld;
 public class SpawnArea : MonoBehaviour {
     public static SpawnArea current;
     public int spawnDist;
+    [SerializeField] private bool isMainMenuSpawn;
 
     [Space(10)]
     [Header("SPAWNING")]
@@ -48,8 +49,10 @@ public class SpawnArea : MonoBehaviour {
 
     private void Start() {
         world = GameObject.Find("WORLD").transform;
-        StartCoroutine(SpawnLoop());
+        // else 
         spawnDist = PlayerPrefs.GetInt("Settings_SpawnDist", 100);
+        print("spawndist: " + spawnDist);
+        StartCoroutine(SpawnLoop());
         transform.localScale = new Vector3(spawnDist, spawnDist, spawnDist);
         // StartCoroutine(PersonSpawnLoop());
 
@@ -71,6 +74,8 @@ public class SpawnArea : MonoBehaviour {
         // int vicLayerMask = 1 << 20;
 
         while (true) {
+            print("Spawndist: " + spawnDist);
+            if(isMainMenuSpawn) spawnDist = 130;
             Collider[] spawns = Physics.OverlapSphere(transform.position, spawnDist, spawnsLayerMask);
 
             for(int i = 0; i < spawns.Length; i++) {

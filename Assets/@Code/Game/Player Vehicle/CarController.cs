@@ -105,10 +105,12 @@ public class CarController : MonoBehaviour {
     private KeyCode Key_GearUp;
     private KeyCode Key_GearDown;
     private KeyCode Key_TowTruck;
+    private KeyCode Key_Map;
 
     [Space(10)]
     [Header("OTHERS")]
     [SerializeField] private ParticleSystem smokeParticles;
+    [SerializeField] private Tablet tablet;
 
     [Space(10)]
     [Header("WHEEL AND AXLES")]
@@ -169,16 +171,17 @@ public class CarController : MonoBehaviour {
 
     private void OnKeyChangeEvent() {
         //Set keys
-        Key_DriveForward = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_DriveForward", "W"));;
-        Key_DriveBackward = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_DriveBackward", "S"));;
-        Key_SteerLeft = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_SteerLeft", "A"));;
-        Key_SteerRight = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_SteerRight", "D"));;
-        Key_Headlights = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Headlights", "R"));;
-        Key_Horn = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Horn", "F"));;
-        Key_Brake = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Brake", "Space"));;
-        Key_GearUp = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GearUp", "LeftShift"));;
-        Key_GearDown = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GearDown", "LeftControl"));;
-        Key_TowTruck = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_TowTruck", "T"));;
+        Key_DriveForward = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_DriveForward", "W"));
+        Key_DriveBackward = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_DriveBackward", "S"));
+        Key_SteerLeft = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_SteerLeft", "A"));
+        Key_SteerRight = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_SteerRight", "D"));
+        Key_Headlights = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Headlights", "R"));
+        Key_Horn = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Horn", "F"));
+        Key_Brake = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Brake", "Space"));
+        Key_GearUp = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GearUp", "LeftShift"));
+        Key_GearDown = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GearDown", "LeftControl"));
+        Key_TowTruck = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_TowTruck", "T"));
+        Key_Map = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Map", "Tab"));
     }
 
     public void GetInput() {
@@ -206,6 +209,11 @@ public class CarController : MonoBehaviour {
 
         //Braking
         brakeInput = Input.GetKey(Key_Brake);
+
+        //Map
+        if(Input.GetKeyDown(Key_Map)) {
+            tablet.Toggle();
+        }
         
         //Lights
         if(Input.GetKeyDown(Key_Headlights)) headlights.SetActive(!headlights.activeSelf);
@@ -293,6 +301,10 @@ public class CarController : MonoBehaviour {
     }
 
     // DRIVING ============================================================================
+
+    public void DriverExit() {
+        tablet.Out();
+    }
 
     public void SetEngine(bool newIsOn) {
         isEngineOn = newIsOn;
