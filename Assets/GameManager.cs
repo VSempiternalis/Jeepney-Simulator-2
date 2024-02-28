@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
     public bool isEvents;
     public int populationCount;
     public int trafficCount;
+    public int dayCount;
 
     //CAREER
     public bool isHardMode;
@@ -39,10 +40,15 @@ public class GameManager : MonoBehaviour {
     //=========================================================================================
 
     private void LoadFreerideSettings() {
+        dayCount = PlayerPrefs.GetInt("Freeride_DayCount", 1);
         isPassengerPickups = PlayerPrefs.GetInt("Freeride_IsPassengerPickup", 1) == 1? true:false;
-        isEvents = PlayerPrefs.GetInt("Freeride_IsEvents", 1) == 1? true:false;
         populationCount = PlayerPrefs.GetInt("Freeride_PopulationCount", 50);
         trafficCount = PlayerPrefs.GetInt("Freeride_TrafficCount", 25);
+        isEvents = PlayerPrefs.GetInt("Freeride_IsEvents", 1) == 1? true:false;
+
+        SpawnArea.current.maxVicCount = trafficCount;
+        SpawnArea.current.maxPersonCount = populationCount;
+        PlayerDriveInput.current.isTakingPassengers = isPassengerPickups;
     }
 
     private void LoadCareerSettings() {

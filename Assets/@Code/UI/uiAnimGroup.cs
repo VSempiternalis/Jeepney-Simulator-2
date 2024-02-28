@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class uiAnimGroup : MonoBehaviour {
+    public bool isIn;
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     [SerializeField] private bool isActivateOnStart;
@@ -72,6 +73,8 @@ public class uiAnimGroup : MonoBehaviour {
         if(isFadeIn) {
             LeanTween.alphaCanvas(canvasGroup, 1, inFadeTime).setEase(inFadeEasingType);
         }
+
+        isIn = true;
     }
 
     public void Out() {
@@ -94,5 +97,7 @@ public class uiAnimGroup : MonoBehaviour {
         if(isFadeOut) {
             LeanTween.alphaCanvas(canvasGroup, 0, outFadeTime).setEase(outFadeEasingType);
         }
+
+        isIn = false;
     }
 }

@@ -33,16 +33,25 @@ public class PlayerInteraction : MonoBehaviour {
     [SerializeField] private int layerInteractable;
     [SerializeField] private int layerItem;
     [SerializeField] private int layerStorage;
+    [SerializeField] private int layerDrop;
+    [SerializeField] private int layerArea;
 
     [Space(10)]
     [Header("UI")]
     [SerializeField] private TMP_Text areaUI;
-    [SerializeField] private GameObject dropUI;
+    // [SerializeField] private GameObject dropUI;
     [SerializeField] private GameObject onhandItemPF;
     [SerializeField] private Transform onhandUI;
     [SerializeField] private TMP_Text tooltipHeader;
     [SerializeField] private TMP_Text tooltipText;
     [SerializeField] private uiAnimGroup gameHUD;
+
+    [Space(10)]
+    [Header("DESTINATIONS")]
+    private bool inDrop;
+    private bool inArea;
+    [SerializeField] private uiAnimGroup playerDestUI;
+    [SerializeField] private uiAnimGroup inAreaUI;
 
     // [Space(10)]
     // [Header("Keybinds")]
@@ -271,4 +280,72 @@ public class PlayerInteraction : MonoBehaviour {
     //     Key_GearDown = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GearDown", "LeftControl"));;
     //     Key_TowTruck = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_TowTruck", "T"));;
     // }
+    
+
+    private void OnTriggerEnter(Collider other) {
+        GameObject go = other.gameObject;
+         
+        if(!playerDestUI.isIn && !inDrop && go.layer == layerDrop) { // && areaUI.text != other.name
+            inDrop = true;
+
+            playerDestUI.In();
+            // if(areaUI.color != colorMain) areaUI.color = colorMain;
+            // if(areaUI.transform.parent.position.y != 540) LeanTween.moveLocalY(areaUI.transform.parent.gameObject, 540f, 1f).setEaseOutElastic();
+            // if(areaUI.transform.parent.position.y != 1080f) areaUI.transform.parent.LeanMoveY(1080f, 1f).setEaseOutElastic();
+            if(areaUI.text != other.name) areaUI.text = other.name;
+            // if(areaUI.transform.parent.lossyScale.x != 1) LeanTween.scale(areaUI.transform.parent.gameObject, new Vector3(1f, 1f, 1f), 0.5f).setEaseOutExpo();
+
+            //Audio
+            // audioHandler.Play(8);
+        } 
+        // else if(go.layer == layerArea && !inDrop) { // && areaUI.text != other.name
+        //     inArea = true;
+
+        //     inAreaUI.In();
+        //     // if(areaUI.color != colorSub) areaUI.color = colorSub;
+        //     // if(areaUI.transform.parent.position.y != 540) 
+        //     // LeanTween.moveLocalY(areaUI.transform.parent.gameObject, 540f, 1f).setEaseOutElastic();
+        //     // if(areaUI.transform.parent.position.y != 0) 
+        //     // areaUI.transform.parent.LeanMoveY(1080f, 1f).setEaseOutElastic();
+        //     // if(areaUI.text != other.name) areaUI.text = other.name;
+        //     // if(areaUI.transform.parent.lossyScale.x != 1) LeanTween.scale(areaUI.transform.parent.gameObject, new Vector3(1f, 1f, 1f), 0.5f).setEaseOutExpo();
+        // }
+    }
+
+    private void OnTriggerStay(Collider other) {
+        GameObject go = other.gameObject;
+
+        if(!inAreaUI.isIn && go.layer == layerArea) { // && areaUI.text != other.name
+            inArea = true;
+
+            inAreaUI.In();
+            // if(areaUI.color != colorSub) areaUI.color = colorSub;
+            // if(areaUI.transform.parent.position.y != 540) 
+            // LeanTween.moveLocalY(areaUI.transform.parent.gameObject, 540f, 1f).setEaseOutElastic();
+            // if(areaUI.transform.parent.position.y != 0) 
+            // areaUI.transform.parent.LeanMoveY(1080f, 1f).setEaseOutElastic();
+            // if(areaUI.text != other.name) areaUI.text = other.name;
+            // if(areaUI.transform.parent.lossyScale.x != 1) LeanTween.scale(areaUI.transform.parent.gameObject, new Vector3(1f, 1f, 1f), 0.5f).setEaseOutExpo();
+        }
+    }
+
+    private void OnTriggerExit(Collider other) {
+        GameObject go = other.gameObject;
+        //if(gameObject.layer != 13) return;
+        if(playerDestUI.isIn && go.layer == layerDrop) {
+            inDrop = false;
+            playerDestUI.Out();
+            // if(areaUI.color != colorSub) areaUI.color = colorSub;
+
+            //Audio
+            // if(!GetComponent<AudioSource>().isPlaying) audioHandler.Play(9);
+        }
+        if(inAreaUI.isIn && go.layer == layerArea) {
+            inAreaUI.Out();
+            // inArea = false;
+            // LeanTween.moveLocalY(areaUI.transform.parent.gameObject, 625f, 1f).setEaseOutElastic();
+            // areaUI.transform.parent.LeanMoveY(1180f, 1f).setEaseOutElastic();
+            // areaUI.text = "";
+        }
+    }
 }

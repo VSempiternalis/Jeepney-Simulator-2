@@ -4,6 +4,7 @@ public class Despawner : MonoBehaviour {
     [SerializeField] private string objectType;
     [SerializeField] private Transform pool;
 
+    [SerializeField] private bool isMainMenuDespawner;
     private int despawnDist = 100;
 
     private float nextSecUpdate;
@@ -45,7 +46,8 @@ public class Despawner : MonoBehaviour {
     private void DistanceCheck() {
         float dist = Vector3.Distance(player.position, transform.position);
         // print("DIST: " + dist);
-        if(dist >= despawnDist + 10) Despawn();
+        if(isMainMenuDespawner && dist >= 140) Despawn();
+        if(!isMainMenuDespawner && dist >= despawnDist + 10) Despawn();
     }
 
     public void Despawn() {
