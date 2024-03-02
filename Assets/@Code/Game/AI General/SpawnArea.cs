@@ -74,7 +74,7 @@ public class SpawnArea : MonoBehaviour {
         // int vicLayerMask = 1 << 20;
 
         while (true) {
-            print("Spawndist: " + spawnDist);
+            // print("Spawndist: " + spawnDist);
             if(isMainMenuSpawn) spawnDist = 130;
             Collider[] spawns = Physics.OverlapSphere(transform.position, spawnDist, spawnsLayerMask);
 
@@ -129,7 +129,7 @@ public class SpawnArea : MonoBehaviour {
     }
 
     private void TrySpawnPerson(Transform spawn) {
-        print("tryspawnperson");
+        // print("tryspawnperson");
         if(personCount >= maxPersonCount || personPool.childCount == 0) return;
 
         int toSpawn;

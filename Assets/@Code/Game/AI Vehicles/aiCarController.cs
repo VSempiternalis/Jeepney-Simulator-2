@@ -22,7 +22,8 @@ public class aiCarController : MonoBehaviour {
     [Header("COMPONENTS")]
     private AudioSource audioSource;
     [SerializeField] private AudioClip audioCrash;
-    [SerializeField] private CollisionAvoidance ca;
+    // [SerializeField] 
+    private CollisionAvoidance ca;
     [SerializeField] private ParticleSystem smokeParticles;
 
     [Space(10)]
@@ -55,6 +56,7 @@ public class aiCarController : MonoBehaviour {
         // maxMotorTorque = gearFactor;
         GetComponent<Rigidbody>().drag = freeDrag;
         audioSource = GetComponent<AudioSource>();
+        ca = GetComponent<aiCarInput>().CA_frontMed;
     }
 
     private void Update() {

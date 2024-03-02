@@ -11,7 +11,7 @@ public class CollisionAvoidance : MonoBehaviour {
 
     private void Start() {
         triggerCount = 0;
-        // InvokeRepeating("EmptyCheck", 0f, emptyCheckTime);
+        InvokeRepeating("EmptyCheck", 0f, emptyCheckTime);
     }
 
     public void EmptyCheck() {

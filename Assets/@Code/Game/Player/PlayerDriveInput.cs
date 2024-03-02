@@ -20,23 +20,44 @@ public class PlayerDriveInput : MonoBehaviour {
     [Space(10)]
     [Header("SEATING")]
     [SerializeField] private Transform player;
+    [SerializeField] private PlayerInteraction pi;
     [SerializeField] private Transform playerModel;
     [SerializeField] private TwoBoneIKConstraint leftHandIK;
     [SerializeField] private TwoBoneIKConstraint rightHandIK;
     [SerializeField] private Vector3 localDrivePos;
     [SerializeField] private Vector3 localSitPos;
 
+    [Space(10)]
+    [Header("Keybinds")]
+    private KeyCode Key_GiveChange;
+    private KeyCode Key_ChangerScrollUp;
+    private KeyCode Key_ChangerScrollDown;
+    private KeyCode Key_TakePayment;
+
     private void Awake() {
         current = this;
     }
 
     private void Start() {
+        pi = GetComponent<PlayerInteraction>();
 
+        OnKeyChangeEvent();
     }
 
     private void Update() {
-        if(isDriving) carCon.GetInput();
-        
+        if(isDriving) {
+            carCon.GetInput();
+
+            //Get pay
+            if(Input.GetKeyDown(Key_TakePayment)) pi.GrabAllFromStorage(carCon.payPoint.GetComponent<StorageHandler>());
+            //Give change
+            else if(Input.GetKeyDown(Key_GiveChange)) pi.PutAllInStorage(carCon.changePoint.GetComponent<StorageHandler>());
+            //Scroll up
+            else if(Input.GetKeyDown(Key_ChangerScrollUp)) carCon.changePoint.GetComponent<ChangeHandler>().Scroll(1);
+            //Scroll down
+            else if(Input.GetKeyDown(Key_ChangerScrollDown)) carCon.changePoint.GetComponent<ChangeHandler>().Scroll(-1);
+        }
+
         leftHandIK.weight = isDriving? 1.0f:0f;
         rightHandIK.weight = isDriving? 1.0f:0f;
     }
@@ -98,5 +119,12 @@ public class PlayerDriveInput : MonoBehaviour {
         }
 
         SetIsSitting(isDriving, true, seat);
+    }
+
+    private void OnKeyChangeEvent() {
+        Key_GiveChange = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GiveChange", "R"));
+        Key_ChangerScrollUp = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_ChangerScrollUp", "E"));
+        Key_ChangerScrollDown = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_ChangerScrollDown", "Q"));
+        Key_TakePayment = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_TakePayment", "F"));
     }
 }

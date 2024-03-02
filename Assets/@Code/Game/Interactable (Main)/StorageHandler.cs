@@ -6,13 +6,14 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
     public List<GameObject> items;
     private AudioHandler audioHandler;
     [SerializeField] private Transform goober; //hitpos to localPos
+    [SerializeField] private bool isPayPoint; //updates player UI
 
     private void Start() {
         audioHandler = GetComponent<AudioHandler>();
     }
 
     private void Update() {
-        
+
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -21,6 +22,11 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
 
     private void AddValue(int newValue) {
         value += newValue;
+
+        if(isPayPoint) {
+            if(value > 0) PayChangeUIManager.current.SetStorageValue(value);
+            else PayChangeUIManager.current.SetStorageValue(0);
+        }
     }
 
     public void AddItem(GameObject newItem, Vector3 placePos) {

@@ -53,19 +53,6 @@ public class PlayerInteraction : MonoBehaviour {
     [SerializeField] private uiAnimGroup playerDestUI;
     [SerializeField] private uiAnimGroup inAreaUI;
 
-    // [Space(10)]
-    // [Header("Keybinds")]
-    // private KeyCode Key_DriveForward;
-    // private KeyCode Key_DriveBackward;
-    // private KeyCode Key_SteerLeft;
-    // private KeyCode Key_SteerRight;
-    // private KeyCode Key_Headlights;
-    // private KeyCode Key_Horn;
-    // private KeyCode Key_Brake;
-    // private KeyCode Key_GearUp;
-    // private KeyCode Key_GearDown;
-    // private KeyCode Key_TowTruck;
-
     private void Start() {
         // OnKeyChangeEvent();
     }
@@ -173,14 +160,7 @@ public class PlayerInteraction : MonoBehaviour {
         //MID CLICK
         else if(mMouseDown) {
             if(itemOver.layer == layerStorage) {
-                for(int i = 0; i < maxItemsOnHand; i++) {
-                    List<GameObject> items = itemOver.GetComponent<StorageHandler>().items;
-                    // print("i: " + i + " items: " + items.Count + " right hand items: " + rightHand.childCount);
-                    if(items.Count == 0 || rightHand.childCount == maxItemsOnHand) break;
-
-                    rightHand.GetComponent<StorageHandler>().AddItemRandom(items[0]);
-                    UpdateOnhandUI();
-                }
+                GrabAllFromStorage(itemOver.GetComponent<StorageHandler>());
                 //AUDIO
                 // audioHandler.Play(0);
             }
@@ -199,6 +179,34 @@ public class PlayerInteraction : MonoBehaviour {
         if(mouseScroll != 0 && itemOver.GetComponent<IScrollable>() != null) {
             itemOver.GetComponent<IScrollable>().Scroll(mouseScroll);
         }
+    }
+
+    public void GrabAllFromStorage(StorageHandler storage) {
+        for(int i = 0; i < maxItemsOnHand; i++) {
+            List<GameObject> items = storage.items;
+            // print("i: " + i + " items: " + items.Count + " right hand items: " + rightHand.childCount);
+            if(items.Count == 0 || rightHand.childCount == maxItemsOnHand) break;
+
+            rightHand.GetComponent<StorageHandler>().AddItemRandom(items[0]);
+        }
+        UpdateOnhandUI();
+    }
+
+    public void PutAllInStorage(StorageHandler storage) {
+        List<GameObject> toStore = new List<GameObject>();
+
+        foreach(Transform item in rightHand) {
+            // print("[1] Putting in storage: " + item.name + " items total: " + rightHand.childCount);
+            toStore.Add(item.gameObject);
+            // storage.AddItemRandom(item.gameObject);
+            // UpdateOnhandUI();
+        }
+
+        foreach(GameObject item in toStore) {
+            // print("[2] Putting in storage: " + item.name + " items total: " + rightHand.childCount);
+            storage.AddItemRandom(item.gameObject);
+        }
+        UpdateOnhandUI();
     }
 
     private void TakeItemOver() {

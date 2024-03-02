@@ -43,7 +43,7 @@ public class ChangeHandler : MonoBehaviour, ITooltipable, IScrollable {
     }
 
     public void Scroll(float direction) {
-        print("ChangeHandler Scrolling");
+        // print("ChangeHandler Scrolling");
         if(changees.Count <= 1) return;
 
         int currentChangeeIndex = changees.IndexOf(currentChangee);
@@ -75,12 +75,15 @@ public class ChangeHandler : MonoBehaviour, ITooltipable, IScrollable {
             //     changeText.text += GetText();
             // } else {
             // }
-        } 
+        }
+
+        PayChangeUIManager.current.SetChangeText(changeText.text);
     }
 
     public void UpdateText() {
         if(changees.Count == 0) {
             changeText.text = "CHANGE";
+            PayChangeUIManager.current.SetChangeText(changeText.text);
         } else if(changees.Contains(currentChangee)) {
             SetChangee(changees.IndexOf(currentChangee));
         } else {

@@ -41,7 +41,7 @@ public class SeatHandler : MonoBehaviour, IInteractable, ITooltipable {
             player.SetParent(transform);
             player.localPosition = localPosPlayer;
             player.localEulerAngles = Vector3.zero;
-            print("!player y rot: " + player.localRotation.y);
+            // print("!player y rot: " + player.localRotation.y);
         }
 
         if(audioSource) audioSource.Play();
