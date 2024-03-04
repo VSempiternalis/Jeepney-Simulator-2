@@ -4,12 +4,16 @@ using System.Collections;
 using TMPro;
 
 public class GameManager : MonoBehaviour {
-    public bool isPassengerPickups;
-    public bool isEvents;
-    public int populationCount;
-    public int trafficCount;
     public int dayCount;
     public int deposit;
+    public bool isPassengerPickups;
+    public bool isPayments;
+    public bool isEvents;
+    public bool isShifts;
+    public int populationCount;
+    public int trafficCount;
+    public int shiftLength;
+    public float floatTime;
 
     //CAREER
     public bool isHardMode;
@@ -50,9 +54,13 @@ public class GameManager : MonoBehaviour {
         dayCount = PlayerPrefs.GetInt("Freeride_DayCount", 1);
         deposit = PlayerPrefs.GetInt("Freeride_Deposit", 0);
         isPassengerPickups = PlayerPrefs.GetInt("Freeride_IsPassengerPickup", 1) == 1? true:false;
+        isPayments = PlayerPrefs.GetInt("Freeride_IsPayments", 1) == 1? true:false;
         isEvents = PlayerPrefs.GetInt("Freeride_IsEvents", 1) == 1? true:false;
+        isShifts = PlayerPrefs.GetInt("Freeride_IsShifts", 1) == 1? true:false;
         populationCount = PlayerPrefs.GetInt("Freeride_PopulationCount", 50);
         trafficCount = PlayerPrefs.GetInt("Freeride_TrafficCount", 25);
+        shiftLength = PlayerPrefs.GetInt("Freeride_ShiftLength", 25);
+        floatTime = PlayerPrefs.GetFloat("Freeride_FloatTime", 0f);
 
         SpawnArea.current.maxVicCount = trafficCount;
         SpawnArea.current.maxPersonCount = populationCount;
@@ -61,9 +69,12 @@ public class GameManager : MonoBehaviour {
         freerideSettingsText.text = dayCount + "\n" +
             "P" + deposit + "\n" +
             (isPassengerPickups? "ON":"OFF") + "\n" +
+            (isPayments? "ON":"OFF") + "\n" +
             (isEvents? "ON":"OFF") + "\n" +
+            (isShifts? "ON":"OFF") + "\n" +
             populationCount + "\n" +
-            trafficCount + "\n";
+            trafficCount + "\n"+
+            shiftLength + "\n";
     }
 
     private void LoadCareerSettings() {
@@ -93,6 +104,10 @@ public class GameManager : MonoBehaviour {
     }
 
     private void LoadCareer() {
+    
+    }
+
+    private void SaveGame() {
     
     }
 

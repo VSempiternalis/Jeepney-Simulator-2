@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2966226081897991764}
   - component: {fileID: 2966226081897991765}
   - component: {fileID: 2966226081897991766}
-  - component: {fileID: 198909950853507848}
+  - component: {fileID: 1815945153719623673}
   m_Layer: 0
   m_Name: Intersection_X_32m_A
   m_TagString: Untagged
@@ -29,6 +29,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3654972635168311634}
   m_RootOrder: 0
@@ -52,6 +53,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -82,8 +84,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &198909950853507848
-MeshCollider:
+--- !u!65 &1815945153719623673
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -92,10 +94,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 515337180558167020, guid: 0c0068a05bfe0e2458ea838ffe95e874, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 32, y: 0.0000340885, z: 16.000002}
+  m_Center: {x: -16.000027, y: 0.0020210105, z: -7.9999547}
 --- !u!1 &2966226082026456938
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,9 +123,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2966226082026456938}
-  m_LocalRotation: {x: -8.881784e-16, y: -0.0000002682209, z: -0.0000000037252796, w: 1}
+  m_LocalRotation: {x: -8.881784e-16, y: -0.0000002682209, z: -0.0000000037252796,
+    w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3654972635168311634}
   m_RootOrder: 1
@@ -148,6 +151,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -218,6 +222,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2966226081897991764}
   - {fileID: 2966226082026456943}

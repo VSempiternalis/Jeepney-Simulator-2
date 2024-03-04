@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2496525220103061055}
   - component: {fileID: 2496525220103061054}
   - component: {fileID: 2496525220103061053}
-  - component: {fileID: 7696241436060561913}
+  - component: {fileID: 1643569795147864452}
   m_Layer: 0
   m_Name: Road_32m_B_Twoway
   m_TagString: Untagged
@@ -29,6 +29,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 300616397415765355}
   m_RootOrder: 0
@@ -52,6 +53,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -82,8 +84,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7696241436060561913
-MeshCollider:
+--- !u!65 &1643569795147864452
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -92,10 +94,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 6391971287091640096, guid: 1748801a7645ba14ebe2e5302062d44e, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 23.999996, y: 0.000006391667, z: 16.000006}
+  m_Center: {x: -15.999998, y: 0.0019900256, z: -8.000014}
 --- !u!1 &2496525220393150166
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,6 +126,7 @@ Transform:
   m_LocalRotation: {x: -0, y: 0.00000017881393, z: -7.1054274e-15, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 300616397415765355}
   m_RootOrder: 1
@@ -148,6 +150,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -218,6 +221,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2496525220103061055}
   - {fileID: 2496525220393150161}
