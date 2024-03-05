@@ -9,6 +9,7 @@ TagManager:
   - StreetLamp
   - LampLens
   - HouseWindow
+  - Clock
   layers:
   - Default
   - TransparentFX

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1506803944260389112}
   - component: {fileID: 1506803944260389115}
   - component: {fileID: 1506803944260389114}
-  - component: {fileID: 5297843387920664920}
+  - component: {fileID: 1090263521537314344}
   m_Layer: 0
   m_Name: Intersection_T_32m_B
   m_TagString: Untagged
@@ -29,6 +29,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 515506903456138289}
   m_RootOrder: 1
@@ -52,6 +53,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -82,8 +84,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5297843387920664920
-MeshCollider:
+--- !u!65 &1090263521537314344
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -92,10 +94,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2327721869290694109, guid: 7f7c3bc0aca507e4092674debfde4d6c, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 32.000004, y: 0, z: 24.000004}
+  m_Center: {x: -15.999998, y: 0.0019998474, z: -12.000002}
 --- !u!1 &1506803944379541970
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +108,7 @@ GameObject:
   - component: {fileID: 1506803944379541969}
   - component: {fileID: 1506803944379541968}
   - component: {fileID: 1506803944379541971}
-  - component: {fileID: 3835241284101618687}
+  - component: {fileID: 4939629553709917873}
   m_Layer: 0
   m_Name: Intersection_T_32m_B_Sidewalk
   m_TagString: Untagged
@@ -122,9 +123,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1506803944379541970}
-  m_LocalRotation: {x: -0.00000017881393, y: -0.00000017881393, z: -1.687539e-14, w: 1}
+  m_LocalRotation: {x: -0.00000017881393, y: -0.00000017881393, z: -1.687539e-14,
+    w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 515506903456138289}
   m_RootOrder: 0
@@ -148,6 +151,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -178,7 +182,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3835241284101618687
+--- !u!64 &4939629553709917873
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -218,6 +222,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1506803944379541969}
   - {fileID: 1506803944260389112}

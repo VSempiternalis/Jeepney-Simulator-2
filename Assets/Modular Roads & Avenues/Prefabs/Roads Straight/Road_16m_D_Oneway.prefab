@@ -26,6 +26,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1695078747714899123}
   - {fileID: 1695078746887000338}
@@ -61,6 +62,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0.0000002682209, z: 1.0658141e-14, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8104832936173594985}
   m_RootOrder: 1
@@ -84,6 +86,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -139,7 +142,7 @@ GameObject:
   - component: {fileID: 1695078747714899123}
   - component: {fileID: 1695078747714899120}
   - component: {fileID: 1695078747714899121}
-  - component: {fileID: 8472042292321789867}
+  - component: {fileID: 3199440994458601433}
   m_Layer: 0
   m_Name: Road_16m_C_Oneway
   m_TagString: Untagged
@@ -157,6 +160,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8104832936173594985}
   m_RootOrder: 0
@@ -180,6 +184,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -210,8 +215,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8472042292321789867
-MeshCollider:
+--- !u!65 &3199440994458601433
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -220,7 +225,6 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 478194722541364836, guid: 5b53d3bff49866a4ba3bc6bc5f62eb44, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 8, y: 0.000001065433, z: 32.000004}
+  m_Center: {x: -8.000017, y: 0.00199759, z: -15.999999}

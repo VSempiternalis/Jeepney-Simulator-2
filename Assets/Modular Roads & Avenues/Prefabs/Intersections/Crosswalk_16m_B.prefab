@@ -26,6 +26,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9194618663876130082}
   - {fileID: 9194618664025825974}
@@ -43,7 +44,7 @@ GameObject:
   - component: {fileID: 9194618663876130082}
   - component: {fileID: 9194618663876130084}
   - component: {fileID: 9194618663876130083}
-  - component: {fileID: 6187502068512183868}
+  - component: {fileID: 6539406681914646966}
   m_Layer: 0
   m_Name: Crosswalk_16m_B
   m_TagString: Untagged
@@ -61,6 +62,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3836961929943183046}
   m_RootOrder: 0
@@ -84,6 +86,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -114,8 +117,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6187502068512183868
-MeshCollider:
+--- !u!65 &6539406681914646966
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -124,10 +127,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4264440603293355304, guid: 42235d34e7061df4780915441475ce77, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 8, y: 0.0000021306332, z: 8}
+  m_Center: {x: -8.000009, y: 0.0020159418, z: -3.9999976}
 --- !u!1 &9194618664025825973
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,6 +159,7 @@ Transform:
   m_LocalRotation: {x: -0.00000035762787, y: -0, z: -1.3322676e-14, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3836961929943183046}
   m_RootOrder: 1
@@ -180,6 +183,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
