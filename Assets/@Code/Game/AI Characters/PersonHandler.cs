@@ -51,6 +51,7 @@ public class PersonHandler : MonoBehaviour {
 
     [Space(10)]
     [Header("PAYMENT")]
+    private bool isPayments;
     public StorageHandler payPoint;
     public ChangeHandler changePoint;
     public StorageHandler changePointStorage;
@@ -112,6 +113,8 @@ public class PersonHandler : MonoBehaviour {
         // VoiceType voiceType = voices.GetChild(voiceIndex).GetComponent<VoiceType>();
         // voiceHandler.SetAudioClips(voiceType.payAudios, voiceType.stopAudios, voiceType.deathAudios);
         // patience = maxPatience;
+
+        isPayments = GameManager.current.isPayments;
 
         nextSecUpdate = Time.time + 1;
     }
@@ -423,8 +426,12 @@ public class PersonHandler : MonoBehaviour {
         // popup.SayChange("(Unpaid)");
         destinations.Clear();
 
-        StartPayTimer();
-        SetState("Waiting to pay");
+        if(!isPayments) {
+            SetState("Waiting to arrive");
+        } else {
+            StartPayTimer();
+            SetState("Waiting to pay");
+        }
         
         AddDestination();
     }
@@ -539,7 +546,7 @@ public class PersonHandler : MonoBehaviour {
         //Walk
         else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering" || state == "Dropping" || state == "Moving to pos" || state == "Crossing") anim = Random.Range(14, 20);
         //Sit
-        else if(state == "Waiting to pay") anim = Random.Range(20, 28);
+        else if(state == "Waiting to pay" || state == "Waiting to arrive") anim = Random.Range(20, 28);
 
         if(ani == null) ani = GetComponent<Animator>();
         ani.SetInteger("State", anim);

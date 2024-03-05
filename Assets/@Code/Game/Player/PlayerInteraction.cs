@@ -297,11 +297,7 @@ public class PlayerInteraction : MonoBehaviour {
             inDrop = true;
 
             playerDestUI.In();
-            // if(areaUI.color != colorMain) areaUI.color = colorMain;
-            // if(areaUI.transform.parent.position.y != 540) LeanTween.moveLocalY(areaUI.transform.parent.gameObject, 540f, 1f).setEaseOutElastic();
-            // if(areaUI.transform.parent.position.y != 1080f) areaUI.transform.parent.LeanMoveY(1080f, 1f).setEaseOutElastic();
             if(areaUI.text != other.name) areaUI.text = other.name;
-            // if(areaUI.transform.parent.lossyScale.x != 1) LeanTween.scale(areaUI.transform.parent.gameObject, new Vector3(1f, 1f, 1f), 0.5f).setEaseOutExpo();
 
             //Audio
             // audioHandler.Play(8);
@@ -309,26 +305,13 @@ public class PlayerInteraction : MonoBehaviour {
             inArea = true;
 
             inAreaUI.In();
-            // if(areaUI.color != colorSub) areaUI.color = colorSub;
-            // if(areaUI.transform.parent.position.y != 540) 
-            // LeanTween.moveLocalY(areaUI.transform.parent.gameObject, 540f, 1f).setEaseOutElastic();
-            // if(areaUI.transform.parent.position.y != 0) 
-            // areaUI.transform.parent.LeanMoveY(1080f, 1f).setEaseOutElastic();
-            // if(areaUI.text != other.name) areaUI.text = other.name;
-            // if(areaUI.transform.parent.lossyScale.x != 1) LeanTween.scale(areaUI.transform.parent.gameObject, new Vector3(1f, 1f, 1f), 0.5f).setEaseOutExpo();
         }
-        // else if(go.layer == layerArea && !inDrop) { // && areaUI.text != other.name
-        //     inArea = true;
 
-        //     inAreaUI.In();
-        //     // if(areaUI.color != colorSub) areaUI.color = colorSub;
-        //     // if(areaUI.transform.parent.position.y != 540) 
-        //     // LeanTween.moveLocalY(areaUI.transform.parent.gameObject, 540f, 1f).setEaseOutElastic();
-        //     // if(areaUI.transform.parent.position.y != 0) 
-        //     // areaUI.transform.parent.LeanMoveY(1080f, 1f).setEaseOutElastic();
-        //     // if(areaUI.text != other.name) areaUI.text = other.name;
-        //     // if(areaUI.transform.parent.lossyScale.x != 1) LeanTween.scale(areaUI.transform.parent.gameObject, new Vector3(1f, 1f, 1f), 0.5f).setEaseOutExpo();
-        // }
+        if(go.CompareTag("StartShiftTrigger")) {
+            TimeManager.current.TryStartShift();
+        } else if(go.CompareTag("EndShiftTrigger")) {
+            TimeManager.current.TryEndShift();
+        }
     }
 
     private void OnTriggerStay(Collider other) {
@@ -337,21 +320,15 @@ public class PlayerInteraction : MonoBehaviour {
 
     private void OnTriggerExit(Collider other) {
         GameObject go = other.gameObject;
-        //if(gameObject.layer != 13) return;
         if(playerDestUI.isIn && go.layer == layerDrop) {
             inDrop = false;
             playerDestUI.Out();
-            // if(areaUI.color != colorSub) areaUI.color = colorSub;
 
             //Audio
             // if(!GetComponent<AudioSource>().isPlaying) audioHandler.Play(9);
         }
         if(inAreaUI.isIn && go.layer == layerArea) {
             inAreaUI.Out();
-            // inArea = false;
-            // LeanTween.moveLocalY(areaUI.transform.parent.gameObject, 625f, 1f).setEaseOutElastic();
-            // areaUI.transform.parent.LeanMoveY(1180f, 1f).setEaseOutElastic();
-            // areaUI.text = "";
         }
     }
 }
