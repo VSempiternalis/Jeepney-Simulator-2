@@ -146,6 +146,8 @@ public class SpawnArea : MonoBehaviour {
 
         //Spawn people
         for(int i = 0; i < toSpawn; i++) {
+            if(personCount >= maxPersonCount || personPool.childCount == 0) break;
+            
             //Set random variables
             float spawnX = Random.Range(spawn.position.x - (spawn.localScale.x/2), spawn.position.x + (spawn.localScale.x/2));
             float spawnZ = Random.Range(spawn.position.z - (spawn.localScale.z/2), spawn.position.z + (spawn.localScale.z/2));
@@ -155,6 +157,7 @@ public class SpawnArea : MonoBehaviour {
             GameObject newPerson = personPool.GetChild(newPersonIndex).gameObject;
             newPerson.transform.position = new Vector3(spawnX, spawn.position.y, spawnZ);
             newPerson.transform.Rotate(new Vector3(0, rotY, 0));
+            // newPerson.transform.SetParent(null);
             newPerson.transform.parent = world;
             newPerson.SetActive(true);
             newPerson.GetComponent<TGCharacterAppearance>().Start();

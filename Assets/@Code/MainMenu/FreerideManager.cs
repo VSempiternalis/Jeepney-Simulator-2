@@ -62,7 +62,7 @@ public class FreerideManager : MonoBehaviour {
 
     public void SaveFreerideSettings() {
         SetPassengerPickups(togglePassengerPickups.isOn);
-        SetPayments(togglePayments);
+        SetPayments(togglePayments.isOn);
         SetEvents(toggleEvents.isOn);
         SetShifts(toggleShifts.isOn);
         SetPopulationCount(Mathf.RoundToInt(sliderPopulationCount.value));
@@ -83,6 +83,7 @@ public class FreerideManager : MonoBehaviour {
     }
 
     public void SetPayments(bool newVal) {
+        print("Setting payments: " + (newVal? "ON":"OFF"));
         PlayerPrefs.SetInt("Freeride_IsPayments", newVal? 1:0);
     }
 

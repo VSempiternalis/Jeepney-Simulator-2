@@ -4,6 +4,10 @@ using System.Collections;
 using TMPro;
 
 public class GameManager : MonoBehaviour {
+    public static GameManager current;
+
+    public string gameMode;
+
     public int dayCount;
     public int deposit;
     public bool isPassengerPickups;
@@ -13,7 +17,7 @@ public class GameManager : MonoBehaviour {
     public int populationCount;
     public int trafficCount;
     public int shiftLength;
-    public float floatTime;
+    public int time;
 
     //CAREER
     public bool isHardMode;
@@ -22,6 +26,7 @@ public class GameManager : MonoBehaviour {
     [Header("OFFICE PANEL")]
     [SerializeField] private GameObject freeridePanel;
     [SerializeField] private TMP_Text freerideSettingsText;
+    // [SerializeField] private GameObject startShiftButton;
 
     [Space(10)]
     [Header("LOADING SCREEN")]
@@ -29,8 +34,12 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private RectTransform loadingProgress;
     [SerializeField] private float loadTransitionTime = 2f;
 
+    private void Awake() {
+        current = this;
+    }
+
     private void Start() {
-        string gameMode = PlayerPrefs.GetString("Game_GameMode");
+        gameMode = PlayerPrefs.GetString("Game_GameMode");
         bool isNewGame = PlayerPrefs.GetInt("Game_isNewGame") == 1? true:false;
 
         if(gameMode == "Freeride") {
@@ -51,7 +60,7 @@ public class GameManager : MonoBehaviour {
     //=========================================================================================
 
     private void LoadFreerideSettings() {
-        dayCount = PlayerPrefs.GetInt("Freeride_DayCount", 1);
+        // dayCount = PlayerPrefs.GetInt("Freeride_DayCount", 1);
         deposit = PlayerPrefs.GetInt("Freeride_Deposit", 0);
         isPassengerPickups = PlayerPrefs.GetInt("Freeride_IsPassengerPickup", 1) == 1? true:false;
         isPayments = PlayerPrefs.GetInt("Freeride_IsPayments", 1) == 1? true:false;
@@ -59,8 +68,10 @@ public class GameManager : MonoBehaviour {
         isShifts = PlayerPrefs.GetInt("Freeride_IsShifts", 1) == 1? true:false;
         populationCount = PlayerPrefs.GetInt("Freeride_PopulationCount", 50);
         trafficCount = PlayerPrefs.GetInt("Freeride_TrafficCount", 25);
-        shiftLength = PlayerPrefs.GetInt("Freeride_ShiftLength", 25);
-        floatTime = PlayerPrefs.GetFloat("Freeride_FloatTime", 0f);
+        shiftLength = PlayerPrefs.GetInt("Freeride_ShiftLength", 10);
+        time = PlayerPrefs.GetInt("Freeride_Time", 0);
+        TimeManager.current.SetTimeTo(480);
+        dayCount = TimeManager.current.GetDays() + 1;
 
         SpawnArea.current.maxVicCount = trafficCount;
         SpawnArea.current.maxPersonCount = populationCount;
@@ -88,6 +99,7 @@ public class GameManager : MonoBehaviour {
         print("isEvents: " + isEvents);
         print("populationCount: " + populationCount);
         print("trafficCount: " + trafficCount);
+        TimeManager.current.CheckForShifts(isShifts);
     }
 
     private void LoadFreeride() {
@@ -97,10 +109,11 @@ public class GameManager : MonoBehaviour {
         // print("isEvents: " + isEvents);
         // print("populationCount: " + populationCount);
         // print("trafficCount: " + trafficCount);
+        TimeManager.current.SetTimeTo(time);
     }
 
     private void NewCareer() {
-    
+        TimeManager.current.SetTimeTo(480);
     }
 
     private void LoadCareer() {
