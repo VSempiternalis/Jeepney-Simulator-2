@@ -69,11 +69,11 @@ public class SpawnArea : MonoBehaviour {
     }
 
     private IEnumerator SpawnLoop() {
-        if(vicCount >= maxVicCount) yield return null;
+        // if(vicCount >= maxVicCount) yield return null;
 
         // int vicLayerMask = 1 << 20;
 
-        while (true) {
+        while(vicCount < maxVicCount) {
             // print("Spawndist: " + spawnDist);
             if(isMainMenuSpawn) spawnDist = 130;
             Collider[] spawns = Physics.OverlapSphere(transform.position, spawnDist, spawnsLayerMask);
@@ -167,6 +167,7 @@ public class SpawnArea : MonoBehaviour {
 
             if(crosswalk != null) newPerson.GetComponent<PersonHandler>().CrossRoad(crosswalk.otherCrosswalk);
             else newPerson.GetComponent<PersonHandler>().MakeWait();
+            personCount ++;
         }
     }
 

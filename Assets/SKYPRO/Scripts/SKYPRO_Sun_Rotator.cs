@@ -6,6 +6,7 @@ public class SKYPRO_Sun_Rotator : MonoBehaviour {
     // [SerializeField] private float rotationSpeed = 0.5f;
     public float time;
     [SerializeField] private bool isMainMenuRotator;
+    private float multiplier = 1;
 
     private void Awake() {
         current = this;
@@ -13,6 +14,7 @@ public class SKYPRO_Sun_Rotator : MonoBehaviour {
 
     private void Start() {
         // StartCoroutine(UpdateRotation());
+        if(isMainMenuRotator) multiplier = 10;
     }
 
     private void Update() {
@@ -34,7 +36,7 @@ public class SKYPRO_Sun_Rotator : MonoBehaviour {
 
     void Rotate() {
         //one day = 24 real mins = 1440 secs
-        float value = (time*0.25f) - 90f; //-90 to 270 
+        float value = (time*0.25f*multiplier) - 90f; //-90 to 270 
         //transform.localEulerAngles.x + ((rotationSpeed / 10) * Time.deltaTime)
         // transform.localEulerAngles = new Vector3(Time.time * rotationSpeed, 20, 0);
         transform.localEulerAngles = new Vector3(value, 20, 0);

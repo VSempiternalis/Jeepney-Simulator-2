@@ -26,6 +26,7 @@ NPCs
 20-39: Sitting
 40-49: Stopping
 50-59: Calling jeep/Hailing
+60-69: Dancing
 90: Guard
 
 PLAYER

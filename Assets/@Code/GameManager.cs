@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour {
 
     //CAREER
     public bool isHardMode;
+    public int boundary = 0;
 
     [Space(10)]
     [Header("OFFICE PANEL")]
