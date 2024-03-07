@@ -286,7 +286,7 @@ namespace TGStylizedWorld
             // apply skin
             if (clothSkinID < ClothSkins.Count && ClothSkins.Count>0)
             {
-                if (ClothSkins[clothSkinID])
+                if (Character && ClothSkins[clothSkinID])
                 {
                     Character.material = ClothSkins[clothSkinID];
                     if (Glasses)
@@ -302,7 +302,7 @@ namespace TGStylizedWorld
             {
                 case TGPartSkinMode.Random:
                     int bodyIndex = Random.Range(0, BodyRandomSkins.Count);
-                    if (bodyIndex < BodyRandomSkins.Count && BodyRandomSkins.Count > 0)
+                    if (bodyIndex < BodyRandomSkins.Count && BodyRandomSkins.Count > 0 && Character)
                     {
                         if (BodySkins[(int)BodyRandomSkins[bodyIndex]])
                         {
@@ -313,7 +313,7 @@ namespace TGStylizedWorld
                     }
                     break;
                 case TGPartSkinMode.Default:
-                    if ((int)BodyDefaultSkin < BodySkins.Count && BodySkins.Count > 0)
+                    if ((int)BodyDefaultSkin < BodySkins.Count && BodySkins.Count > 0 && Character)
                     {
                         if (BodySkins[(int)BodyDefaultSkin])
                         {
