@@ -253,7 +253,7 @@ public class Settings : MonoBehaviour {
 
     public void SetReflectionProbeSize(float sizeIndex) {
         int realSize = (int)Mathf.Pow(2, sizeIndex+4);
-        print("Setting size: " + realSize);
+        // print("Setting size: " + realSize);
         reflectionProbe.GetComponent<ReflectionProbe>().resolution = realSize;
         reflectionProbe.GetComponent<ReflectionProbe>().enabled = false;
         reflectionProbe.GetComponent<ReflectionProbe>().enabled = true;

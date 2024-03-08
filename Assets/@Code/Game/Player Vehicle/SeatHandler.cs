@@ -21,7 +21,7 @@ public class SeatHandler : MonoBehaviour, IInteractable, ITooltipable {
     }
 
     public void Interact(GameObject interactor) {
-        print("interacting");
+        // print("interacting");
         Transform player = interactor.transform;
         if(transform.childCount > 1) {
             //EXIT
