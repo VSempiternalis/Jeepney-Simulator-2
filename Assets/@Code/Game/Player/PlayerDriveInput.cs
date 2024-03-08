@@ -63,7 +63,7 @@ public class PlayerDriveInput : MonoBehaviour {
     }
 
     public void SetIsSitting(bool newIsSitting, bool isDriversSeat, Transform seat) {
-        print("set is sitting");
+        // print("set is sitting");
         isSitting = newIsSitting;
         if(!isDriversSeat) isDriving = false;
         

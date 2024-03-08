@@ -22,15 +22,20 @@ public class TimeManager : MonoBehaviour {
     //SHIFTS
     [Space(10)]
     [Header("SHIFT")]
+    public int shiftLength;
     private bool isShifts;
     private bool isShiftOn;
-    public float floatShiftStart;
-    public float floatShiftEnd;
+    // public float floatShiftStart;
+    // public float floatShiftEnd;
+    // private int shiftDay; //the day the current shift started
+    // private bool isShiftEnded; //should only turn to true after 
     private int shiftHoursLeft;
     private int shiftMinutesLeft;
     private int shiftTimeLeft;
     private List<TMP_Text> shiftTimeTexts = new List<TMP_Text>();
-    [SerializeField] private TMP_Text shiftTimeTextRed;
+    // [SerializeField] private TMP_Text shiftTimeTextRed;
+    [SerializeField] private Color white;
+    [SerializeField] private Color red;
 
     //ENVIRONMENT
     private int minHour = 0;
@@ -62,8 +67,25 @@ public class TimeManager : MonoBehaviour {
         StartCoroutine(UpdateTimeCoroutine());
     }
 
+    public void Setup() {
+        shiftTimeLeft = shiftLength * 60;
+
+        //Update clocks
+        foreach(TMP_Text shiftTimer in shiftTimeTexts) {
+            shiftTimer.text = shiftLength + ":00";
+        }
+    }
+
 
     #region SHIFTS ==========================================================================================
+
+    public void NewShift() {
+        days ++;
+        UpdateDayTexts();
+
+        shiftTimeLeft = shiftLength * 60;
+        UpdateShiftTimers();
+    }
 
     public void CheckForShifts(bool newIsShifts) {
         isShifts = newIsShifts;
@@ -77,42 +99,58 @@ public class TimeManager : MonoBehaviour {
 
     public void TryStartShift() {
         if(!isShifts) return;
+        // if(shiftDay == days) return;
+        // if(isShiftEnded) return;
         if(isShiftOn) return;
 
+        // shiftTimeLeft = shiftLength * 60;
         isShiftOn = true;
-
-        shiftTimeLeft = GameManager.current.shiftLength * 60;
+        // shiftDay = days;
     }
 
     public void TryEndShift() {
         if(!isShiftOn) return;
+        // if(isShiftEnded) return;
+        // if(shiftDay == days) {
+            isShiftOn = false;
+            // isShiftEnded = true;
 
-        isShiftOn = false;
-
-        //stuff
+            //stuff
+            BoundaryManager.current.UpdateTexts();
+        // }
     }
 
     private void UpdateShiftTime() {
+        //OVERTIME!
         if(shiftTimeLeft <= 0) {
-            //alarm
-            //shift over. +1 boundary per second
+            //alarm audio
+            BoundaryManager.current.TryAddLateFee();
+            //Turn off all normal shift timers
+            foreach(TMP_Text shiftTimer in shiftTimeTexts) {
+                shiftTimer.text = "-" + BoundaryManager.current.lateFee;
+                shiftTimer.color = red;
+            }
+            // UpdateShiftTimers();
+
             return;
         }
 
         shiftTimeLeft --;
 
-        //MINUTES
-        shiftMinutesLeft = shiftTimeLeft % 60; // Remaining minutes after counting hours
-
-        //HOURS
-        float totalHoursFloat = shiftTimeLeft / 60.0f;  // Use floating-point division
-        int totalHours = Mathf.FloorToInt(totalHoursFloat);
-        shiftHoursLeft = totalHours % 24; // Remaining hours after counting days
-
         UpdateShiftTimers();
     }
 
     private void UpdateShiftTimers() {
+        print("updating shift timers");
+
+        //MINUTES
+        shiftMinutesLeft = shiftTimeLeft % 60;
+
+        //HOURS
+        float totalHoursFloat = shiftTimeLeft / 60.0f;
+        int totalHours = Mathf.FloorToInt(totalHoursFloat);
+        shiftHoursLeft = totalHours % 24;
+
         //Update clocks
         string tempHours = shiftHoursLeft + "";
         string tempMins = shiftMinutesLeft + "";
@@ -121,17 +159,15 @@ public class TimeManager : MonoBehaviour {
         if(shiftMinutesLeft < 10) tempMins = "0" + tempMins;
 
         if(shiftHoursLeft < 3) {
-            foreach(TMP_Text shiftTimer in shiftTimeTexts) {
-                shiftTimer.gameObject.SetActive(false);
-            }
-
-            shiftTimeTextRed.gameObject.SetActive(true);
-            shiftTimeTextRed.text = tempHours + ":" + tempMins;
-        } else {
-            shiftTimeTextRed.gameObject.SetActive(false);
-
+            //Turn off all normal shift timers
             foreach(TMP_Text shiftTimer in shiftTimeTexts) {
                 shiftTimer.text = tempHours + ":" + tempMins;
+                shiftTimer.color = red;
+            }
+        } else {
+            foreach(TMP_Text shiftTimer in shiftTimeTexts) {
+                shiftTimer.text = tempHours + ":" + tempMins;
+                shiftTimer.color = white;
             }
         }
     }
@@ -165,19 +201,9 @@ public class TimeManager : MonoBehaviour {
         UpdateClocks();
     }
 
-    // public void SetDay(int newDay) {
-    //     days = newDay;
-    //     UpdateDayTexts();
-    // }
-
-    // public void NextDay() {
-    //     days ++;
-    //     UpdateDayTexts();
-    // }
-
     private void UpdateDayTexts() {
         foreach(TMP_Text dayText in dayTexts) {
-            dayText.text = (days + 1) + "";
+            dayText.text = days + "";
         }
     }
 
@@ -236,7 +262,7 @@ public class TimeManager : MonoBehaviour {
         hours = totalHours % 24; // Remaining hours after counting days
 
         //DAYS
-        days = totalHours / 24;
+        // days = totalHours / 24;
 
         UpdateClocks();
         UpdateDayTexts();

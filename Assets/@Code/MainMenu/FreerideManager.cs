@@ -25,19 +25,19 @@ public class FreerideManager : MonoBehaviour {
 
     private void Start() {
         LoadSavedStats();
-        LoadDefaultSettings();
+        // LoadDefaultSettings();
     }
 
     private void Update() {
         
     }
 
-    private void LoadDefaultSettings() {
+    // private void LoadDefaultSettings() {
         
-    }
+    // }
 
     private void LoadSavedStats() {
-        string dayCount = PlayerPrefs.GetInt("Freeride_DayCount", 1) + "";
+        string dayCount = PlayerPrefs.GetInt("Freeride_Day", 1) + "";
         string deposit = PlayerPrefs.GetInt("Freeride_Deposit", 0) + "";
         string isPassengerPickup = (PlayerPrefs.GetInt("Freeride_IsPassengerPickup", 1) == 1)? "ON":"OFF";
         string isPayments = (PlayerPrefs.GetInt("Freeride_IsPayments", 1) == 1)? "ON":"OFF";
@@ -45,7 +45,7 @@ public class FreerideManager : MonoBehaviour {
         string isShifts = (PlayerPrefs.GetInt("Freeride_IsShifts", 1) == 1)? "ON":"OFF";
         string popCount = PlayerPrefs.GetInt("Freeride_PopulationCount", 50) + "";
         string trafficCount = PlayerPrefs.GetInt("Freeride_TrafficCount", 25) + "";
-        string shiftLength = PlayerPrefs.GetInt("Freeride_ShiftLength", 10) + "";
+        string shiftLength = PlayerPrefs.GetInt("Freeride_ShiftLength", 15) + "";
 
         text1.text = "Day: " + dayCount + "\n" +
             "Money: " + deposit + "\n" +
@@ -60,6 +60,7 @@ public class FreerideManager : MonoBehaviour {
             "Shift Length: " + shiftLength + "\n";
     }
 
+    //Only runs when start new is pressed
     public void SaveFreerideSettings() {
         SetPassengerPickups(togglePassengerPickups.isOn);
         SetPayments(togglePayments.isOn);
@@ -68,6 +69,11 @@ public class FreerideManager : MonoBehaviour {
         SetPopulationCount(Mathf.RoundToInt(sliderPopulationCount.value));
         SetTrafficCount(Mathf.RoundToInt(sliderTrafficCount.value));
         SetShiftLength(Mathf.RoundToInt(sliderShiftLength.value));
+
+        //RESET PROGRESS
+        PlayerPrefs.SetInt("Freeride_Deposit", 0);
+        PlayerPrefs.SetInt("Freeride_Day", 1);
+        PlayerPrefs.SetInt("Freeride_Time", 0);
     }
 
     // public void SetDay(int newDay) {

@@ -222,7 +222,7 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     private void PlaceItem() {
-        print("placing item");
+        // print("placing item");
         //Place item on itemover(storage)
         GameObject dropItem = rightHand.GetChild(0).gameObject;
 

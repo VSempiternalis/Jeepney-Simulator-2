@@ -114,7 +114,7 @@ public class PersonHandler : MonoBehaviour {
         // voiceHandler.SetAudioClips(voiceType.payAudios, voiceType.stopAudios, voiceType.deathAudios);
         // patience = maxPatience;
 
-        isPayments = GameManager.current.isPayments;
+        isPayments = SaveLoadSystem.current.isPayments;
 
         nextSecUpdate = Time.time + 1;
     }

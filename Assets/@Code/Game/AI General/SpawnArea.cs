@@ -69,21 +69,16 @@ public class SpawnArea : MonoBehaviour {
     }
 
     private IEnumerator SpawnLoop() {
-        // if(vicCount >= maxVicCount) yield return null;
-
-        // int vicLayerMask = 1 << 20;
-
-        while(vicCount < maxVicCount) {
-            // print("Spawndist: " + spawnDist);
+        while(true) {
             if(isMainMenuSpawn) spawnDist = 130;
             Collider[] spawns = Physics.OverlapSphere(transform.position, spawnDist, spawnsLayerMask);
 
             for(int i = 0; i < spawns.Length; i++) {
+                if(vicCount >= maxVicCount) break;
+
                 Collider spawn = spawns[i];
-                // print("COLLIDER: " + spawn.name);
 
                 if(Vector3.Distance(transform.position, spawn.transform.position) >= spawnDist - 10) {
-                    //[VEHICLES]
                     if(spawn.gameObject.layer == vicSpawnLayer) {
                         currentVehicleSpawn = spawn.GetComponent<VehicleSpawn>();
 
@@ -95,11 +90,6 @@ public class SpawnArea : MonoBehaviour {
                             currentVehicleSpawn.isSpawnable = true;
                         }
                     }
-                    //[PERSONS]
-                    // else if(spawn.gameObject.layer == personSpawnLayer) {
-                    //     print("PERSON SPAWN LAYER");
-                    //     TrySpawnPerson(spawn.transform);
-                    // }
                 }
             }
 
