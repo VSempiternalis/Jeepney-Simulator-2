@@ -126,15 +126,14 @@ public class BoundaryManager : MonoBehaviour {
             deposit -= boundary + lateFee;
             string text = "CONGRATULATIONS! YOU MADE THE BOUNDARY!\n\nSaving game...\n";
             if(!doBoundary) text = "Saving game...";
+            lateFee = 0;
 
             Fader.current.FadeToBlack(1f, text, () => {
                 //Reset
-                lateFee = 0;
                 TimeManager.current.NewShift();
                 SaveLoadSystem.current.SaveGame();
 
                 CalculateNewBoundary();
-                // CalculateTotal();
                 UpdateTexts();
                 
                 LeanTween.delayedCall(1f, () => {
@@ -148,13 +147,7 @@ public class BoundaryManager : MonoBehaviour {
         } else {
             Fader.current.FadeToBlack(1f, "YOU'RE FIRED!\n\nLoading previous save...\n", () => {
                 //Reset
-                lateFee = 0;
-                // TimeManager.current.NewShift();
-                // SaveLoadSystem.current.SaveGame();
-
-                // CalculateNewBoundary();
-                // CalculateTotal();
-                // UpdateTexts();
+                SaveLoadSystem.current.LoadGame();
                 
                 LeanTween.delayedCall(1f, () => {
                     Fader.current.SetText("DAY " + TimeManager.current.days);

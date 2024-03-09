@@ -8,7 +8,7 @@ public class SaveLoadSystem : MonoBehaviour {
 
     public string gameMode;
 
-    // public int dayCount;
+    public int days;
     public int deposit;
     public bool isPassengerPickups;
     public bool isPayments;
@@ -27,7 +27,9 @@ public class SaveLoadSystem : MonoBehaviour {
     [Space(10)]
     [Header("OFFICE PANEL")]
     [SerializeField] private GameObject freeridePanel;
+    [SerializeField] private GameObject careerPanel;
     [SerializeField] private TMP_Text freerideSettingsText;
+    [SerializeField] private TMP_Text careerSettingsText;
     // [SerializeField] private GameObject startShiftButton;
 
     [Space(10)]
@@ -36,11 +38,21 @@ public class SaveLoadSystem : MonoBehaviour {
     [SerializeField] private RectTransform loadingProgress;
     [SerializeField] private float loadTransitionTime = 2f;
 
+    [Space(10)]
+    [Header("SETUP")]
+    [SerializeField] private Transform spawnPoint;
+    [SerializeField] private Transform mainJeepSpawnPoint;
+    [SerializeField] private Transform player;
+    [SerializeField] private Transform mainJeep;
+
     private void Awake() {
         current = this;
     }
 
     private void Start() {
+        freeridePanel.SetActive(false);
+        careerPanel.SetActive(false);
+
         gameMode = PlayerPrefs.GetString("Game_GameMode");
         bool isNewGame = PlayerPrefs.GetInt("Game_isNewGame") == 1? true:false;
 
@@ -53,6 +65,8 @@ public class SaveLoadSystem : MonoBehaviour {
             if(isNewGame) NewCareer();
             else LoadCareer();
         }
+
+        Setup();
     }
 
     private void Update() {
@@ -60,6 +74,13 @@ public class SaveLoadSystem : MonoBehaviour {
     }
 
     #region SETUP AND SAVES =========================================================================================
+
+    private void Setup() {
+        player.position = spawnPoint.position;
+        player.rotation = spawnPoint.rotation;
+        mainJeep.position = mainJeepSpawnPoint.position;
+        mainJeep.rotation = mainJeepSpawnPoint.rotation;
+    }
 
     private void LoadFreerideSettings() {
         print("Loading freeride settings");
@@ -103,6 +124,8 @@ public class SaveLoadSystem : MonoBehaviour {
         TimeManager.current.Setup();
         BoundaryManager.current.Setup(gameMode);
 
+        freeridePanel.SetActive(true);
+        freerideSettingsText.gameObject.SetActive(true);
         freerideSettingsText.text = 
             (isPassengerPickups? "ON":"OFF") + "\n" +
             (isPayments? "ON":"OFF") + "\n" +
@@ -114,7 +137,53 @@ public class SaveLoadSystem : MonoBehaviour {
     }
 
     private void LoadCareerSettings() {
-    
+        print("Loading career settings");
+
+        //DEPOSIT
+        deposit = PlayerPrefs.GetInt("Career_Deposit", 0);
+        BoundaryManager.current.deposit = deposit;
+
+        isPassengerPickups = true;
+        
+        isPayments = true;
+        
+        isEvents = true;
+        
+        isShifts = true;
+        
+        //MAX POP
+        populationCount = PlayerPrefs.GetInt("Career_MaxPop", 50);
+        SpawnArea.current.maxPersonCount = populationCount;
+        
+        //MAX TRAFFIC
+        trafficCount = PlayerPrefs.GetInt("Career_MaxTraffic", 25);
+        SpawnArea.current.maxVicCount = trafficCount;
+        
+        shiftLength = PlayerPrefs.GetInt("Career_ShiftLength", 15);
+        TimeManager.current.shiftLength = shiftLength;
+        BoundaryManager.current.shiftLength = shiftLength;
+        
+        //TIME AND DAY
+        time = PlayerPrefs.GetInt("Career_Time", 0);
+        TimeManager.current.SetTimeTo(480);
+        TimeManager.current.days = PlayerPrefs.GetInt("Career_Day", 1);
+
+        PlayerDriveInput.current.isTakingPassengers = isPassengerPickups;
+
+        //SETUPS
+        TimeManager.current.Setup();
+        BoundaryManager.current.Setup(gameMode);
+
+        careerPanel.SetActive(true);
+        careerSettingsText.gameObject.SetActive(true);
+        careerSettingsText.text = 
+            // (isPassengerPickups? "ON":"OFF") + "\n" +
+            // (isPayments? "ON":"OFF") + "\n" +
+            // (isEvents? "ON":"OFF") + "\n" +
+            // (isShifts? "ON":"OFF") + "\n" +
+            populationCount + "\n" +
+            trafficCount + "\n"+
+            shiftLength + "\n";
     }
     
     private void NewFreeride() {
@@ -135,25 +204,68 @@ public class SaveLoadSystem : MonoBehaviour {
         // print("isEvents: " + isEvents);
         // print("populationCount: " + populationCount);
         // print("trafficCount: " + trafficCount);
+        TimeManager.current.CheckForShifts(isShifts);
         TimeManager.current.SetTimeTo(time);
     }
 
     private void NewCareer() {
+        //new game setup
+        print("NEW CAREER!");
+        print("isPassengerPickups: " + isPassengerPickups);
+        print("isEvents: " + isEvents);
+        print("populationCount: " + populationCount);
+        print("trafficCount: " + trafficCount);
+        TimeManager.current.CheckForShifts(true);
         TimeManager.current.SetTimeTo(480);
     }
 
     private void LoadCareer() {
-    
+        TimeManager.current.CheckForShifts(true);
+        TimeManager.current.SetTimeTo(time);
     }
 
     public void SaveGame() {
         print("Saving game");
+        //Save vars into sls
+        deposit = BoundaryManager.current.deposit;
+        days = TimeManager.current.days;
+        time = TimeManager.current.time;
+
         //DEPOSIT
-        PlayerPrefs.SetInt("Freeride_Deposit", BoundaryManager.current.deposit);
+        PlayerPrefs.SetInt(gameMode + "_Deposit", deposit);
         //DAY
-        PlayerPrefs.SetInt("Freeride_Day", TimeManager.current.days);
+        PlayerPrefs.SetInt(gameMode + "_Day", days);
         //TIME
-        PlayerPrefs.SetInt("Freeride_Time", TimeManager.current.time);
+        PlayerPrefs.SetInt(gameMode + "_Time", time);
+
+
+        //CAREER HIGH SCORE
+        if(gameMode == "Career") {
+            int hsMoney = PlayerPrefs.GetInt("Career_HS_Deposit", 0);
+            int currentMoney = deposit;
+
+            if(currentMoney > hsMoney) {
+                print("NEW HIGHSCORE!");
+                PlayerPrefs.SetInt("Career_HS_Day", days);
+                PlayerPrefs.SetInt("Career_HS_Deposit", deposit);
+                PlayerPrefs.SetInt("Career_HS_MaxPop", populationCount);
+                PlayerPrefs.SetInt("Career_HS_MaxTraffic", trafficCount);
+                PlayerPrefs.SetInt("Career_HS_ShiftLength", shiftLength);
+            }
+        }
+
+        Setup();
+    }
+
+    public void LoadGame() {
+        if(gameMode == "Freeride") {
+            LoadFreerideSettings();
+            LoadFreeride();
+        } else {
+            LoadCareerSettings();
+            LoadCareer();
+        }
+        Setup();
     }
 
     #endregion
