@@ -22,7 +22,7 @@ public class Follower : MonoBehaviour {
             // rot.z = toFollow.rotation.y;
             // transform.rotation = rot;
             float y = toFollow.rotation.eulerAngles.y;
-            Quaternion rot = Quaternion.Euler(0, 0, y);
+            Quaternion rot = Quaternion.Euler(0, y, 0);
             transform.rotation = rot;
         }
     }

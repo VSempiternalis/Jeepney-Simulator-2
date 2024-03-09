@@ -88,6 +88,7 @@ public class TimeManager : MonoBehaviour {
     }
 
     public void CheckForShifts(bool newIsShifts) {
+        print("Check for shifts: " + newIsShifts);
         isShifts = newIsShifts;
 
         if(!isShifts) {
