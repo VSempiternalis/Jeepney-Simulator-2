@@ -191,7 +191,7 @@ namespace TGStylizedWorld
                     int hairIndex = Random.Range(0, hairIndexes.Count - 1);
                     foreach (TGHairItem item in Hairs)
                     {
-                        item.Hair.gameObject.SetActive(false);
+                        if(item.Hair && item.Hair.gameObject) item.Hair.gameObject.SetActive(false);
                     }
                     hairItem = Hairs[hairIndexes[hairIndex]];
                     hatEnabled = hairItem.AllowHair;

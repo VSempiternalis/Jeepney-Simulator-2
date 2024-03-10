@@ -14,6 +14,7 @@ TagManager:
   - DayText
   - StartShiftTrigger
   - EndShiftTrigger
+  - Chunk
   layers:
   - Default
   - TransparentFX

@@ -41,6 +41,7 @@ public class PlayerDriveInput : MonoBehaviour {
     private void Start() {
         pi = GetComponent<PlayerInteraction>();
 
+        Keybinds.current.onKeyChangeEvent += OnKeyChangeEvent;
         OnKeyChangeEvent();
     }
 

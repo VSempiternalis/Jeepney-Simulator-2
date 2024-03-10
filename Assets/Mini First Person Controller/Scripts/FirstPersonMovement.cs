@@ -17,13 +17,14 @@ public class FirstPersonMovement : MonoBehaviour
     [SerializeField, Tooltip("Prevents jumping when the transform is in mid-air.")]
     GroundCheck groundCheck;
 
-    [Header("Keybinds")]
-    public KeyCode Key_Forward;
-    public KeyCode Key_Left;
-    public KeyCode Key_Right;
-    public KeyCode Key_Back;
-    public KeyCode Key_Run;
-    public KeyCode Key_Crouch;
+    [Space(10)]
+    [Header("KEYBINDS")]
+    private KeyCode Key_Forward;
+    private KeyCode Key_Backward;
+    private KeyCode Key_Left;
+    private KeyCode Key_Right;
+    private KeyCode Key_Run;
+    private KeyCode Key_Crouch;
 
     [SerializeField] private Head head;
     [SerializeField] private bool onlyMoveWhenGrounded;
@@ -52,13 +53,21 @@ public class FirstPersonMovement : MonoBehaviour
             }
 
             // Get targetVelocity from input.
-            Vector2 targetVelocity =new Vector2( Input.GetAxis("Horizontal") * targetMovingSpeed, Input.GetAxis("Vertical") * targetMovingSpeed);
+            float velY = 0;
+            float velX = 0;
+            if(Input.GetKey(Key_Forward)) velY = targetMovingSpeed;
+            else if(Input.GetKey(Key_Backward)) velY = -targetMovingSpeed;
+            if(Input.GetKey(Key_Left)) velX = -targetMovingSpeed;
+            else if(Input.GetKey(Key_Right)) velX = targetMovingSpeed;
+
+            Vector2 targetVelocity = new Vector2(velX, velY);
+            // Vector2 targetVelocity =new Vector2( Input.GetAxis("Horizontal") * targetMovingSpeed, Input.GetAxis("Vertical") * targetMovingSpeed);
 
             // Apply movement.
             rb.velocity = transform.rotation * new Vector3(targetVelocity.x, rb.velocity.y, targetVelocity.y);
 
             //Animation
-            if(Input.GetKey(Key_Crouch) && Input.GetKey(Key_Forward)) {
+            if(Input.GetKey(Key_Crouch) && (Input.GetKey(Key_Forward) || Input.GetKey(Key_Backward) || Input.GetKey(Key_Left) || Input.GetKey(Key_Right))) {
                 if(head.state == "Crouch walking") return;
                 head.state = "Crouch walking";
                 head.CheckState();
@@ -74,7 +83,7 @@ public class FirstPersonMovement : MonoBehaviour
                 if(head.state == "Walking") return;
                 head.state = "Walking";
                 head.CheckState();
-            } else if(Input.GetKey(Key_Back)) {
+            } else if(Input.GetKey(Key_Backward)) {
                 if(head.state == "Walking back") return;
                 head.state = "Walking back";
                 head.CheckState();
@@ -95,7 +104,7 @@ public class FirstPersonMovement : MonoBehaviour
 
     private void OnKeyChangeEvent() {
         Key_Forward = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Forward", "W"));
-        Key_Back = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Back", "S"));
+        Key_Backward = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Backward", "S"));
         Key_Left = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Left", "A"));
         Key_Right = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Right", "D"));
         Key_Run = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Run", "LeftShift"));

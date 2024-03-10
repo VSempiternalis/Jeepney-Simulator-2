@@ -106,10 +106,10 @@ public class CarController : MonoBehaviour {
     private KeyCode Key_GearDown;
     private KeyCode Key_TowTruck;
     private KeyCode Key_Map;
-    private KeyCode Key_GiveChange;
-    private KeyCode Key_ChangerScrollUp;
-    private KeyCode Key_ChangerScrollDown;
-    private KeyCode Key_TakePayment;
+    // private KeyCode Key_GiveChange;
+    // private KeyCode Key_ChangerScrollUp;
+    // private KeyCode Key_ChangerScrollDown;
+    // private KeyCode Key_TakePayment;
 
     [Space(10)]
     [Header("OTHERS")]
@@ -144,7 +144,7 @@ public class CarController : MonoBehaviour {
         }
         UpdateSeatsTaken();
 
-        // KeybindsManager.current.onKeyChangeEvent += OnKeyChangeEvent;
+        Keybinds.current.onKeyChangeEvent += OnKeyChangeEvent;
         OnKeyChangeEvent();
 
         UpdateGearText();
@@ -179,17 +179,17 @@ public class CarController : MonoBehaviour {
         Key_DriveBackward = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_DriveBackward", "S"));
         Key_SteerLeft = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_SteerLeft", "A"));
         Key_SteerRight = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_SteerRight", "D"));
-        Key_Headlights = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Headlights", "L"));
+        Key_Headlights = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Headlights", "H"));
         Key_Horn = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Horn", "F"));
         Key_Brake = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Brake", "Space"));
         Key_GearUp = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GearUp", "LeftShift"));
         Key_GearDown = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GearDown", "LeftControl"));
         Key_TowTruck = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_TowTruck", "T"));
         Key_Map = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Map", "Tab"));
-        Key_GiveChange = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GiveChange", "R"));
-        Key_ChangerScrollUp = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_ChangerScrollUp", "E"));
-        Key_ChangerScrollDown = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_ChangerScrollDown", "Q"));
-        Key_TakePayment = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_TakePayment", "F"));
+        // Key_GiveChange = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GiveChange", "R"));
+        // Key_ChangerScrollUp = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_ChangerScrollUp", "E"));
+        // Key_ChangerScrollDown = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_ChangerScrollDown", "Q"));
+        // Key_TakePayment = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_TakePayment", "F"));
     }
 
     public void GetInput() {

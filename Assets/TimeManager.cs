@@ -16,8 +16,8 @@ public class TimeManager : MonoBehaviour {
 
     public bool updatingTime;
 
-    private List<TMP_Text> clocks = new List<TMP_Text>();
-    private List<TMP_Text> dayTexts = new List<TMP_Text>();
+    [SerializeField] private List<TMP_Text> clocks = new List<TMP_Text>();
+    [SerializeField] private List<TMP_Text> dayTexts = new List<TMP_Text>();
 
     //SHIFTS
     [Space(10)]
@@ -32,7 +32,7 @@ public class TimeManager : MonoBehaviour {
     private int shiftHoursLeft;
     private int shiftMinutesLeft;
     private int shiftTimeLeft;
-    private List<TMP_Text> shiftTimeTexts = new List<TMP_Text>();
+    [SerializeField] private List<TMP_Text> shiftTimeTexts = new List<TMP_Text>();
     // [SerializeField] private TMP_Text shiftTimeTextRed;
     [SerializeField] private Color white;
     [SerializeField] private Color red;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Crouch : MonoBehaviour
 {
-    public KeyCode key = KeyCode.LeftControl;
+    // public KeyCode key = KeyCode.LeftControl;
 
     [Header("Slow Movement")]
     [Tooltip("Movement to slow down when crouched.")]
@@ -49,7 +49,7 @@ public class Crouch : MonoBehaviour
 
     void LateUpdate()
     {
-        if (Input.GetKey(key)) {
+        if (Input.GetKey(Key_Crouch)) {
             // Enforce a low head.
             if (headToLower) {
                 // If we don't have the defaultHeadYLocalPosition, get it now.

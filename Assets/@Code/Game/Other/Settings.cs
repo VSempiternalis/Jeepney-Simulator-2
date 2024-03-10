@@ -135,9 +135,9 @@ public class Settings : MonoBehaviour {
         SetReflectionProbeSize(PlayerPrefs.GetFloat("Settings_ReflectionProbeSize"));
         SetFOV(PlayerPrefs.GetFloat("Settings_FOV"));
 
-        float mouseSens = PlayerPrefs.GetFloat("Settings_MouseSens");
+        float mouseSens = PlayerPrefs.GetFloat("Settings_MouseSens", 0.3f);
         SetMouseSens(mouseSens);
-        float zoomSens = PlayerPrefs.GetFloat("Settings_ZoomSens");
+        float zoomSens = PlayerPrefs.GetFloat("Settings_ZoomSens", 3f);
         SetZoomSens(zoomSens);
         float renderDist = PlayerPrefs.GetFloat("Settings_RenderDist", 5);
         SetRenderDist(renderDist);

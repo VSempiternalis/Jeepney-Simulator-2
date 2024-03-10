@@ -12,7 +12,7 @@ public class PlayerInteraction : MonoBehaviour {
     private bool rMouseDown;
     private bool mMouseDown;
     private bool tabDown;
-    private bool f12Down;
+    private bool hudToggleDown;
     private bool lMouseHold;
     private bool rMouseHold;
     private float mouseScroll;
@@ -53,8 +53,13 @@ public class PlayerInteraction : MonoBehaviour {
     [SerializeField] private uiAnimGroup playerDestUI;
     [SerializeField] private uiAnimGroup inAreaUI;
 
+    [Space(10)]
+    [Header("KEYBINDS")]
+    private KeyCode Key_HUDToggle;
+
     private void Start() {
-        // OnKeyChangeEvent();
+        Keybinds.current.onKeyChangeEvent += OnKeyChangeEvent;
+        OnKeyChangeEvent();
     }
 
     private void Update() {
@@ -64,6 +69,11 @@ public class PlayerInteraction : MonoBehaviour {
         Interaction();
 
         ClearInput();
+    }
+
+    private void OnKeyChangeEvent() {
+        print(KeyCode.F12);
+        Key_HUDToggle = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_HUDToggle", "F12"));
     }
 
     private void GetInput() {
@@ -89,7 +99,7 @@ public class PlayerInteraction : MonoBehaviour {
             } else rMouseHold = false;
         }
 
-        f12Down = Input.GetKeyDown(KeyCode.F12);
+        hudToggleDown = Input.GetKeyDown(Key_HUDToggle);
 
         mouseScroll = Input.mouseScrollDelta.y;
     }
@@ -101,7 +111,7 @@ public class PlayerInteraction : MonoBehaviour {
         lMouseHold = false;
         rMouseHold = false;
         tabDown = false;
-        f12Down = false;
+        hudToggleDown = false;
         mouseScroll = 0;
     }
 
@@ -132,7 +142,7 @@ public class PlayerInteraction : MonoBehaviour {
             // MapManager.current.Toggle();
         } 
         //HIDE UI
-        else if(f12Down) {
+        else if(hudToggleDown) {
             // gameHUD.SetActive(!gameHUD.activeSelf);
             if(gameHUD.GetComponent<CanvasGroup>().alpha > 0) gameHUD.Out();
             else gameHUD.In();
