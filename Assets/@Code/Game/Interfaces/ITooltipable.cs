@@ -2,5 +2,6 @@ using UnityEngine;
 
 public interface ITooltipable {
     public string GetHeader();
-    public string GetText();
+    public string GetControls();
+    public string GetDesc();
 }

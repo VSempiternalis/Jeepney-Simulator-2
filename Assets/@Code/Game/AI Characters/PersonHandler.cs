@@ -310,10 +310,11 @@ public class PersonHandler : MonoBehaviour {
         posDestinations.Clear();
 
         Vector3 exitPos = new Vector3();
-        Vector3 dropPos = dropSpot.GetDropPos();
-        print(name + " DROPPING! Dropspot: " + dropSpot.name + " drop pos: " + dropPos);
+        Vector3 dropPos = new Vector3(0, 0, 0);
+        if(dropSpot) dropPos = dropSpot.GetDropPos();
+        // print(name + " DROPPING! Dropspot: " + dropSpot.name + " drop pos: " + dropPos);
 
-        if(Vector3.Distance(carCon.pointPassengerExitLeft.position, dropPos) < Vector3.Distance(carCon.pointPassengerExitRight.position, dropPos)) exitPos = carCon.pointPassengerExitLeft.position;
+        if(Vector3.Distance(carCon.pointPassengerExitLeft.position, dropPos) <= Vector3.Distance(carCon.pointPassengerExitRight.position, dropPos)) exitPos = carCon.pointPassengerExitLeft.position;
         else exitPos = carCon.pointPassengerExitRight.position;
         posDestinations.Add(exitPos);
         posDestinations.Add(dropPos);

@@ -18,11 +18,11 @@ public class ChunksManager : MonoBehaviour {
     }
 
     private void ChunkCheck() {
-        print(Time.time + " chunk check");
+        // print(Time.time + " chunk check");
         Vector3 playerPos = player.position;
         foreach(Transform chunk in chunks) {
             dist = Vector3.Distance(playerPos, chunk.position);
-            print("dist: " + dist);
+            // print("dist: " + dist);
 
             //TURN OFF
             if(chunk.gameObject.activeSelf && dist > loadDist) {

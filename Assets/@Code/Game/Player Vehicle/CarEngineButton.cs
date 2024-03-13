@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class CarEngineButton : MonoBehaviour, IInteractable {
+public class CarEngineButton : MonoBehaviour, IInteractable, ITooltipable {
+    [SerializeField] private string desc;
+    
     [SerializeField] private CarController carCon;
     private bool isOn;
     [SerializeField] private Vector3 onPosition;
@@ -28,5 +30,17 @@ public class CarEngineButton : MonoBehaviour, IInteractable {
         audioHandler.Play(1);
         if(isOn) audioHandler.Play(2);
         else audioHandler.Play(3);
+    }
+
+    public string GetHeader() {
+        return "Engine Button";
+    }
+
+    public string GetControls() {
+        return "[L Mouse] Toggle engine";
+    }
+
+    public string GetDesc() {
+        return desc;
     }
 }

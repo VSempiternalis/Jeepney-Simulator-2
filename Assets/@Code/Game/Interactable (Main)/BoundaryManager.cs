@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using Unity.Mathematics;
 
 public class BoundaryManager : MonoBehaviour {
     public static BoundaryManager current;
@@ -32,6 +33,14 @@ public class BoundaryManager : MonoBehaviour {
 
     [SerializeField] private Transform spawnPoint;
 
+    [Space(10)]
+    [Header("VEHICLE")]
+    [SerializeField] private GameObject money1PF;
+    [SerializeField] private GameObject money5PF;
+    [SerializeField] private StorageHandler storage1;
+    [SerializeField] private StorageHandler storage2;
+    [SerializeField] private CarController carCon;
+
     private void Awake() {
         current = this;
     }
@@ -51,11 +60,32 @@ public class BoundaryManager : MonoBehaviour {
         // });
     }
 
+    private void ResetVicMoney() {
+        for(int i = 0; i < 10; i++){
+            GameObject newMoney = Instantiate(money1PF, storage1.transform.position, Quaternion.identity);
+            // float xPos = Random.Range(storage.transform.position.x - (storage.transform.localScale.x/2), storage.transform.position.x + (storage.transform.localScale.x/2));
+            // float zPos = Random.Range(storage.transform.position.z - (storage.transform.localScale.z/2), storage.transform.position.z + (storage.transform.localScale.z/2));
+            // Vector3 newPos = new Vector3(xPos, storage1.transform.position.y, zPos);
+            storage1.AddItemRandom(newMoney);
+            newMoney.name = "Money - P" + newMoney.GetComponent<Value>().value;
+        }
+
+        for(int i = 0; i < 3; i++){
+            GameObject newMoney = Instantiate(money5PF, storage2.transform.position, Quaternion.identity);
+            // float xPos = Random.Range(storage.transform.position.x - (storage.transform.localScale.x/2), storage.transform.position.x + (storage.transform.localScale.x/2));
+            // float zPos = Random.Range(storage.transform.position.z - (storage.transform.localScale.z/2), storage.transform.position.z + (storage.transform.localScale.z/2));
+            // Vector3 newPos = new Vector3(xPos, storage1.transform.position.y, zPos);
+            storage2.AddItemRandom(newMoney);
+            newMoney.name = "Money - P" + newMoney.GetComponent<Value>().value;
+        }
+    }
+
     public void Setup(string gameMode) {
         if(gameMode == "Career") doBoundary = true;
 
         CalculateNewBoundary();
         UpdateTexts();
+        ResetVicMoney();
     }
 
     public void TryAddLateFee() {
@@ -158,5 +188,8 @@ public class BoundaryManager : MonoBehaviour {
                 });
             });
         }
+
+        //Clear jeepney seats
+        carCon.NewDay();
     }
 }

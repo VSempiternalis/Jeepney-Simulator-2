@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 
 public class ChangeHandler : MonoBehaviour, ITooltipable, IScrollable {
+    [SerializeField] private string header;
+    [SerializeField] private string controls;
+
     public List<PersonHandler> changees = new List<PersonHandler>();
     public PersonHandler currentChangee;
     private LineRenderer lr;
@@ -70,7 +73,7 @@ public class ChangeHandler : MonoBehaviour, ITooltipable, IScrollable {
         if(changees.Count == 0) {
             changeText.text = "Place change here";
         } else {
-            changeText.text = GetText();
+            changeText.text = GetDesc();
             // if(changees.Count > 1) {
             //     changeText.text += GetText();
             // } else {
@@ -97,7 +100,11 @@ public class ChangeHandler : MonoBehaviour, ITooltipable, IScrollable {
         return header;
     }
 
-    public string GetText() {
+    public string GetControls() {
+        return "[R Mouse] Place item\n[Mid Mouse] Take all items";
+    }
+
+    public string GetDesc() {
         string text = "";
 
         if(changees.Count == 0) {
