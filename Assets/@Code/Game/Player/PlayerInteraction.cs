@@ -43,8 +43,12 @@ public class PlayerInteraction : MonoBehaviour {
     [SerializeField] private GameObject onhandItemPF;
     [SerializeField] private Transform onhandUI;
     [SerializeField] private TMP_Text tooltipHeader;
-    [SerializeField] private TMP_Text tooltipText;
+    [SerializeField] private TMP_Text tooltipControls;
+    [SerializeField] private TMP_Text tooltipDesc;
     [SerializeField] private uiAnimGroup gameHUD;
+    private TooltipMask tm;
+    private GameObject oldItemOver;
+    private bool isItemOverSame;
 
     [Space(10)]
     [Header("DESTINATIONS")]
@@ -60,6 +64,8 @@ public class PlayerInteraction : MonoBehaviour {
     private void Start() {
         Keybinds.current.onKeyChangeEvent += OnKeyChangeEvent;
         OnKeyChangeEvent();
+
+        tm = TooltipMask.current;
     }
 
     private void Update() {
@@ -72,7 +78,6 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     private void OnKeyChangeEvent() {
-        print(KeyCode.F12);
         Key_HUDToggle = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_HUDToggle", "F12"));
     }
 
@@ -118,19 +123,41 @@ public class PlayerInteraction : MonoBehaviour {
     private void SetItemOver() {
         //Clear ItemOver
         if(itemOver && itemOver.GetComponent<Outline>()) itemOver.GetComponent<Outline>().OutlineWidth = 0;
+        oldItemOver = itemOver;
         itemOver = null;
+        isItemOverSame = false;
 
         Vector3 raycastOrigin = playerCam.transform.position + (Vector3.up * raycastOffset);
         Ray ray = playerCam.ScreenPointToRay(Input.mousePosition);
 
         Debug.DrawRay(raycastOrigin, ray.direction, Color.red);
         if(Physics.Raycast(raycastOrigin, ray.direction, out hit, reachDist, interactionMask)) {
-            if (hit.collider) { // Check if the collider is on the Interactable layer
+            if(hit.collider) { // Check if the collider is on the Interactable layer
                 itemOver = hit.collider.gameObject;
             }
         }
 
-        if(itemOver && itemOver.GetComponent<Outline>()) itemOver.GetComponent<Outline>().OutlineWidth = 5;
+        if(itemOver == oldItemOver) isItemOverSame = true;
+
+        if(itemOver) {
+            //OUTLINE
+            if(itemOver.GetComponent<Outline>()) itemOver.GetComponent<Outline>().OutlineWidth = 5;
+
+            //TOOLTIP
+            if(itemOver.GetComponent<ITooltipable>() != null) {
+            // if(itemOver.GetComponent<ITooltipable>() != null && !isItemOverSame) {
+                ITooltipable tooltipable = itemOver.GetComponent<ITooltipable>();
+                tooltipHeader.text = tooltipable.GetHeader();
+                tooltipControls.text = tooltipable.GetControls();
+                tooltipDesc.text = tooltipable.GetDesc();
+                // tooltipHeader.gameObject.SetActive(true);
+                // tooltipText.gameObject.SetActive(true);
+
+                tm.In();
+            }
+        } else {
+            tm.Out();
+        }
     }
 
     private void Interaction() {
@@ -284,20 +311,6 @@ public class PlayerInteraction : MonoBehaviour {
 
         return returnBool;
     }
-
-    // private void OnKeyChangeEvent() {
-    //     //Set keys
-    //     Key_DriveForward = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_DriveForward", "W"));;
-    //     Key_DriveBackward = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_DriveBackward", "S"));;
-    //     Key_SteerLeft = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_SteerLeft", "A"));;
-    //     Key_SteerRight = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_SteerRight", "D"));;
-    //     Key_Headlights = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Headlights", "R"));;
-    //     Key_Horn = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Horn", "F"));;
-    //     Key_Brake = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Brake", "Space"));;
-    //     Key_GearUp = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GearUp", "LeftShift"));;
-    //     Key_GearDown = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GearDown", "LeftControl"));;
-    //     Key_TowTruck = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_TowTruck", "T"));;
-    // }
     
 
     private void OnTriggerEnter(Collider other) {

@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class SeatHandler : MonoBehaviour, IInteractable, ITooltipable {
     [SerializeField] private string header;
-    [SerializeField] private string text;
+    [SerializeField] private string controls;
+    [SerializeField] [TextArea] private string desc;
 
     [SerializeField] private CarController carCon;
     public Vector3 localPosPlayer;
@@ -48,10 +49,15 @@ public class SeatHandler : MonoBehaviour, IInteractable, ITooltipable {
     }
 
     public string GetHeader() {
-        return header;
+        if(header != "") return header;
+        return "Seat";
     }
 
-    public string GetText() {
-        return text;
+    public string GetControls() {
+        return "[L Mouse] Sit/Exit";
+    }
+
+    public string GetDesc() {
+        return desc;
     }
 }

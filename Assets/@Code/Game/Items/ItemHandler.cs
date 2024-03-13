@@ -1,6 +1,10 @@
 using UnityEngine;
 
-public class ItemHandler : MonoBehaviour, IInteractable {
+public class ItemHandler : MonoBehaviour, IInteractable, ITooltipable {
+    [SerializeField] private string header;
+    [SerializeField] private string controls;
+    [SerializeField] [TextArea] private string desc;
+
     public Transform storage;
     public float yPlaceOffset;
 
@@ -21,5 +25,17 @@ public class ItemHandler : MonoBehaviour, IInteractable {
 
     public void Interact(GameObject interactor) {
 
+    }
+
+    public string GetHeader() {
+        return name;
+    }
+
+    public string GetControls() {
+        return "[L Mouse] Grab item";
+    }
+
+    public string GetDesc() {
+        return desc;
     }
 }

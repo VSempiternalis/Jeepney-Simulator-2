@@ -14,7 +14,7 @@ public class StickShift : MonoBehaviour {
         
     }
 
-    private void Update() {
+    private void FixedUpdate() {
         if(state == "Moving" && moveToPoints.Count > 0) {
             float distToNext = 1;
             Vector3 thisPos = transform.position;

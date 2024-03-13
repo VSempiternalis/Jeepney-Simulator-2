@@ -142,7 +142,7 @@ public class TimeManager : MonoBehaviour {
     }
 
     private void UpdateShiftTimers() {
-        print("updating shift timers");
+        // print("updating shift timers");
 
         //MINUTES
         shiftMinutesLeft = shiftTimeLeft % 60;

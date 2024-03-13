@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class DoorHandler : MonoBehaviour, IInteractable, ITooltipable {
     [SerializeField] private string header;
-    [SerializeField] private string text;
+    [SerializeField] private string controls;
+    [SerializeField] [TextArea] private string desc;
 
     public string state; //open, closed, opening, closing
     [SerializeField] private bool hasPivot;
@@ -92,11 +93,15 @@ public class DoorHandler : MonoBehaviour, IInteractable, ITooltipable {
     }
 
     public string GetHeader() {
-        return header;
+        return "Door";
     }
 
-    public string GetText() {
-        return text;
+    public string GetControls() {
+        return "[L Mouse] Open/Close";
+    }
+
+    public string GetDesc() {
+        return desc;
     }
 
     #endregion

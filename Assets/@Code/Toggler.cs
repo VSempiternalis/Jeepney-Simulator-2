@@ -1,6 +1,10 @@
 using UnityEngine;
 
 public class Toggler : MonoBehaviour, IInteractable, ITooltipable {
+    [SerializeField] private string header;
+    [SerializeField] private string controls;
+    [SerializeField] private string desc;
+
     [SerializeField] private GameObject toToggle;
     private AudioSource audioSource;
 
@@ -18,10 +22,14 @@ public class Toggler : MonoBehaviour, IInteractable, ITooltipable {
     }
 
     public string GetHeader() {
-        return "LIGHT";
+        return header;
     }
 
-    public string GetText() {
-        return "Click to toggle on/off";
+    public string GetControls() {
+        return controls;
+    }
+
+    public string GetDesc() {
+        return desc;
     }
 }

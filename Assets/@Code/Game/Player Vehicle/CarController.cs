@@ -171,6 +171,20 @@ public class CarController : MonoBehaviour {
         return (passengerCount < seatSpots.Count);
     }
 
+    public void NewDay() {
+        changePoint.ClearChangees();
+
+        foreach(Transform seat in seatSpots) {
+            if(seat.childCount > 0) {
+                Transform passenger = seat.GetChild(0);
+                // passenger.GetComponent<PersonHandler>().patience = 0;
+                passenger.GetComponent<PersonHandler>().ExitVehicle();
+                passenger.GetComponent<PersonHandler>().state = "Idle";
+                passenger.GetComponent<Despawner>().Despawn();
+            }
+        }
+    }
+
     // INPUTS ============================================================================
 
     private void OnKeyChangeEvent() {
@@ -292,7 +306,7 @@ public class CarController : MonoBehaviour {
     private void UpdateSeatsTaken() {
         // print("Updating seats taken");
         for(int i = 0; i < seatSpots.Count; i++) {
-            if(seatSpots[i].childCount == 1) seatsTaken[i] = 0;
+            if(seatSpots[i].childCount == 0) seatsTaken[i] = 0;
             else seatsTaken[i] = 1;
         }
     }

@@ -2,6 +2,10 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class StorageHandler : MonoBehaviour, ITooltipable { 
+    [SerializeField] private string header;
+    [SerializeField] private string controls;
+    [SerializeField] [TextArea] private string desc;
+
     public int value;
     public List<GameObject> items;
     private AudioHandler audioHandler;
@@ -55,11 +59,29 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
         if(audioHandler) audioHandler.Play(0);
     }
 
+    // public void AddItemRandom(GameObject newItem) {
+    //     if(newItem.GetComponent<ItemHandler>().storage != null && newItem.GetComponent<ItemHandler>().storage.GetComponent<StorageHandler>()) {
+    //         newItem.GetComponent<ItemHandler>().storage.GetComponent<StorageHandler>().RemoveItem(newItem);
+    //     }
+
+    //     items.Add(newItem);
+    //     newItem.GetComponent<ItemHandler>().storage = transform;
+    //     if(newItem.GetComponent<Value>()) AddValue(newItem.GetComponent<Value>().value);
+    //     //Set random position within placeArea
+    //     float spawnX = Random.Range(-0.5f, 0.5f);
+    //     float spawnZ = Random.Range(-0.5f, 0.5f);
+        
+    //     float rotY = Random.Range(0, 360);
+        
+    //     LeanTween.moveLocal(newItem, new Vector3(spawnX, transform.localPosition.y, spawnZ), 0.25f).setEaseInOutExpo();
+    //     newItem.transform.eulerAngles = new Vector3(0, rotY, 0);
+
+    //     newItem.transform.SetParent(transform);
+
+    //     if(audioHandler) audioHandler.Play(0);
+    // }
+
     public void AddItemRandom(GameObject newItem) {
-        // print("Adding item: " + newItem.name);
-        //Remove new item from storage if stored
-        // print("newItem.GetComponent<ItemHandler>().storage: " + newItem.GetComponent<ItemHandler>().storage);
-        // print("newItem.GetComponent<ItemHandler>().storage.GetComponent<StorageHandler>(): " + newItem.GetComponent<ItemHandler>().storage.GetComponent<StorageHandler>());
         if(newItem.GetComponent<ItemHandler>().storage != null && newItem.GetComponent<ItemHandler>().storage.GetComponent<StorageHandler>()) {
             newItem.GetComponent<ItemHandler>().storage.GetComponent<StorageHandler>().RemoveItem(newItem);
         }
@@ -68,22 +90,17 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
         newItem.GetComponent<ItemHandler>().storage = transform;
         if(newItem.GetComponent<Value>()) AddValue(newItem.GetComponent<Value>().value);
         //Set random position within placeArea
-        // float spawnX = Random.Range(transform.localPosition.x - (transform.localScale.x/2), transform.localPosition.x + (transform.localScale.x/2));
-        // float spawnZ = Random.Range(transform.localPosition.z - (transform.localScale.z/2), transform.localPosition.z + (transform.localScale.z/2));
-        float spawnX = Random.Range(-0.5f, 0.5f);
-        float spawnZ = Random.Range(-0.5f, 0.5f);
+        float spawnX = Random.Range(-0.4f, 0.4f);
+        float spawnZ = Random.Range(-0.4f, 0.4f);
+        // goober.localPosition = new Vector3(spawnX, transform.localPosition.y, spawnZ);
         
-        float rotY = Random.Range(0, 361); //Technically, it should be 360 but whatever
-        
-        // newItem.transform.localPosition = new Vector3(spawnX, transform.localPosition.y - 0.5f, spawnZ);
-        // newItem.transform.localPosition = new Vector3(spawnX, transform.localPosition.y  + transform.localScale.y, spawnZ);
-        LeanTween.moveLocal(newItem, new Vector3(spawnX, transform.localPosition.y, spawnZ), 0.25f).setEaseInOutExpo();
-        // newItem.transform.Rotate(new Vector3(0, 0, 0));
-        newItem.transform.eulerAngles = new Vector3(0, rotY, 0);
-        // newItem.transform.Rotate(new Vector3(0, rotY, 0));
-        // newItem.transform.rotation = Quaternion.identity;
+        float rotY = Random.Range(0, 360);
 
         newItem.transform.SetParent(transform);
+        // LeanTween.moveLocal(newItem, new Vector3(goober.localPosition.x, transform.localPosition.y, goober.localPosition.z), 0.25f).setEaseInOutExpo();
+        LeanTween.moveLocal(newItem, new Vector3(spawnX, transform.localPosition.y, spawnZ), 0.25f).setEaseInOutExpo();
+        // newItem.transform.localPosition = new Vector3(spawnX, transform.localPosition.y, spawnZ);
+        newItem.transform.eulerAngles = new Vector3(0, rotY, 0);
 
         if(audioHandler) audioHandler.Play(0);
     }
@@ -110,10 +127,14 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
     }
 
     public string GetHeader() {
-        return "STORAGE";
+        return "Storage Mat";
     }
 
-    public string GetText() {
-        return "A place to store your valuables";
+    public string GetControls() {
+        return "[R Mouse] Place item\n[Mid Mouse] Take all items";
+    }
+
+    public string GetDesc() {
+        return desc;
     }
 }

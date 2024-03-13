@@ -1,8 +1,10 @@
 using UnityEngine;
 
-public class DriversSeat : MonoBehaviour, IInteractable, ITooltipable {
+public class DriversSeat : MonoBehaviour, IInteractable {
     [SerializeField] private string header;
-    [SerializeField] private string text;
+    [SerializeField] private string controls;
+    [SerializeField] private string desc;
+
     [SerializeField] private CarController carCon;
     [SerializeField] private AudioSource audioSource;
 
@@ -18,13 +20,5 @@ public class DriversSeat : MonoBehaviour, IInteractable, ITooltipable {
         // carCon.ToggleDriverSeat(interactor.transform, transform);
 
         audioSource.Play();
-    }
-
-    public string GetHeader() {
-        return header;
-    }
-
-    public string GetText() {
-        return text;
     }
 }
