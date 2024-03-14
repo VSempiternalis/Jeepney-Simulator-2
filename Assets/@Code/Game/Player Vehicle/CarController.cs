@@ -8,6 +8,19 @@ public class CarController : MonoBehaviour {
     [SerializeField] private GameObject headlights;
 
     [Space(10)]
+    [Header("FUEL")]
+    [SerializeField] private Transform fuelNeedle;
+    [SerializeField] private TMP_Text fuelText;
+    public int fuelAmount;
+    public int fuelCapacity;
+    // public bool hasFuel;
+    // public bool engineIsOn;
+    public int fuelLoss; //fuel lost per frame
+    // public bool isFuelLossActive;
+    [SerializeField] private float minFuelNeedleRotation;
+    [SerializeField] private float maxFuelNeedleRotation;
+
+    [Space(10)]
     [Header("VARIABLES")]
     public bool isEngineOn;
     public float maxAcceleration = 30.0f;
@@ -106,10 +119,6 @@ public class CarController : MonoBehaviour {
     private KeyCode Key_GearDown;
     private KeyCode Key_TowTruck;
     private KeyCode Key_Map;
-    // private KeyCode Key_GiveChange;
-    // private KeyCode Key_ChangerScrollUp;
-    // private KeyCode Key_ChangerScrollDown;
-    // private KeyCode Key_TakePayment;
 
     [Space(10)]
     [Header("OTHERS")]
@@ -159,6 +168,7 @@ public class CarController : MonoBehaviour {
         Move();
         Steer();
         Brake();
+        FuelDrain();
     }
 
     // CHECKS ======================================================================
@@ -200,10 +210,6 @@ public class CarController : MonoBehaviour {
         Key_GearDown = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GearDown", "LeftControl"));
         Key_TowTruck = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_TowTruck", "T"));
         Key_Map = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_Map", "Tab"));
-        // Key_GiveChange = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GiveChange", "R"));
-        // Key_ChangerScrollUp = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_ChangerScrollUp", "E"));
-        // Key_ChangerScrollDown = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_ChangerScrollDown", "Q"));
-        // Key_TakePayment = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_TakePayment", "F"));
     }
 
     public void GetInput() {
@@ -322,6 +328,30 @@ public class CarController : MonoBehaviour {
         passengerCount --;
     }
 
+    // FUEL ===================================================================================
+
+    private void FuelDrain() {
+        if(!isEngineOn) return;
+
+        AddFuel(-fuelLoss);
+    }
+
+    public void AddFuel(int addAmount) {
+        if(addAmount > 0 && fuelAmount >= fuelCapacity) return;
+
+        fuelAmount += addAmount;
+
+        if(fuelAmount < 0) {
+            fuelAmount = 0;
+            
+            moveInput = 0;
+            steerInput = 0;
+            brakeInput = false;
+        } else if(fuelAmount > fuelCapacity) {
+            fuelAmount = fuelCapacity;
+        }
+    }
+
     // DRIVING ============================================================================
 
     public void DriverExit() {
@@ -341,7 +371,7 @@ public class CarController : MonoBehaviour {
     }
 
     private void Move() {
-        if(!isEngineOn) return;
+        if(!isEngineOn || fuelAmount <= 0) return;
         // torque = CalculateTorque();
         torque = 0;
         foreach(Wheel wheel in wheels) {
@@ -439,15 +469,19 @@ public class CarController : MonoBehaviour {
     }
 
     private void AnimateDashboard() {
-        //needle rotation
+        //RPM
         rpmNeedle.localRotation = Quaternion.Euler(Mathf.Lerp(minRPMNeedleRotation, maxRPMNeedleRotation, RPM/redLine), 0, 0);
         rpmText.text = RPM.ToString("0 000");
+
+        //SPEED
         float speedMpS = carRb.velocity.magnitude;
         float speedKpH = speedMpS*3.6f;
         speedNeedle.localRotation = Quaternion.Euler(Mathf.Lerp(minSpeedNeedleRotation, maxSpeedNeedleRotation, speedKpH/maxSpeed), 0, 0);
         speedText.text = speedKpH.ToString("000");
-        //speed
-        //speedClamped
+        
+        //FUEL
+        fuelNeedle.localRotation = Quaternion.Euler(Mathf.Lerp(minFuelNeedleRotation, maxFuelNeedleRotation, (float)fuelAmount/(float)fuelCapacity), 0, 0);
+        fuelText.text = Mathf.Round((float)fuelAmount/1000f) + "L";
     }
 
     private void AnimateWheels() {

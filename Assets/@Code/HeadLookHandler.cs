@@ -11,6 +11,9 @@ public class HeadLookHandler : MonoBehaviour {
 
     private void Update() {
         currentDist = Vector3.Distance(transform.position, target.position);
+
+        if(currentDist > 10) return;
+
         float targetWeight = 0;
 
         //limit headlook to 30

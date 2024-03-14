@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class WorldButton : MonoBehaviour, IInteractable {
-    private bool isOn;
+public class WorldButton : MonoBehaviour, IInteractable, ITooltipable {
+    public bool isOn;
+    public GameObject interactor;
     [SerializeField] private Vector3 onPosition;
     [SerializeField] private Vector3 offPosition;
     [SerializeField] private float pressTime;
@@ -21,6 +22,7 @@ public class WorldButton : MonoBehaviour, IInteractable {
     }
 
     public void Interact(GameObject player) {
+        interactor = player;
         isOn = !isOn;
 
         //Animation
@@ -35,5 +37,19 @@ public class WorldButton : MonoBehaviour, IInteractable {
             if(isOn) audioHandler.Play(2);
             else audioHandler.Play(3);
         }
+    }
+
+    public string GetHeader() {
+        return "Refuel Button";
+    }
+
+    public string GetControls() {
+        return "[L Mouse] Toggle refuel on/off";
+    }
+
+    public string GetDesc() {
+        string returnString = "Press to start refueling your jeepney.";
+
+        return returnString;
     }
 }

@@ -192,6 +192,8 @@ public class PlayerInteraction : MonoBehaviour {
         else if(rMouseDown) {
             if(itemOver.layer == layerStorage && rightHand.childCount > 0) {
                 PlaceItem();
+            } else if(itemOver.GetComponent<IPayable>() != null && rightHand.childCount > 0) {
+                PayItem();
             }
         }
         //MID CLICK
@@ -209,13 +211,25 @@ public class PlayerInteraction : MonoBehaviour {
         //RIGHT HOLD
         else if(rMouseHold) {
             if(itemOver.layer == layerStorage && rightHand.childCount > 0) PlaceItem();
-            // else if(itemOver.GetComponent<IPayable>() != null && rightHand.childCount > 0) PayItem();
+            else if(itemOver.GetComponent<IPayable>() != null && rightHand.childCount > 0) PayItem();
         }
 
         //MOUSE SCROLL
         if(mouseScroll != 0 && itemOver.GetComponent<IScrollable>() != null) {
             itemOver.GetComponent<IScrollable>().Scroll(mouseScroll);
         }
+    }
+
+    private void PayItem() {
+        //Place item on itemover(storage)
+        GameObject giveItem = rightHand.GetChild(0).gameObject;
+        IPayable payable = itemOver.GetComponent<IPayable>();
+        payable.Pay(giveItem.GetComponent<Value>().value);
+
+        Destroy(giveItem);
+
+        //Remove onhand from ui
+        Destroy(onhandUI.GetChild(0).gameObject);
     }
 
     public void GrabAllFromStorage(StorageHandler storage) {
