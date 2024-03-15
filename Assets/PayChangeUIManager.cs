@@ -22,7 +22,7 @@ public class PayChangeUIManager : MonoBehaviour {
     }
 
     public void SetChangeText(string newText) {
-        print("SetChangeText: " + newText);
+        // print("SetChangeText: " + newText);
         changePointText.text = newText;
         changeText = newText;
 

@@ -154,7 +154,7 @@ public class Settings : MonoBehaviour {
 
     public void ToggleCursor() {
         if(player.transform.parent != null) player.GetComponent<Rigidbody>().isKinematic = true; //Player in driverpos
-        else player.GetComponent<Rigidbody>().isKinematic = isCursorOn;
+        // else player.GetComponent<Rigidbody>().isKinematic = isCursorOn;
         // playerCam.GetComponent<FirstPersonLook>().isOn = !isCursorOn;
         playerCam.GetComponent<FirstPersonLook>().enabled = !isCursorOn;
         playerCam.GetComponent<Zoom>().enabled = !isCursorOn;

@@ -11,7 +11,6 @@ public class PlayerInteraction : MonoBehaviour {
     private bool lMouseDown;
     private bool rMouseDown;
     private bool mMouseDown;
-    private bool tabDown;
     private bool hudToggleDown;
     private bool lMouseHold;
     private bool rMouseHold;
@@ -61,11 +60,16 @@ public class PlayerInteraction : MonoBehaviour {
     [Header("KEYBINDS")]
     private KeyCode Key_HUDToggle;
 
+    [Space(10)]
+    [Header("AUDIO")]
+    private AudioManager am;
+
     private void Start() {
         Keybinds.current.onKeyChangeEvent += OnKeyChangeEvent;
         OnKeyChangeEvent();
 
         tm = TooltipMask.current;
+        am = AudioManager.current;
     }
 
     private void Update() {
@@ -115,7 +119,6 @@ public class PlayerInteraction : MonoBehaviour {
         mMouseDown = false;
         lMouseHold = false;
         rMouseHold = false;
-        tabDown = false;
         hudToggleDown = false;
         mouseScroll = 0;
     }
@@ -161,15 +164,8 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     private void Interaction() {
-        //MAP
-        if(tabDown) {
-            //AUDIO
-            // audioHandler.Play(1);
-
-            // MapManager.current.Toggle();
-        } 
         //HIDE UI
-        else if(hudToggleDown) {
+        if(hudToggleDown) {
             // gameHUD.SetActive(!gameHUD.activeSelf);
             if(gameHUD.GetComponent<CanvasGroup>().alpha > 0) gameHUD.Out();
             else gameHUD.In();
@@ -230,6 +226,9 @@ public class PlayerInteraction : MonoBehaviour {
 
         //Remove onhand from ui
         Destroy(onhandUI.GetChild(0).gameObject);
+
+        //audio
+        am.PlayUI(0);
     }
 
     public void GrabAllFromStorage(StorageHandler storage) {
@@ -241,6 +240,9 @@ public class PlayerInteraction : MonoBehaviour {
             rightHand.GetComponent<StorageHandler>().AddItemRandom(items[0]);
         }
         UpdateOnhandUI();
+
+        //audio
+        am.PlayUI(0);
     }
 
     public void PutAllInStorage(StorageHandler storage) {
@@ -258,6 +260,9 @@ public class PlayerInteraction : MonoBehaviour {
             storage.AddItemRandom(item.gameObject);
         }
         UpdateOnhandUI();
+
+        //audio
+        am.PlayUI(0);
     }
 
     private void TakeItemOver() {
@@ -270,6 +275,7 @@ public class PlayerInteraction : MonoBehaviour {
         UpdateOnhandUI();
 
         //audio
+        am.PlayUI(0);
     }
 
     private void PlaceItem() {
@@ -283,8 +289,9 @@ public class PlayerInteraction : MonoBehaviour {
         }
 
         UpdateOnhandUI();
-    
+
         //audio
+        am.PlayUI(0);
     }
 
     private void UpdateOnhandUI() {
@@ -337,11 +344,14 @@ public class PlayerInteraction : MonoBehaviour {
             if(areaUI.text != other.name) areaUI.text = other.name;
 
             //Audio
-            // audioHandler.Play(8);
+            am.PlayUI(6);
         } else if(!inAreaUI.isIn && go.layer == layerArea) { // && areaUI.text != other.name
             inArea = true;
 
             inAreaUI.In();
+
+            //Audio
+            am.PlayUI(8);
         }
 
         if(go.CompareTag("StartShiftTrigger")) {
@@ -349,6 +359,9 @@ public class PlayerInteraction : MonoBehaviour {
         } else if(go.CompareTag("EndShiftTrigger")) {
             TimeManager.current.TryEndShift();
         }
+
+        //Audio Area
+        if(go.CompareTag("AudioArea")) am.NewAmb(go.GetComponent<AudioArea>().audioInt);
     }
 
     private void OnTriggerStay(Collider other) {
@@ -362,7 +375,7 @@ public class PlayerInteraction : MonoBehaviour {
             playerDestUI.Out();
 
             //Audio
-            // if(!GetComponent<AudioSource>().isPlaying) audioHandler.Play(9);
+            am.PlayUI(7);
         }
         if(inAreaUI.isIn && go.layer == layerArea) {
             inAreaUI.Out();

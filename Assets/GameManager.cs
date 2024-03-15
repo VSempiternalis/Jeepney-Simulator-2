@@ -12,6 +12,10 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Start() {
+        foreach(GameObject fuelText in GameObject.FindGameObjectsWithTag("GasText")) {
+            fuelPriceTexts.Add(fuelText.GetComponent<TMP_Text>());
+        }
+        
         UpdateFuelPriceTexts();
     }
 

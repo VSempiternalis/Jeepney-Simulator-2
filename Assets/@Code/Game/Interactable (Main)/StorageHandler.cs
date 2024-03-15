@@ -56,30 +56,8 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
         LeanTween.moveLocal(newItem, new Vector3(goober.localPosition.x, goober.localPosition.y + newItemHandler.yPlaceOffset, goober.localPosition.z), 0.25f).setEaseInOutExpo();
         // LeanTween.move(newItem, new Vector3(placePos.x, placePos.y + newItemHandler.yPlaceOffset, placePos.z), 0.25f).setEaseInOutExpo();
 
-        if(audioHandler) audioHandler.Play(0);
+        if(audioHandler) audioHandler.Play(newItemHandler.placeAudioInt);
     }
-
-    // public void AddItemRandom(GameObject newItem) {
-    //     if(newItem.GetComponent<ItemHandler>().storage != null && newItem.GetComponent<ItemHandler>().storage.GetComponent<StorageHandler>()) {
-    //         newItem.GetComponent<ItemHandler>().storage.GetComponent<StorageHandler>().RemoveItem(newItem);
-    //     }
-
-    //     items.Add(newItem);
-    //     newItem.GetComponent<ItemHandler>().storage = transform;
-    //     if(newItem.GetComponent<Value>()) AddValue(newItem.GetComponent<Value>().value);
-    //     //Set random position within placeArea
-    //     float spawnX = Random.Range(-0.5f, 0.5f);
-    //     float spawnZ = Random.Range(-0.5f, 0.5f);
-        
-    //     float rotY = Random.Range(0, 360);
-        
-    //     LeanTween.moveLocal(newItem, new Vector3(spawnX, transform.localPosition.y, spawnZ), 0.25f).setEaseInOutExpo();
-    //     newItem.transform.eulerAngles = new Vector3(0, rotY, 0);
-
-    //     newItem.transform.SetParent(transform);
-
-    //     if(audioHandler) audioHandler.Play(0);
-    // }
 
     public void AddItemRandom(GameObject newItem) {
         if(newItem.GetComponent<ItemHandler>().storage != null && newItem.GetComponent<ItemHandler>().storage.GetComponent<StorageHandler>()) {
@@ -102,7 +80,7 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
         // newItem.transform.localPosition = new Vector3(spawnX, transform.localPosition.y, spawnZ);
         newItem.transform.eulerAngles = new Vector3(0, rotY, 0);
 
-        if(audioHandler) audioHandler.Play(0);
+        if(audioHandler) audioHandler.Play(newItem.GetComponent<ItemHandler>().placeAudioInt);
     }
 
     public void RemoveItem(GameObject removeItem) {
@@ -127,7 +105,8 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
     }
 
     public string GetHeader() {
-        return "Storage Mat";
+        if(header != "") return "Storage Mat";
+        else return header;
     }
 
     public string GetControls() {

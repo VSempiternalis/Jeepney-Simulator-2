@@ -8,6 +8,8 @@ public class ItemHandler : MonoBehaviour, IInteractable, ITooltipable {
     public Transform storage;
     public float yPlaceOffset;
 
+    public int placeAudioInt;
+
     public void TakeItem(Transform newParent) {
         //Put in hand
         transform.SetParent(newParent);

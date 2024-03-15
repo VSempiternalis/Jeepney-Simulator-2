@@ -7,14 +7,15 @@ public class FuelPump : MonoBehaviour, IPayable, ITooltipable {
     // private GameObject interactor;
     [SerializeField] private CarController carCon;
     [SerializeField] private TMP_Text depositText;
-    private AudioHandler audioHandler;
 
     [SerializeField] private WorldButton button;
     private bool isOn;
     private bool isPumpingFuel;
 
+    private AudioManager am;
+
     private void Start() {
-        audioHandler = GetComponent<AudioHandler>();
+        am = AudioManager.current;
     }
 
     private void Update() {
@@ -22,10 +23,13 @@ public class FuelPump : MonoBehaviour, IPayable, ITooltipable {
     }
 
     public void Pay(int newAmount) {
-        deposit += newAmount;
-        depositText.text = "P" + deposit;
+        AddToDeposit(newAmount);
+        am.PlayUI(1);
+    }
 
-        if(audioHandler) audioHandler.Play(0);
+    private void AddToDeposit(int val) {
+        deposit += val;
+        depositText.text = "P" + deposit;
     }
 
     private IEnumerator PumpingFuel() {
@@ -33,10 +37,8 @@ public class FuelPump : MonoBehaviour, IPayable, ITooltipable {
         while(true) {
             if(carCon != null && (carCon.fuelAmount < carCon.fuelCapacity) && deposit > 0) {
                 print("Adding fuel");
-                Pay(-(GameManager.current.pricePerLiter/20));
-                carCon.AddFuel(50); //5 secs per liter
-
-                if(audioHandler) audioHandler.Play(1);
+                AddToDeposit(-GameManager.current.pricePerLiter);
+                carCon.AddFuel(1000); //1 secs per liter
             } else {
                 StopPumpingFuel();
 
@@ -44,13 +46,13 @@ public class FuelPump : MonoBehaviour, IPayable, ITooltipable {
                 yield break;
             }
 
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(1f);
         }
     }
 
     public void Interaction() {
         isOn = !isOn;
-        print("interactor: " + button.interactor.name);
+        // print("interactor: " + button.interactor.name);
         // carCon = button.interactor.GetComponent<PlayerDriveInput>().carCon;
 
         if(isOn && !isPumpingFuel) {
@@ -59,13 +61,15 @@ public class FuelPump : MonoBehaviour, IPayable, ITooltipable {
             StopCoroutine(PumpingFuel());
             StopPumpingFuel();
         }
+
+        am.PlayUI(12);
     }
 
     private void StopPumpingFuel() {
         isPumpingFuel = false;
         if(button.isOn) button.Interact(gameObject);
 
-        if(audioHandler) audioHandler.Play(2);
+        // am.PlayUI(2);
     }
 
     public string GetHeader() {

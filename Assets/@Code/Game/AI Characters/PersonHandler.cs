@@ -10,7 +10,7 @@ public class PersonHandler : MonoBehaviour {
     [SerializeField] private Transform voicesMale;
     [SerializeField] private Transform voicesFemale;
     [SerializeField] private Transform voicesChild;
-    // private VoiceHandler voiceHandler;
+    private VoiceHandler voiceHandler;
 
     [Space(10)]
     [Header("STATS")]
@@ -83,7 +83,6 @@ public class PersonHandler : MonoBehaviour {
     public CarController carCon;
 
     private void Start() {
-        //[+] sayHandler = GetComponent<SayHandler>();
         player = GameObject.Find("PLAYER").GetComponent<PlayerDriveInput>();
         ani = GetComponent<Animator>();
 
@@ -99,19 +98,19 @@ public class PersonHandler : MonoBehaviour {
         //SET MOVESPEED
         moveSpeed = Random.Range(moveSpeedRange.x, moveSpeedRange.y);
 
-        //[+] GET VOICES
-        // if(personType == "Male") voices = voicesMale;
-        // else if(personType == "Female") voices = voicesFemale;
-        // else if(personType == "Child") {
-        //     voices = voicesChild;
-        //     //Make children immortal beings
-        //     Destroy(GetComponent<Ragdoll>());
-        // }
-        // else print("VOICE ERROR GODDAMMIT");
-        // voiceHandler = GetComponent<VoiceHandler>();
-        // int voiceIndex = Random.Range(0, voices.childCount);
-        // VoiceType voiceType = voices.GetChild(voiceIndex).GetComponent<VoiceType>();
-        // voiceHandler.SetAudioClips(voiceType.payAudios, voiceType.stopAudios, voiceType.deathAudios);
+        //GET VOICES
+        if(personType == "Male") voices = voicesMale;
+        else if(personType == "Female") voices = voicesFemale;
+        else if(personType == "Child") {
+            voices = voicesChild; 
+            //Make children immortal beings
+            // Destroy(GetComponent<Ragdoll>());
+        }
+        else print("VOICE ERROR GODDAMMIT");
+        voiceHandler = GetComponent<VoiceHandler>();
+        int voiceIndex = Random.Range(0, voices.childCount);
+        VoiceType voiceType = voices.GetChild(voiceIndex).GetComponent<VoiceType>();
+        voiceHandler.SetAudioClips(voiceType.payAudios, voiceType.stopAudios, voiceType.deathAudios);
         // patience = maxPatience;
 
         isPayments = SaveLoadSystem.current.isPayments;
@@ -461,7 +460,7 @@ public class PersonHandler : MonoBehaviour {
     }
 
     private void PayFare() {
-        //[+] voiceHandler.Say("Pay");
+        voiceHandler.Say("Pay");
 
         // popup.Say(sayHandler.GetSay("Pay"), true);
 
@@ -559,7 +558,7 @@ public class PersonHandler : MonoBehaviour {
   
     private void OnTriggerEnter(Collider other) {
         if(other.gameObject.layer == dropAreaLayer && other.name.Contains(to) && state == "Waiting to arrive") {
-            // voiceHandler.Say("Stop");
+            voiceHandler.Say("Stop");
         }
         else if(other.gameObject.layer == spawnAreaLayer) currentSpot = other.transform;
     }

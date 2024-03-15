@@ -98,6 +98,8 @@ public class CarController : MonoBehaviour {
     [SerializeField] private AudioClip audioGearChange;
     [SerializeField] private AudioSource audioHazard;
     [SerializeField] private Vroomer vroomer;
+    [SerializeField] private AudioHandler ah;
+    [SerializeField] private AudioClip hornAudio;
 
     [Space(10)]
     [Header("LIGHTS")]
@@ -141,6 +143,7 @@ public class CarController : MonoBehaviour {
     }
 
     private void Start() {
+        ah = GetComponent<AudioHandler>();
         carRb = GetComponent<Rigidbody>();
         carRb.centerOfMass = centerOfMass;
         // swStandardRot = steeringWheel.transform.rotation.eulerAngles;
@@ -267,6 +270,8 @@ public class CarController : MonoBehaviour {
         //Shifting
         if(Input.GetKeyDown(Key_GearUp)) ShiftGear(1);
         else if(Input.GetKeyDown(Key_GearDown)) ShiftGear(-1);
+
+        if(Input.GetKeyDown(Key_Horn)) Horn();
     }
 
     // PASSENGERS ============================================================================
@@ -353,6 +358,11 @@ public class CarController : MonoBehaviour {
     }
 
     // DRIVING ============================================================================
+
+    private void Horn() {
+        audioHazard.PlayOneShot(hornAudio);
+        // ah.PlayOneShot(0);
+    }
 
     public void DriverExit() {
         tablet.Out();

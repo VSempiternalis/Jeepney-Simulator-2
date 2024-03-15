@@ -5,8 +5,10 @@ public class mapButton : MonoBehaviour, IInteractable {
     [SerializeField] private int zoomRate;
     [SerializeField] private float zoomTime;
 
+    private AudioManager am;
+
     private void Start() {
-        
+        am = AudioManager.current;
     }
 
     private void Update() {
@@ -24,5 +26,7 @@ public class mapButton : MonoBehaviour, IInteractable {
         .setOnUpdate((float size) => {
             target.orthographicSize = size;
         });
+
+        am.PlayUI(1);
     }
 }

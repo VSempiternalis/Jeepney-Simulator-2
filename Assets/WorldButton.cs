@@ -13,6 +13,9 @@ public class WorldButton : MonoBehaviour, IInteractable, ITooltipable {
     public class OnClickEvent : UnityEvent {}
     public OnClickEvent onClickEvent;
 
+    [SerializeField] private string header;
+    [SerializeField] private string desc;
+
     private void Start() {
         
     }
@@ -40,16 +43,14 @@ public class WorldButton : MonoBehaviour, IInteractable, ITooltipable {
     }
 
     public string GetHeader() {
-        return "Refuel Button";
+        return header;
     }
 
     public string GetControls() {
-        return "[L Mouse] Toggle refuel on/off";
+        return "[L Mouse] Toggle on/off";
     }
 
     public string GetDesc() {
-        string returnString = "Press to start refueling your jeepney.";
-
-        return returnString;
+        return desc;
     }
 }

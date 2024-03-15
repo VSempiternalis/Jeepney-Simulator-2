@@ -45,12 +45,16 @@ public class TimeManager : MonoBehaviour {
     //[EVENTS]
     public event Action<int, int> onHourUpdateEvent;
 
+    private AudioManager am;
+
     private void Awake() {
         current = this;
         // PlayerPrefs.DeleteAll();
     }
 
     private void Start() {
+        am = AudioManager.current;
+
         foreach(GameObject clockGO in GameObject.FindGameObjectsWithTag("Clock")) {
             clocks.Add(clockGO.GetComponent<TMP_Text>());
         }
@@ -106,6 +110,7 @@ public class TimeManager : MonoBehaviour {
 
         // shiftTimeLeft = shiftLength * 60;
         isShiftOn = true;
+        am.PlayUI(9);
         // shiftDay = days;
     }
 
@@ -123,6 +128,7 @@ public class TimeManager : MonoBehaviour {
 
     private void UpdateShiftTime() {
         //OVERTIME!
+        if(shiftTimeLeft == 1) am.PlayUI(11);
         if(shiftTimeLeft <= 0) {
             //alarm audio
             BoundaryManager.current.TryAddLateFee();
@@ -159,6 +165,7 @@ public class TimeManager : MonoBehaviour {
         if(shiftHoursLeft < 10) tempHours = "0" + tempHours;
         if(shiftMinutesLeft < 10) tempMins = "0" + tempMins;
 
+        if(shiftTimeLeft == 180) am.PlayUI(10);
         if(shiftHoursLeft < 3) {
             //Turn off all normal shift timers
             foreach(TMP_Text shiftTimer in shiftTimeTexts) {

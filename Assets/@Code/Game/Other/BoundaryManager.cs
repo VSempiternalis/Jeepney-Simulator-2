@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
-using Unity.Mathematics;
 
 public class BoundaryManager : MonoBehaviour {
     public static BoundaryManager current;
@@ -41,23 +40,19 @@ public class BoundaryManager : MonoBehaviour {
     [SerializeField] private StorageHandler storage2;
     [SerializeField] private CarController carCon;
 
+    private AudioManager am;
+
     private void Awake() {
         current = this;
     }
 
     private void Start() {
         sls = SaveLoadSystem.current;
+        am = AudioManager.current;
     }
 
     private void Update() {
-        // if(Input.GetKeyDown(KeyCode.Alpha0)) Fader.current.FadeToBlack(1f, "CONGRATULATIONS! YOU MADE THE BOUNDARY!\n\nSaving game...", () => {
-        //     LeanTween.delayedCall(1f, () => {
-        //         Fader.current.SetText("DAY " + TimeManager.current.days);
-        //     });
-        //     LeanTween.delayedCall(2f, () => {
-        //         Fader.current.FadeFromBlack(1f, "DAY " + TimeManager.current.days, null);
-        //     });
-        // });
+        
     }
 
     private void ResetVicMoney() {
@@ -103,9 +98,6 @@ public class BoundaryManager : MonoBehaviour {
         int shiftFactor = shiftLength * 10; //money earned per hour/realminute = 10
         int dayFactor = (TimeManager.current.days) * dayMultiplier;
         boundary = shiftFactor + dayFactor + baseBoundary;
-        // print("shiftFactor: " + shiftFactor);
-        // print("dayFactor: " + dayFactor);
-        // print("BOUNDARY: " + boundary);
     }
 
     private void CalculateTotal() {
@@ -162,6 +154,7 @@ public class BoundaryManager : MonoBehaviour {
                 //Reset
                 TimeManager.current.NewShift();
                 SaveLoadSystem.current.SaveGame();
+                am.PlayUI(3);
 
                 CalculateNewBoundary();
                 UpdateTexts();
@@ -171,6 +164,7 @@ public class BoundaryManager : MonoBehaviour {
                 });
 
                 LeanTween.delayedCall(2f, () => {
+                    am.PlayUI(4);
                     Fader.current.FadeFromBlack(1f, "DAY " + TimeManager.current.days, null);
                 });
             });
@@ -178,6 +172,7 @@ public class BoundaryManager : MonoBehaviour {
             Fader.current.FadeToBlack(1f, "YOU'RE FIRED!\n\nLoading previous save...\n", () => {
                 //Reset
                 SaveLoadSystem.current.LoadGame();
+                am.PlayUI(5);
                 
                 LeanTween.delayedCall(1f, () => {
                     Fader.current.SetText("DAY " + TimeManager.current.days);

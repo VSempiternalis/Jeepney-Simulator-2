@@ -77,7 +77,7 @@ public class SaveLoadSystem : MonoBehaviour {
 
     private void Setup() {
         player.position = spawnPoint.position;
-        player.rotation = spawnPoint.rotation;
+        // player.rotation = spawnPoint.rotation;
         mainJeep.position = mainJeepSpawnPoint.position;
         mainJeep.rotation = mainJeepSpawnPoint.rotation;
     }
