@@ -5,22 +5,23 @@ public class ChunksManager : MonoBehaviour {
     [SerializeField] private int loadDist;
     [SerializeField] private int loadFreq = 1;
     [SerializeField] private Transform player;
-    [SerializeField] private List<Transform> chunks;
+    [SerializeField] private Transform chunks;
+    [SerializeField] private List<Transform> chunksList;
     private float dist;
 
     private void Start() {
         // chunks = GameObject.FindGameObjectsWithTag("Chunk").;
-        foreach(GameObject chunk in GameObject.FindGameObjectsWithTag("Chunk")) {
-            chunks.Add(chunk.transform);
+        foreach(Transform chunk in chunks) {
+            chunksList.Add(chunk);
         }
 
         InvokeRepeating("ChunkCheck", 0f, loadFreq);
     }
 
     private void ChunkCheck() {
-        // print(Time.time + " chunk check");
+        print(Time.time + " chunk check");
         Vector3 playerPos = player.position;
-        foreach(Transform chunk in chunks) {
+        foreach(Transform chunk in chunksList) {
             dist = Vector3.Distance(playerPos, chunk.position);
             // print("dist: " + dist);
 
