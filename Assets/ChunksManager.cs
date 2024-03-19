@@ -19,7 +19,7 @@ public class ChunksManager : MonoBehaviour {
     }
 
     private void ChunkCheck() {
-        print(Time.time + " chunk check");
+        // print(Time.time + " chunk check");
         Vector3 playerPos = player.position;
         foreach(Transform chunk in chunksList) {
             dist = Vector3.Distance(playerPos, chunk.position);

@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour {
 
     private void UpdateFuelPriceTexts() {
         foreach(TMP_Text fuelPriceText in fuelPriceTexts) {
-            fuelPriceText.text = "P" + pricePerLiter + ".00";
+            fuelPriceText.text = pricePerLiter + ".00/L"; //"P" + 
         }
     }
 }

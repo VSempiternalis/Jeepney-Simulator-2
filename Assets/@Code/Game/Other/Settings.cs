@@ -4,8 +4,6 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEngine.Rendering;
 using System.Collections.Generic;
-using UnityEngine.Rendering;
-using System;
 
 public class Settings : MonoBehaviour {
     public AudioMixer audioMixer;
@@ -169,7 +167,7 @@ public class Settings : MonoBehaviour {
 
     public void SetMasterVolume(float newVol) {
         audioMixer.SetFloat("MasterVolume", newVol);
-        masterVolumeText.text = (newVol + 80) + "";
+        masterVolumeText.text = ((newVol + 20) * 5) + "";
         masterVolSlider.value = newVol;
 
         PlayerPrefs.SetFloat("Settings_MasterVolume", newVol);

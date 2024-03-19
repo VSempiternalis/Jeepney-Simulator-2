@@ -47,9 +47,10 @@ public class Vroomer : MonoBehaviour {
         //MUFFLER
         if(hasMuffler) {
             if(currentSpeed >= mufflerStartSpeed) {
-                float mufflerPitchRatio = (currentSpeed / (mufflerMaxSpeed - mufflerStartSpeed) - 1) * 2f;
+                // float mufflerPitchRatio = (currentSpeed / (mufflerMaxSpeed - mufflerStartSpeed) - 1) * 2f;
+                float mufflerPitchRatio = (currentSpeed / (mufflerMaxSpeed - mufflerStartSpeed)) * 2f;
                 mufflerAudio.pitch = mufflerPitchRatio + 1;
-                mufflerAudio.volume = mufflerPitchRatio - 0.25f;
+                mufflerAudio.volume = (mufflerPitchRatio - 0.5f)/2f;
                 if(!mufflerAudio.isPlaying) mufflerAudio.Play();
             } else if(mufflerAudio.isPlaying) {
                 mufflerAudio.Stop();
@@ -58,6 +59,6 @@ public class Vroomer : MonoBehaviour {
     }
 
     public void MufflerCheck() {
-        mufflerAudio.volume += 0.25f;
+        // mufflerAudio.volume += 0.25f;
     }
 }
