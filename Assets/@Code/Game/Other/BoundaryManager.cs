@@ -15,6 +15,7 @@ public class BoundaryManager : MonoBehaviour {
 
     [SerializeField] private int baseBoundary;
     [SerializeField] private int dayMultiplier;
+    [SerializeField] private int shiftMultiplier;
 
     [SerializeField] private Transform depositTo;
     [SerializeField] private StorageHandler storage;
@@ -56,6 +57,9 @@ public class BoundaryManager : MonoBehaviour {
     }
 
     private void ResetVicMoney() {
+        storage1.Clear();
+        storage2.Clear();
+
         for(int i = 0; i < 10; i++){
             GameObject newMoney = Instantiate(money1PF, storage1.transform.position, Quaternion.identity);
             // float xPos = Random.Range(storage.transform.position.x - (storage.transform.localScale.x/2), storage.transform.position.x + (storage.transform.localScale.x/2));
@@ -95,8 +99,8 @@ public class BoundaryManager : MonoBehaviour {
         }
 
         // boundary = (TimeManager.current.days + 1) * 10 * (shiftLength * 10) + ;
-        int shiftFactor = shiftLength * 10; //money earned per hour/realminute = 10
-        int dayFactor = (TimeManager.current.days) * dayMultiplier;
+        int shiftFactor = shiftLength * shiftMultiplier; //money earned per hour/realminute = 10
+        int dayFactor = TimeManager.current.days * dayMultiplier;
         boundary = shiftFactor + dayFactor + baseBoundary;
     }
 
@@ -171,7 +175,13 @@ public class BoundaryManager : MonoBehaviour {
         } else {
             Fader.current.FadeToBlack(1f, "YOU'RE FIRED!\n\nLoading previous save...\n", () => {
                 //Reset
-                SaveLoadSystem.current.LoadGame();
+                // if(TimeManager.current.days == 1) SaveLoadSystem.current.NewGame();
+                // else 
+                SaveLoadSystem.current.OnLose();
+                UpdateTexts();
+                ResetVicMoney();
+                TimeManager.current.ResetShiftTime();
+
                 am.PlayUI(5);
                 
                 LeanTween.delayedCall(1f, () => {

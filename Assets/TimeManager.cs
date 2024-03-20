@@ -55,6 +55,12 @@ public class TimeManager : MonoBehaviour {
     private void Start() {
         am = AudioManager.current;
 
+        //[Set to random time]
+        StartCoroutine(UpdateTimeCoroutine());
+    }
+
+    public void Setup() {
+        //TEXTS
         foreach(GameObject clockGO in GameObject.FindGameObjectsWithTag("Clock")) {
             clocks.Add(clockGO.GetComponent<TMP_Text>());
         }
@@ -67,11 +73,6 @@ public class TimeManager : MonoBehaviour {
             shiftTimeTexts.Add(shiftTimeText.GetComponent<TMP_Text>());
         }
 
-        //[Set to random time]
-        StartCoroutine(UpdateTimeCoroutine());
-    }
-
-    public void Setup() {
         shiftTimeLeft = shiftLength * 60;
 
         //Update clocks
@@ -83,10 +84,16 @@ public class TimeManager : MonoBehaviour {
 
     #region SHIFTS ==========================================================================================
 
+    //Runs when player doesnt make the boundary
     public void NewShift() {
+        print("NEW SHIFT");
         days ++;
         UpdateDayTexts();
 
+        ResetShiftTime();
+    }
+
+    public void ResetShiftTime() {
         shiftTimeLeft = shiftLength * 60;
         UpdateShiftTimers();
     }
@@ -210,6 +217,7 @@ public class TimeManager : MonoBehaviour {
     }
 
     private void UpdateDayTexts() {
+        print("Updating Day Texts: " + days);
         foreach(TMP_Text dayText in dayTexts) {
             dayText.text = days + "";
         }

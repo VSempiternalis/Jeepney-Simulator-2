@@ -36,9 +36,10 @@ public class MainMenuManager : MonoBehaviour {
         PlayerPrefs.SetInt("Game_isNewGame", isNewGame? 1:0);
 
         //LOADING BAR
+        print("(MAIN MENU) Game_isNewGame: " + (isNewGame? 1:0));
         while(!operation.isDone) {
             float progress = Mathf.Clamp01(operation.progress/0.9f);
-            print(progress);
+            print("Loading bar: " + progress);
             loadingProgress.LeanScaleX(progress, 1f);
             yield return null;
         }
