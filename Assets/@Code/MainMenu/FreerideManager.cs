@@ -62,6 +62,7 @@ public class FreerideManager : MonoBehaviour {
 
     //Only runs when start new is pressed
     public void SaveFreerideSettings() {
+        print("SAVE FREERIDE SETTINGS");
         SetPassengerPickups(togglePassengerPickups.isOn);
         SetPayments(togglePayments.isOn);
         SetEvents(toggleEvents.isOn);
@@ -70,7 +71,7 @@ public class FreerideManager : MonoBehaviour {
         SetTrafficCount(Mathf.RoundToInt(sliderTrafficCount.value));
         SetShiftLength(Mathf.RoundToInt(sliderShiftLength.value));
 
-        //RESET PROGRESS
+        //RESET PROGRESS (kinda useless now. This is done in saveloadsystem)
         PlayerPrefs.SetInt("Freeride_Deposit", 0);
         PlayerPrefs.SetInt("Freeride_Day", 1);
         PlayerPrefs.SetInt("Freeride_Time", 0);
@@ -106,6 +107,7 @@ public class FreerideManager : MonoBehaviour {
     }
 
     public void SetShifts(bool newVal) {
+        print("SET SHIFTS: " + (newVal? 1:0));
         PlayerPrefs.SetInt("Freeride_IsShifts", newVal? 1:0);
     }
 

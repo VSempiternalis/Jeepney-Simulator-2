@@ -13,8 +13,11 @@ public class Head : MonoBehaviour {
     [SerializeField] private Vector3 driveCamPos;
     [SerializeField] private Vector3 sitCamPos;
 
+    [Space(10)]
+    [SerializeField] private int drivingClamp;
+
     public string state;
-    private float clamp;
+    private float clamp = 55;
     public bool isDriving;
     public bool isSitting;
 
@@ -27,12 +30,12 @@ public class Head : MonoBehaviour {
             // state = "Driving";
             transform.localPosition = driveCamPos;
             pAni.SetState("Driving");
-            clamp = 60;
+            clamp = drivingClamp;
         } else if(isSitting && state != "Sitting") {
             // state = "Driving";
             transform.localPosition = sitCamPos;
             pAni.SetState("Sitting");
-            clamp = 60;
+            clamp = drivingClamp;
         } else if(state == "Crouching") {
             // state = "Crouching";
             transform.localPosition = crouchCamPos;
