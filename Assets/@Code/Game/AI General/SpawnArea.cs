@@ -50,8 +50,8 @@ public class SpawnArea : MonoBehaviour {
     private void Start() {
         world = GameObject.Find("WORLD").transform;
         // else 
-        spawnDist = PlayerPrefs.GetInt("Settings_SpawnDist", 100);
-        print("spawndist: " + spawnDist);
+        // spawnDist = PlayerPrefs.GetInt("Settings_SpawnDist", 100);
+        spawnDist = 100;
         StartCoroutine(SpawnLoop());
         transform.localScale = new Vector3(spawnDist, spawnDist, spawnDist);
         // StartCoroutine(PersonSpawnLoop());
