@@ -45,6 +45,11 @@ public class SaveLoadSystem : MonoBehaviour {
     [SerializeField] private Transform player;
     [SerializeField] private Transform mainJeep;
 
+    [Space(10)]
+    [Header("TUTORIAL UI")]
+    [SerializeField] private Settings settings;
+    [SerializeField] private uiAnimGroup tutorialUI;
+
     private void Awake() {
         current = this;
     }
@@ -81,6 +86,13 @@ public class SaveLoadSystem : MonoBehaviour {
             LoadCareerSettings();
             if(isNewGame) NewCareer();
             else LoadCareer();
+        }
+
+        if(TimeManager.current.days == 1) {
+            tutorialUI.In();
+            tutorialUI.GetComponent<CanvasGroup>().blocksRaycasts = true;
+            settings.ToggleCursor();
+            settings.UpdateCursor();
         }
     }
 
