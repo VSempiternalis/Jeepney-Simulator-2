@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections.Generic;
 
 public class StorageHandler : MonoBehaviour, ITooltipable { 
@@ -11,6 +12,10 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
     private AudioHandler audioHandler;
     [SerializeField] private Transform goober; //hitpos to localPos
     [SerializeField] private bool isPayPoint; //updates player UI
+
+    [System.Serializable]
+    public class OnAddItem : UnityEvent {}
+    public OnAddItem onAddItem;
 
     private void Start() {
         audioHandler = GetComponent<AudioHandler>();
@@ -57,6 +62,8 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
         // LeanTween.move(newItem, new Vector3(placePos.x, placePos.y + newItemHandler.yPlaceOffset, placePos.z), 0.25f).setEaseInOutExpo();
 
         if(audioHandler) audioHandler.Play(newItemHandler.placeAudioInt);
+
+        onAddItem?.Invoke();
     }
 
     public void AddItemRandom(GameObject newItem) {

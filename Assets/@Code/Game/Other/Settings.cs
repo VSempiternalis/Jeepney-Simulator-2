@@ -6,6 +6,8 @@ using UnityEngine.Rendering;
 using System.Collections.Generic;
 
 public class Settings : MonoBehaviour {
+    public Settings current;
+
     public AudioMixer audioMixer;
 
     [SerializeField] private GameObject player;
@@ -46,10 +48,19 @@ public class Settings : MonoBehaviour {
     [SerializeField] private TMP_Text zoomSensText;
     [SerializeField] private Slider mouseSensSlider;
     [SerializeField] private TMP_Text mouseSensText;
+    [SerializeField] private Toggle tutorialPanelsToggle;
+    [SerializeField] private Toggle autoTransToggle;
     [SerializeField] private Slider renderDistSlider;
     [SerializeField] private TMP_Text renderDistText;
     [SerializeField] private Slider spawnDistSlider;
     [SerializeField] private TMP_Text spawnDistText;
+
+    [SerializeField] private CanvasGroup tutorialUI; //help/page at game start
+    [SerializeField] private uiAnimGroup tutorialPanels;
+
+    private void Awake() {
+        current = this;
+    }
 
     private void Start() {
         resolutions = Screen.resolutions;
@@ -89,7 +100,7 @@ public class Settings : MonoBehaviour {
 
     private void Update() {
         //Toggle Settings
-        if(Input.GetKeyDown(KeyCode.Escape)) {
+        if(Input.GetKeyDown(KeyCode.Escape) && tutorialUI.alpha < 1) {
             ToggleSettings();
         }
     }
@@ -111,9 +122,10 @@ public class Settings : MonoBehaviour {
 
         SetMouseSens(2);
         SetZoomSens(3);
+        SetTutorialPanels(true);
+        SetAutoTrans(true);
         SetRenderDist(5);
         SetSpawnDistance(100);
-        //SetTutorialUI
     }
 
     private void LoadSavedSettings() {
@@ -137,30 +149,38 @@ public class Settings : MonoBehaviour {
         SetMouseSens(mouseSens);
         float zoomSens = PlayerPrefs.GetFloat("Settings_ZoomSens", 3f);
         SetZoomSens(zoomSens);
+        SetTutorialPanels(PlayerPrefs.GetInt("Settings_IsTutorialPanels") == 1? true : false);
+        SetAutoTrans(PlayerPrefs.GetInt("Settings_IsAutomaticTransmission") == 1? true : false);
         float renderDist = PlayerPrefs.GetFloat("Settings_RenderDist", 5);
         SetRenderDist(renderDist);
         int spawnDist = PlayerPrefs.GetInt("Settings_SpawnDist", 100);
         SetSpawnDistance(100);
     }
 
-    public void ToggleSettings() {
+    public void ToggleCursor() {
         isCursorOn = !isCursorOn;
-        if(isCursorOn) settingsPanel.In();
-        else settingsPanel.Out();
-        ToggleCursor();
     }
 
-    public void ToggleCursor() {
+    public void ToggleSettings() {
+        ToggleCursor();
+        if(isCursorOn) {
+            settingsPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+            settingsPanel.In();
+        } else {
+            settingsPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+            settingsPanel.Out();
+        }
+        UpdateCursor();
+    }
+
+    public void UpdateCursor() {
         if(player.transform.parent != null) player.GetComponent<Rigidbody>().isKinematic = true; //Player in driverpos
-        // else player.GetComponent<Rigidbody>().isKinematic = isCursorOn;
-        // playerCam.GetComponent<FirstPersonLook>().isOn = !isCursorOn;
         playerCam.GetComponent<FirstPersonLook>().enabled = !isCursorOn;
         playerCam.GetComponent<Zoom>().enabled = !isCursorOn;
         Cursor.visible = isCursorOn;
 
         if(isCursorOn) Cursor.lockState = CursorLockMode.None;
         else Cursor.lockState = CursorLockMode.Locked;
-        // else Cursor.lockState = CursorLockMode.Locked;
     }
 
     #region AUDIO
@@ -299,6 +319,28 @@ public class Settings : MonoBehaviour {
 
         //Saving
         PlayerPrefs.SetFloat("Settings_ZoomSens", newZoomSens);
+    }
+
+    public void SetTutorialPanels(bool newValue) {
+        if(newValue) tutorialPanels.In();
+        else tutorialPanels.Out();
+
+        tutorialPanelsToggle.isOn = newValue;
+
+        //Saving
+        // print("SAVING Fog: " + isFog);
+        PlayerPrefs.SetInt("Settings_IsTutorialPanels", newValue? 1:0);
+    }
+
+    public void SetAutoTrans(bool newValue) {
+        // if(newValue) tutorialPanels.In();
+        // else tutorialPanels.Out();
+
+        autoTransToggle.isOn = newValue;
+
+        //Saving
+        // print("SAVING Fog: " + isFog);
+        PlayerPrefs.SetInt("Settings_IsAutomaticTransmission", newValue? 1:0);
     }
 
     public void SetRenderDist(float newRenderDist) {
