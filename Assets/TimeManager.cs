@@ -9,7 +9,7 @@ public class TimeManager : MonoBehaviour {
 
     public int time;
     private float minutes;
-    [SerializeField] private float secsPerRealMinute = 1f;
+    [SerializeField] private float secsPerRealMinute = 1f; //wrong name for variable
     public int hours;
     public int days;
     // [SerializeField] private TMP_Text daysUI;
@@ -111,31 +111,36 @@ public class TimeManager : MonoBehaviour {
 
     public void TryStartShift() {
         if(!isShifts) return;
-        // if(shiftDay == days) return;
-        // if(isShiftEnded) return;
         if(isShiftOn) return;
 
-        // shiftTimeLeft = shiftLength * 60;
-        isShiftOn = true;
-        am.PlayUI(9);
-        // shiftDay = days;
+        if(shiftTimeLeft > 0) {
+            isShiftOn = true;
+            am.PlayUI(9);
+
+            //notif
+            NotificationManager.current.NewNotif("SHIFT STARTED", "Your shift has begun! Get inside your jeepney, pick up passengers, and earn money before your time runs out!");
+        } else isShiftOn = false;
     }
 
     public void TryEndShift() {
         if(!isShiftOn) return;
-        // if(isShiftEnded) return;
-        // if(shiftDay == days) {
-            isShiftOn = false;
-            // isShiftEnded = true;
 
-            //stuff
-            BoundaryManager.current.UpdateTexts();
-        // }
+        isShiftOn = false;
+        BoundaryManager.current.UpdateTexts();
+
+        // if(shiftTimeLeft <= 0) 
+        //notif
+        NotificationManager.current.NewNotif("SHIFT ENDED", "Grab as much money as you can, go to Billy, and pay your boundary.");
     }
 
     private void UpdateShiftTime() {
         //OVERTIME!
-        if(shiftTimeLeft == 1) am.PlayUI(11);
+        if(shiftTimeLeft == 1) {
+            am.PlayUI(11);
+
+            //notif
+            NotificationManager.current.NewNotif("OVERTIME!", "You're late for your payment! You cannot pick up passengers anymore. For every second you're not in Billy's Office, your boundary is increased by P1");
+        }
         if(shiftTimeLeft <= 0) {
             //alarm audio
             BoundaryManager.current.TryAddLateFee();
@@ -145,6 +150,9 @@ public class TimeManager : MonoBehaviour {
                 shiftTimer.color = red;
             }
             // UpdateShiftTimers();
+
+            //passenger pickup off
+            PlayerDriveInput.current.isTakingPassengers = false;
 
             return;
         }
@@ -172,7 +180,12 @@ public class TimeManager : MonoBehaviour {
         if(shiftHoursLeft < 10) tempHours = "0" + tempHours;
         if(shiftMinutesLeft < 10) tempMins = "0" + tempMins;
 
-        if(shiftTimeLeft == 180) am.PlayUI(10);
+        if(shiftTimeLeft == 180) {
+            am.PlayUI(10);
+            //notif
+            NotificationManager.current.NewNotif("THREE MINUTES LEFT!", "Return to Billy's Office before time runs out!");
+        }
+        
         if(shiftHoursLeft < 3) {
             //Turn off all normal shift timers
             foreach(TMP_Text shiftTimer in shiftTimeTexts) {

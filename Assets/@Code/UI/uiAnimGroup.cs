@@ -55,6 +55,7 @@ public class uiAnimGroup : MonoBehaviour {
     }
 
     public void In() {
+        print("IN. RectTrans: " + rectTransform.name);
         switch (inAnimationType) {
             case AnimationType.Move:
                 LeanTween.move(rectTransform, inTargetPosition, inTime).setEase(inEasingType);
