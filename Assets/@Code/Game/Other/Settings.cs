@@ -58,6 +58,8 @@ public class Settings : MonoBehaviour {
     [SerializeField] private CanvasGroup tutorialUI; //help/page at game start
     [SerializeField] private uiAnimGroup tutorialPanels;
 
+    [SerializeField] private CarController carCon;
+
     private void Awake() {
         current = this;
     }
@@ -143,7 +145,7 @@ public class Settings : MonoBehaviour {
         SetShadows(PlayerPrefs.GetInt("Settings_ActiveShadows") == 1? true : false);
         SetReflectionProbe(PlayerPrefs.GetInt("Settings_ReflectionProbe") == 1? true : false);
         SetReflectionProbeSize(PlayerPrefs.GetFloat("Settings_ReflectionProbeSize"));
-        SetFOV(PlayerPrefs.GetFloat("Settings_FOV"));
+        SetFOV(PlayerPrefs.GetFloat("Settings_FOV", 80));
 
         float mouseSens = PlayerPrefs.GetFloat("Settings_MouseSens", 0.3f);
         SetMouseSens(mouseSens);
@@ -333,8 +335,7 @@ public class Settings : MonoBehaviour {
     }
 
     public void SetAutoTrans(bool newValue) {
-        // if(newValue) tutorialPanels.In();
-        // else tutorialPanels.Out();
+        carCon.isAutoTrans = newValue;
 
         autoTransToggle.isOn = newValue;
 

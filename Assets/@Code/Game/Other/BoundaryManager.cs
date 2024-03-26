@@ -152,7 +152,6 @@ public class BoundaryManager : MonoBehaviour {
             deposit -= boundary + lateFee;
             string text = "CONGRATULATIONS! YOU MADE THE BOUNDARY!\n\nSaving game...\n";
             if(!doBoundary) text = "Saving game...";
-            lateFee = 0;
 
             Fader.current.FadeToBlack(1f, text, () => {
                 //Reset
@@ -193,6 +192,9 @@ public class BoundaryManager : MonoBehaviour {
                 });
             });
         }
+        lateFee = 0;
+        PlayerDriveInput.current.isTakingPassengers = true;
+        //notif
 
         //Clear jeepney seats
         carCon.NewDay();

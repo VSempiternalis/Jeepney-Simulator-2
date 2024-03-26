@@ -9,6 +9,7 @@ public class CarController : MonoBehaviour {
 
     [Space(10)]
     [Header("FUEL")]
+    [SerializeField] private CarEngineButton carEngineButton;
     [SerializeField] private Transform fuelNeedle;
     [SerializeField] private TMP_Text fuelText;
     public int fuelAmount;
@@ -95,11 +96,13 @@ public class CarController : MonoBehaviour {
     [Space(10)]
     [Header("AUDIO")]
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource metalAudioSource;
     [SerializeField] private AudioClip audioGearChange;
     [SerializeField] private AudioSource audioHazard;
     [SerializeField] private Vroomer vroomer;
     [SerializeField] private AudioHandler ah;
     [SerializeField] private AudioClip hornAudio;
+    [SerializeField] private AudioClip metalAudio;
 
     [Space(10)]
     [Header("LIGHTS")]
@@ -121,6 +124,19 @@ public class CarController : MonoBehaviour {
     private KeyCode Key_GearDown;
     private KeyCode Key_TowTruck;
     private KeyCode Key_Map;
+
+    [Space(10)]
+    [Header("TUTORIAL UI")]
+    [SerializeField] private TMP_Text rpmTextUI;
+    [SerializeField] private TMP_Text speedTextUI;
+    [SerializeField] private TMP_Text fuelTextUI;
+    [SerializeField] private TMP_Text gearTextUI;
+    [SerializeField] private Color red;
+    [SerializeField] private Color white;
+
+    [Space(10)]
+    [Header("AUTO TRANS")]
+    public bool isAutoTrans;
 
     [Space(10)]
     [Header("OTHERS")]
@@ -163,6 +179,7 @@ public class CarController : MonoBehaviour {
     }
 
     private void Update() {
+        if(isAutoTrans) AutoTrans();
         AnimateWheels();
         AnimateDashboard();
     }
@@ -196,6 +213,9 @@ public class CarController : MonoBehaviour {
                 passenger.GetComponent<Despawner>().Despawn();
             }
         }
+
+        //reset fuel to full
+        fuelAmount = fuelCapacity;
     }
 
     // INPUTS ============================================================================
@@ -221,21 +241,24 @@ public class CarController : MonoBehaviour {
         brakeInput = false;
 
         //movement
-        if(Input.GetKey(Key_DriveForward)) {
-            //if R or N, set to gear 1
-            if(gear < 2) {
-                SetGear(2);
-            }
-            moveInput = 1;
+        
+        if(isEngineOn && fuelAmount > 0) {
+            if(Input.GetKey(Key_DriveForward)) {
+                //if R or N, set to gear 1
+                if(gear < 2) {
+                    SetGear(2);
+                }
+                moveInput = 1;
 
-            //Muffler
-            vroomer.MufflerCheck();
-        } else if(Input.GetKey(Key_DriveBackward)) {
-            //if forward, set to R
-            if(gear > 0) {
-                SetGear(0);
+                //Muffler
+                vroomer.MufflerCheck();
+            } else if(Input.GetKey(Key_DriveBackward)) {
+                //if forward, set to R
+                if(gear > 0) {
+                    SetGear(0);
+                }
+                moveInput = -1;
             }
-            moveInput = -1;
         }
 
         //Braking
@@ -346,12 +369,14 @@ public class CarController : MonoBehaviour {
 
         fuelAmount += addAmount;
 
-        if(fuelAmount < 0) {
+        if(fuelAmount <= 0) {
             fuelAmount = 0;
             
             moveInput = 0;
-            steerInput = 0;
-            brakeInput = false;
+            // steerInput = 0;
+            // brakeInput = false;
+
+            if(isEngineOn) carEngineButton.Interact(gameObject);
         } else if(fuelAmount > fuelCapacity) {
             fuelAmount = fuelCapacity;
         }
@@ -381,7 +406,6 @@ public class CarController : MonoBehaviour {
     }
 
     private void Move() {
-        if(!isEngineOn || fuelAmount <= 0) return;
         // torque = CalculateTorque();
         torque = 0;
         foreach(Wheel wheel in wheels) {
@@ -471,17 +495,31 @@ public class CarController : MonoBehaviour {
         }
     }
 
+    private void AutoTrans() {
+        if(gear != 0 && RPM > 6800) ShiftGear(1);
+        else if(gear > 2 && RPM < 4000) ShiftGear(-1);
+    }
+
     private void UpdateGearText() {
         string returnText  = (gear-1).ToString();
         if(gear == 0) returnText = "R";
         else if(gear == 1) returnText = "N";
         gearText.text = returnText;
+
+        //TUTORIAL UI
+        gearTextUI.text = returnText;
     }
 
     private void AnimateDashboard() {
         //RPM
         rpmNeedle.localRotation = Quaternion.Euler(Mathf.Lerp(minRPMNeedleRotation, maxRPMNeedleRotation, RPM/redLine), 0, 0);
+        Color rpmColor = white;
+        if(RPM > 6800) {
+            rpmColor = red;
+            if(!metalAudioSource.isPlaying) metalAudioSource.Play();
+        }
         rpmText.text = RPM.ToString("0 000");
+        if(rpmText.color != rpmColor) rpmText.color = rpmColor;
 
         //SPEED
         float speedMpS = carRb.velocity.magnitude;
@@ -491,7 +529,22 @@ public class CarController : MonoBehaviour {
         
         //FUEL
         fuelNeedle.localRotation = Quaternion.Euler(Mathf.Lerp(minFuelNeedleRotation, maxFuelNeedleRotation, (float)fuelAmount/(float)fuelCapacity), 0, 0);
+        Color fuelColor = white;
+        if(fuelAmount < 5000 && fuelAmount > 4997) {
+            NotificationManager.current.NewNotif("LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refill!");
+            rpmColor = red;
+        } else if(fuelAmount < 10 && fuelAmount > 7 ) {
+            NotificationManager.current.NewNotif("NO FUEL!", "You have run out of fuel! Call a tow truck.");
+        }
         fuelText.text = Mathf.Round((float)fuelAmount/1000f) + "L";
+        if(fuelText.color != fuelColor) fuelText.color = fuelColor;
+
+        //TUTORIAL UI
+        rpmTextUI.text = RPM.ToString("0 000");
+        if(rpmTextUI.color != rpmColor) rpmTextUI.color = rpmColor;
+        speedTextUI.text = speedKpH.ToString("000");
+        fuelTextUI.text = Mathf.Round((float)fuelAmount/1000f) + "L";
+        if(fuelTextUI.color != fuelColor) fuelTextUI.color = fuelColor;
     }
 
     private void AnimateWheels() {
@@ -503,11 +556,4 @@ public class CarController : MonoBehaviour {
             wheel.wheelModel.transform.rotation = rot;
         }
     }
-}
-
-public enum GearState {
-    Neutral,
-    Running,
-    CheckingChange,
-    Changing
 }

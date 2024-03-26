@@ -65,6 +65,7 @@ public class PersonHandler : MonoBehaviour {
     [SerializeField] private List<int> moneySpawnProbabilities = new List<int>();
     private bool waitingForChange;
     public int change;
+    private bool hasSentChangeNotif;
 
     [Space(10)]
     [Header("ANIMATION")]
@@ -352,7 +353,14 @@ public class PersonHandler : MonoBehaviour {
     }
 
     private void Arrived() {
-        if(state == "Dropping" || state == "Waiting for change") return;
+        if(state == "Dropping") return;
+        if(state == "Waiting for change") {
+            if(!hasSentChangeNotif) {
+                NotificationManager.current.NewNotif("PASSENGER NEEDS CHANGE!", "You've taken a passenger to their destination but they are still waiting for their change.");
+                hasSentChangeNotif = true;
+            }
+            return;
+        }
         // else if(state == "Waiting to pay") {
         //     //TESTING
         //     // PayFare();
@@ -501,6 +509,7 @@ public class PersonHandler : MonoBehaviour {
 
     public void Reset() {
         // print("Resetting: " + name);
+        hasSentChangeNotif = false;
         MakeWait();
         posDestinations.Clear();
     }

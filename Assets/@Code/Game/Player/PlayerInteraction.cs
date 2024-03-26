@@ -365,7 +365,7 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     private void OnTriggerStay(Collider other) {
-        GameObject go = other.gameObject;
+        // GameObject go = osther.gameObject;
     }
 
     private void OnTriggerExit(Collider other) {
