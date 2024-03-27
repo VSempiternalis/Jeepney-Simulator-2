@@ -20,6 +20,7 @@ public class CarController : MonoBehaviour {
     // public bool isFuelLossActive;
     [SerializeField] private float minFuelNeedleRotation;
     [SerializeField] private float maxFuelNeedleRotation;
+    public bool isPumpingFuel;
 
     [Space(10)]
     [Header("VARIABLES")]
@@ -44,6 +45,7 @@ public class CarController : MonoBehaviour {
     public int passengerCount;
     public List<Transform> seatSpots;
     private List<int> seatsTaken = new List<int>();
+    [SerializeField] private LayerMask collisionLayer;
     // [SerializeField] private List<Transform> leftSeats; //[!] left (perspective of passenger entering from rear)
 
     [Space(10)]
@@ -382,6 +384,18 @@ public class CarController : MonoBehaviour {
         }
     }
 
+    public void PumpingFuel(bool newVal) {
+        if(isPumpingFuel == newVal) return;
+        
+        isPumpingFuel = newVal;
+
+        AudioManager.current.PlayFuelPump(newVal);
+
+        if(isPumpingFuel && isEngineOn) {
+            carEngineButton.Interact(gameObject);
+        }
+    }
+
     // DRIVING ============================================================================
 
     private void Horn() {
@@ -394,6 +408,9 @@ public class CarController : MonoBehaviour {
     }
 
     public void SetEngine(bool newIsOn) {
+        print("Sett Engine. newIsOn: " + newIsOn + " isPumpingFuel: " + isPumpingFuel);
+        if(isPumpingFuel && !isEngineOn) return;
+
         isEngineOn = newIsOn;
         if(isEngineOn) smokeParticles.Play();
         else smokeParticles.Stop();
@@ -554,6 +571,23 @@ public class CarController : MonoBehaviour {
             wheel.wheelCollider.GetWorldPose(out pos, out rot);
             wheel.wheelModel.transform.position = pos;
             wheel.wheelModel.transform.rotation = rot;
+        }
+    }
+
+    // COLLISIONS ===========================================================
+
+    private void OnCollisionEnter(Collision other) {
+        // print("car collision");
+        if((collisionLayer.value & (1 << other.gameObject.layer)) != 0) {
+            // print("in layer");
+            // Calculate the relative velocity between the two colliding objects
+            float relativeVelocity = other.relativeVelocity.magnitude;
+
+            if(relativeVelocity > 6) {
+                // print("playing audio");
+                AudioManager.current.PlayUI(14);
+                // damage vehicle
+            }
         }
     }
 }

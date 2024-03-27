@@ -23,10 +23,13 @@ ANIMATION INDEX
 NPCs
 0-9: Idle
 10-19: Walking
-20-39: Sitting
-40-49: Stopping
-50-59: Calling jeep/Hailing
+20-29: Sitting
+30-39: Stopping
+40-49: Calling jeep/Hailing
+50-59: 
 60-69: Dancing
+70-79: Passive Anims (Phone)
+80-89: Hit by Car
 90: Guard
 
 PLAYER

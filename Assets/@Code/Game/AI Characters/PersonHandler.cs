@@ -78,6 +78,12 @@ public class PersonHandler : MonoBehaviour {
     private Transform crossRoad;
 
     [Space(10)]
+    [Header("COLLISION")]
+    [SerializeField] private LayerMask vehicleLayer;
+    private bool isRagdoll;
+    [SerializeField] private float velocityThresh;
+
+    [Space(10)]
     private float nextSecUpdate;
     private PlayerDriveInput player;
     [SerializeField] private float distToPlayer;
@@ -222,7 +228,7 @@ public class PersonHandler : MonoBehaviour {
 
             // print("Car mag: " + carCon.GetComponent<Rigidbody>().velocity.magnitude + " mag thresh: " + magnitudeThresh);
             if(carCon.GetComponent<Rigidbody>().velocity.magnitude <= magnitudeThresh) {
-                print("Past magnitude thresh");
+                // print("Past magnitude thresh");
                 MakeMoveToVehicle();
             }
         } else {
@@ -512,6 +518,13 @@ public class PersonHandler : MonoBehaviour {
         hasSentChangeNotif = false;
         MakeWait();
         posDestinations.Clear();
+        
+        isRagdoll = false;
+
+        // GetComponent<Rigidbody>().freezeRotation = false;
+        GetComponent<Rigidbody>().isKinematic = false;
+        GetComponent<Rigidbody>().useGravity = true;
+        GetComponent<CapsuleCollider>().enabled = true;
     }
 
     public void CrossRoad(Transform otherCrosswalk) {
@@ -556,6 +569,8 @@ public class PersonHandler : MonoBehaviour {
         else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering" || state == "Dropping" || state == "Moving to pos" || state == "Crossing") anim = Random.Range(14, 20);
         //Sit
         else if(state == "Waiting to pay" || state == "Waiting to arrive") anim = Random.Range(20, 28);
+        //Death
+        else if(state == "Death") anim = Random.Range(80, 86);
 
         if(ani == null) ani = GetComponent<Animator>();
         ani.SetInteger("State", anim);
@@ -565,11 +580,54 @@ public class PersonHandler : MonoBehaviour {
 
     #region TRIGGERS ======================================================================================================
   
+    private void OnCollisionEnter(Collision other) {
+        // print("COLLISION: " + other.gameObject.name);
+        if(isRagdoll) return;
+        // print("layer: " + other.gameObject.layer + " vehicle layer: " + vehicleLayer.value);
+        
+        // if(other.gameObject.layer == vehicleLayer.value) {
+        if((vehicleLayer.value & (1 << other.gameObject.layer)) != 0) {
+            // print("vehicle layer");
+            // Calculate the relative velocity between the two colliding objects
+            float relativeVelocity = other.relativeVelocity.magnitude;
+            print("relvel: " + relativeVelocity);
+
+            if(relativeVelocity > velocityThresh) StartRagdoll();
+
+            // Apply the velocity to the object's Rigidbody
+            Vector3 impactVelocity = other.relativeVelocity;
+            GetComponent<Rigidbody>().velocity = impactVelocity * 2;
+            transform.LookAt(other.gameObject.transform);
+        }
+    }
+
+    private void StartRagdoll() {
+        // print("STARTING RAGDOLL");
+        isRagdoll = true;
+
+        // GetComponent<Rigidbody>().freezeRotation = false;
+        // GetComponent<Rigidbody>().isKinematic = true;
+        GetComponent<Rigidbody>().useGravity = false;
+        GetComponent<CapsuleCollider>().enabled = false;
+        SetState("Death");
+        // GetComponent<Test_script>().ChangeState("Standing");
+        // GetComponent<Test_script>().enabled = false;
+        // GetComponent<PersonController>().enabled = false;
+
+        //blood particles
+
+        //death audio
+        // audioSource.enabled = true;
+        // audioSource.volume = 1;
+        //[!] GetComponent<VoiceHandler>().Say("Death");
+        // audioSource.PlayOneShot(deathSounds[Random.Range(0, deathSounds.Length - 1)]);
+        // audioSource.PlayOneShot(collisionSounds[Random.Range(0, collisionSounds.Length - 1)]);
+    }
+
     private void OnTriggerEnter(Collider other) {
         if(other.gameObject.layer == dropAreaLayer && other.name.Contains(to) && state == "Waiting to arrive") {
             voiceHandler.Say("Stop");
-        }
-        else if(other.gameObject.layer == spawnAreaLayer) currentSpot = other.transform;
+        } else if(other.gameObject.layer == spawnAreaLayer) currentSpot = other.transform;
     }
 
     private void OnTriggerStay(Collider other) {

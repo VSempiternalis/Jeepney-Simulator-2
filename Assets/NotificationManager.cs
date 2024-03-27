@@ -23,7 +23,7 @@ public class NotificationManager : MonoBehaviour {
         if(notifs.childCount > 5) return;
 
         AudioManager.current.PlayUI(13);
-        print("New notif: " + header);
+        // print("New notif: " + header);
         GameObject newNotif = Instantiate(notifPF, notifs);
         newNotif.GetComponent<Notification>().Setup(header, desc);
         // newNotif.GetComponent<uiAnimGroup>().In();

@@ -25,7 +25,7 @@ public class Notification : MonoBehaviour {
     }
 
     public void Setup(string header, string desc) {
-        print("Setup: " + header);
+        // print("Setup: " + header);
         gameObject.SetActive(true);
         // descImg.SetActive(false);
         // descImg.SetActive(true);

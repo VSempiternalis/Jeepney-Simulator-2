@@ -85,7 +85,7 @@ public class Settings : MonoBehaviour {
 
         // If new player, set settings to default
         if(PlayerPrefs.GetInt("IsNewPlay") == 0) {
-            print("NEW PLAYER");
+            // print("NEW PLAYER");
             currentResolutionIndex = 0;
             currentResolutionIndex = resolutionOptions.Count - 1;
 
@@ -95,7 +95,7 @@ public class Settings : MonoBehaviour {
         }
         // If old player, load saved settings
         else {
-            print("OLD PLAYER");
+            // print("OLD PLAYER");
             LoadSavedSettings();
         }
     }
@@ -131,7 +131,7 @@ public class Settings : MonoBehaviour {
     }
 
     private void LoadSavedSettings() {
-        print("[SETTINGS] Loading saved settings");
+        // print("[SETTINGS] Loading saved settings");
         float volume = PlayerPrefs.GetFloat("Settings_MasterVolume");
         SetMasterVolume(volume);
 

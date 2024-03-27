@@ -35,12 +35,19 @@ public class FuelPump : MonoBehaviour, IPayable, ITooltipable {
     private IEnumerator PumpingFuel() {
         isPumpingFuel = true;
         while(true) {
-            if(carCon != null && (carCon.fuelAmount < carCon.fuelCapacity) && deposit > 0) {
+            if(Vector3.Distance(transform.position, carCon.transform.position) > 10) {
+                StopPumpingFuel();
+                carCon.PumpingFuel(false);
+
+                yield break;
+            } else if(carCon != null && (carCon.fuelAmount < carCon.fuelCapacity) && deposit > 0) {
                 print("Adding fuel");
                 AddToDeposit(-GameManager.current.pricePerLiter);
                 carCon.AddFuel(1000); //1 secs per liter
+                carCon.PumpingFuel(true);
             } else {
                 StopPumpingFuel();
+                carCon.PumpingFuel(false);
 
                 print("Stop Pumping fuel");
                 yield break;
