@@ -86,7 +86,7 @@ public class TimeManager : MonoBehaviour {
 
     //Runs when player doesnt make the boundary
     public void NewShift() {
-        print("NEW SHIFT");
+        // print("NEW SHIFT");
         days ++;
         UpdateDayTexts();
 
@@ -99,7 +99,7 @@ public class TimeManager : MonoBehaviour {
     }
 
     public void CheckForShifts(bool newIsShifts) {
-        print("Check for shifts: " + newIsShifts);
+        // print("Check for shifts: " + newIsShifts);
         isShifts = newIsShifts;
 
         if(!isShifts) {
@@ -230,7 +230,7 @@ public class TimeManager : MonoBehaviour {
     }
 
     private void UpdateDayTexts() {
-        print("Updating Day Texts: " + days);
+        // print("Updating Day Texts: " + days);
         foreach(TMP_Text dayText in dayTexts) {
             dayText.text = days + "";
         }

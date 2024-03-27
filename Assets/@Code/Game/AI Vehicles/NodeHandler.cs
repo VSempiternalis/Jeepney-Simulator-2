@@ -37,20 +37,20 @@ public class NodeHandler : MonoBehaviour {
         return connections[randomIndex];
     }
 
-    private void OnTriggerEnter(Collider other) {
-        if(other.gameObject.layer == vehicleLayer) {
-            if(other.gameObject.GetComponent<aiCarInput>()) CallNextNode(other.gameObject.GetComponent<aiCarInput>()); 
-            else if(other.transform.parent.GetComponent<aiCarInput>()) CallNextNode(other.transform.parent.GetComponent<aiCarInput>());
-        }
-    }
+    // private void OnTriggerEnter(Collider other) {
+    //     if(other.gameObject.layer == vehicleLayer) {
+    //         if(other.gameObject.GetComponent<aiCarInput>()) CallNextNode(other.gameObject.GetComponent<aiCarInput>()); 
+    //         else if(other.transform.parent.GetComponent<aiCarInput>()) CallNextNode(other.transform.parent.GetComponent<aiCarInput>());
+    //     }
+    // }
 
-    private void CallNextNode(aiCarInput ai) {
-        if(speedMod == 0) ai.carCon.maxMotorTorque = ai.carCon.gearFactor;
-        else ai.carCon.maxMotorTorque = ai.carCon.maxMotorTorque*5;//ai.carCon.maxMotorTorque *= ai.carCon.currentNode.speedMod;
+    // private void CallNextNode(aiCarInput ai) {
+    //     if(speedMod == 0) ai.carCon.maxMotorTorque = ai.carCon.gearFactor;
+    //     else ai.carCon.maxMotorTorque = ai.carCon.maxMotorTorque*5;//ai.carCon.maxMotorTorque *= ai.carCon.currentNode.speedMod;
 
-        // if(ai == null || ai.carCon == null || ai.carCon.nextNode == null) return;
-        // if(ai.carCon.nextNode != this) return;
+    //     // if(ai == null || ai.carCon == null || ai.carCon.nextNode == null) return;
+    //     // if(ai.carCon.nextNode != this) return;
 
-        // ai.NextNode();
-    }
+    //     // ai.NextNode();
+    // }
 }

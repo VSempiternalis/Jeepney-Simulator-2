@@ -5,6 +5,7 @@ using System.Collections;
 public class AudioManager : MonoBehaviour {
     public static AudioManager current;
     [SerializeField] private AudioHandler uiHandler;
+    [SerializeField] private AudioSource fuelPumpAudio;
 
     //POOL
     // [SerializeField] private int poolSize = 10;
@@ -74,5 +75,10 @@ public class AudioManager : MonoBehaviour {
         // currentAmbience.Play(i);
 
         // isTransitioning = true;
+    }
+
+    public void PlayFuelPump(bool newVal) {
+        if(newVal) fuelPumpAudio.Play();
+        else fuelPumpAudio.Stop();
     }
 }

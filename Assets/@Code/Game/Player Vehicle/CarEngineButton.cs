@@ -4,7 +4,7 @@ public class CarEngineButton : MonoBehaviour, IInteractable, ITooltipable {
     [SerializeField] private string desc;
     
     [SerializeField] private CarController carCon;
-    private bool isOn;
+    public bool isOn;
     [SerializeField] private Vector3 onPosition;
     [SerializeField] private Vector3 offPosition;
     [SerializeField] private float pressTime;

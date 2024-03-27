@@ -111,7 +111,7 @@ public class PlayerDriveInput : MonoBehaviour {
     }
 
     public void SetIsDriving(bool newIsDriving, CarController newCarCon, Transform seat) {
-        print("set is driving");
+        // print("set is driving");
         isDriving = newIsDriving;
         carCon = newCarCon;
         if(carCon) {

@@ -61,7 +61,7 @@ public class SaveLoadSystem : MonoBehaviour {
         gameMode = PlayerPrefs.GetString("Game_GameMode");
         bool isNewGame = PlayerPrefs.GetInt("Game_isNewGame") == 1? true:false;
 
-        print("(GAME) Game_isNewGame: " + (isNewGame? 1:0));
+        // print("(GAME) Game_isNewGame: " + (isNewGame? 1:0));
 
         GameStart(isNewGame);
             
@@ -141,7 +141,7 @@ public class SaveLoadSystem : MonoBehaviour {
     }
 
     private void LoadCareerSettings() {
-        print("Loading career settings");
+        // print("Loading career settings");
 
         //GAME SETTINGS ==============================
 
@@ -206,7 +206,7 @@ public class SaveLoadSystem : MonoBehaviour {
     }
 
     private void LoadFreeride() {
-        print("OLD FREERIDE!");
+        // print("OLD FREERIDE!");
 
         //DEPOSIT
         BoundaryManager.current.deposit = PlayerPrefs.GetInt("Freeride_Deposit", 0);
@@ -221,7 +221,7 @@ public class SaveLoadSystem : MonoBehaviour {
     }
 
     private void NewCareer() {
-        print("NEW CAREER!");
+        // print("NEW CAREER!");
 
         //DEPOSIT
         // deposit = PlayerPrefs.GetInt("Freeride_Deposit", 0);

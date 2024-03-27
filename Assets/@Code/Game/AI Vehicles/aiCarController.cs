@@ -53,7 +53,7 @@ public class aiCarController : MonoBehaviour {
 
     private void Start() {
         maxMotorTorque = UnityEngine.Random.Range(maxMotorTorqueRange.x, maxMotorTorqueRange.y + 1);
-        // print("MAX MOTOR TORQUE: " + maxMotorTorque);
+        print("MAX MOTOR TORQUE: " + maxMotorTorque);
         // maxMotorTorque = gearFactor;
         GetComponent<Rigidbody>().drag = freeDrag;
         audioSource = GetComponent<AudioSource>();
@@ -132,16 +132,16 @@ public class aiCarController : MonoBehaviour {
         GetComponent<Rigidbody>().drag = freeDrag;
     }
 
-    public void SwitchGear(int add) {
-        if(add > 0) gear += add;
-        else if(add < 0 && gear >= 0) gear -= add;
+    // public void SwitchGear(int add) {
+    //     if(add > 0) gear += add;
+    //     else if(add < 0 && gear >= 0) gear -= add;
         
-        if(gear == -1) {
-            maxMotorTorque = gear*gearFactor*-1;
-        } else {
-            maxMotorTorque = gear*gearFactor;
-        }
-    }
+    //     if(gear == -1) {
+    //         maxMotorTorque = gear*gearFactor*-1;
+    //     } else {
+    //         maxMotorTorque = gear*gearFactor;
+    //     }
+    // }
 
     public void GetInput(Vector2 newMoveInput) {
         if(gear < 0) newMoveInput.y *= -1;
