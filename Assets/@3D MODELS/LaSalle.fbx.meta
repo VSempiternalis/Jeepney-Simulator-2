@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6594a336fb11b1f4d88d3d38feba0730
+guid: 1b22a137284d7d04bb72188e7d3d720b
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable: []
@@ -78,6 +78,7 @@ ModelImporter:
   referencedClips:
   - 40eb14c7a76ad7540986da8a9c0491af
   - 03cf908dd96d10f46909e8afe3aa0956
+  - 8aa11b32390d233478c77b2d3619f5ea
   importAnimation: 1
   humanDescription:
     serializedVersion: 3
