@@ -191,6 +191,9 @@ public class CarController : MonoBehaviour {
         Steer();
         Brake();
         FuelDrain();
+
+        if(fuelAmount < 5000 && fuelAmount > 4997) NotificationManager.current.NewNotif("LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refill!");
+        else if(fuelAmount < 10 && fuelAmount > 7 ) NotificationManager.current.NewNotif("NO FUEL!", "You have run out of fuel! Call a tow truck [T].");
     }
 
     // CHECKS ======================================================================
@@ -548,10 +551,10 @@ public class CarController : MonoBehaviour {
         fuelNeedle.localRotation = Quaternion.Euler(Mathf.Lerp(minFuelNeedleRotation, maxFuelNeedleRotation, (float)fuelAmount/(float)fuelCapacity), 0, 0);
         Color fuelColor = white;
         if(fuelAmount < 5000 && fuelAmount > 4997) {
-            NotificationManager.current.NewNotif("LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refill!");
+            // NotificationManager.current.NewNotif("LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refill!");
             rpmColor = red;
         } else if(fuelAmount < 10 && fuelAmount > 7 ) {
-            NotificationManager.current.NewNotif("NO FUEL!", "You have run out of fuel! Call a tow truck.");
+            // NotificationManager.current.NewNotif("NO FUEL!", "You have run out of fuel! Call a tow truck [T].");
         }
         fuelText.text = Mathf.Round((float)fuelAmount/1000f) + "L";
         if(fuelText.color != fuelColor) fuelText.color = fuelColor;

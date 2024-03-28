@@ -564,7 +564,7 @@ public class PersonHandler : MonoBehaviour {
         int anim = 0;
         
         //Stand
-        if(state == "Idle" || state == "Waiting" || state == "Waiting to cross") anim = Random.Range(0, 8);
+        if(state == "Idle" || state == "Waiting" || state == "Waiting to cross") anim = Random.Range(0, 10);
         //Walk
         else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering" || state == "Dropping" || state == "Moving to pos" || state == "Crossing") anim = Random.Range(14, 20);
         //Sit
