@@ -20,7 +20,7 @@ public class NotificationManager : MonoBehaviour {
     }
 
     public void NewNotif(string header, string desc) {
-        if(notifs.childCount > 5) return;
+        if(notifs.childCount > 4) return;
 
         AudioManager.current.PlayUI(13);
         // print("New notif: " + header);

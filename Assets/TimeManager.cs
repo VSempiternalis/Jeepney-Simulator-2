@@ -118,7 +118,7 @@ public class TimeManager : MonoBehaviour {
             am.PlayUI(9);
 
             //notif
-            NotificationManager.current.NewNotif("SHIFT STARTED", "Your shift has begun! Get inside your jeepney, pick up passengers, and earn money before your time runs out!");
+            NotificationManager.current.NewNotif("SHIFT TIMER ON", "Your shift has begun! Get inside your jeepney, pick up passengers, and earn money before your time runs out!");
         } else isShiftOn = false;
     }
 
@@ -130,7 +130,7 @@ public class TimeManager : MonoBehaviour {
 
         // if(shiftTimeLeft <= 0) 
         //notif
-        NotificationManager.current.NewNotif("SHIFT ENDED", "Grab as much money as you can, go to Billy, and pay your boundary.");
+        NotificationManager.current.NewNotif("SHIFT TIMER OFF", "Your shift timer has been paused. Grab as much money as you can, go to Billy, and pay your boundary.");
     }
 
     private void UpdateShiftTime() {

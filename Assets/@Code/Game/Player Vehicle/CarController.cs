@@ -517,7 +517,7 @@ public class CarController : MonoBehaviour {
 
     private void AutoTrans() {
         if(gear != 0 && RPM > 6800) ShiftGear(1);
-        else if(gear > 2 && RPM < 4000) ShiftGear(-1);
+        else if(gear > 2 && RPM < 5000) ShiftGear(-1);
     }
 
     private void UpdateGearText() {
