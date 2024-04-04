@@ -13,11 +13,12 @@ public class Notification : MonoBehaviour {
     }
 
     private void Update() {
-        if(transform.position.x < -120) {
+        if(transform.localPosition.x < -120) {
             descImg.SetActive(false);
-        } else if(transform.position.x < -110) {
+        } else if(transform.localPosition.x < -110) {
             descImg.SetActive(true);
-        } else if(transform.position.x == 125) {
+        } else
+        if(transform.localPosition.x == 125) {
             descImg.SetActive(false);
             descImg.SetActive(true);
         }
@@ -26,15 +27,16 @@ public class Notification : MonoBehaviour {
 
     public void Setup(string header, string desc) {
         // print("Setup: " + header);
-        gameObject.SetActive(true);
         // descImg.SetActive(false);
         // descImg.SetActive(true);
 
-        transform.position = new Vector3(-125, 0, 0);
+        transform.localPosition = new Vector3(-125, -435.3f, 0);
         LeanTween.moveLocalX(gameObject, 125, 0.5f).setEaseOutQuart();
 
         headerText.text = header;
         descText.text = desc;
+        
+        gameObject.SetActive(true);
 
         StartCoroutine(TimerCoroutine());
     }
@@ -43,7 +45,11 @@ public class Notification : MonoBehaviour {
     private IEnumerator TimerCoroutine() {
         while(true) {
             yield return new WaitForSeconds(duration);
-            Destroy(gameObject);
+            DestroySelf();
         }
+    }
+
+    public void DestroySelf() {
+        Destroy(gameObject);
     }
 }

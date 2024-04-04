@@ -119,6 +119,7 @@ public class TimeManager : MonoBehaviour {
 
             //notif
             NotificationManager.current.NewNotif("SHIFT TIMER ON", "Your shift has begun! Get inside your jeepney, pick up passengers, and earn money before your time runs out!");
+            if(BoundaryManager.current.doBoundary) NotificationManager.current.NewNotif("BOUNDARY", "Your BOUNDARY for this shift is P" + BoundaryManager.current.boundary);
         } else isShiftOn = false;
     }
 
@@ -126,11 +127,12 @@ public class TimeManager : MonoBehaviour {
         if(!isShiftOn) return;
 
         isShiftOn = false;
+        BoundaryManager.current.CalculateFailureCharge();
         BoundaryManager.current.UpdateTexts();
 
         // if(shiftTimeLeft <= 0) 
         //notif
-        NotificationManager.current.NewNotif("SHIFT TIMER OFF", "Your shift timer has been paused. Grab as much money as you can, go to Billy, and pay your boundary.");
+        NotificationManager.current.NewNotif("SHIFT TIMER OFF", "Your shift timer has been paused."); // Grab as much money as you can, go to Billy, and pay your boundary.
     }
 
     private void UpdateShiftTime() {
@@ -152,7 +154,8 @@ public class TimeManager : MonoBehaviour {
             // UpdateShiftTimers();
 
             //passenger pickup off
-            PlayerDriveInput.current.isTakingPassengers = false;
+            PlayerDriveInput.current.SetPickups(false);
+            // PlayerDriveInput.current.isPickups = false;
 
             return;
         }
@@ -183,7 +186,7 @@ public class TimeManager : MonoBehaviour {
         if(shiftTimeLeft == 180) {
             am.PlayUI(10);
             //notif
-            NotificationManager.current.NewNotif("THREE MINUTES LEFT!", "Return to Billy's Office before time runs out!");
+            NotificationManager.current.NewNotif("THREE MINUTES LEFT!", "Return to Billy's Office before your shift ends!");
         }
         
         if(shiftHoursLeft < 3) {

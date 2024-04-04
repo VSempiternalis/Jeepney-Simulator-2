@@ -19,7 +19,7 @@ public class mapButton : MonoBehaviour, IInteractable {
         float targetSize = target.orthographicSize;
         float newSize = targetSize + zoomRate;
 
-        if(newSize < 0 || newSize > 1000) return;
+        if(newSize < 0 || newSize > 2000) return;
 
         LeanTween.value(target.gameObject, targetSize, newSize, zoomTime)
         .setEaseOutQuint()

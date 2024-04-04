@@ -111,9 +111,9 @@ public class ChangeHandler : MonoBehaviour, ITooltipable, IScrollable {
             text = "Place change here";
         } else {
             if(changees.Count > 1) {
-                text = currentChangee.to + "\nP" + currentChangee.change + "\nv";
+                text = currentChangee.landmarkDest + "\nP" + currentChangee.change + "\nv";
             } else {
-                text = currentChangee.to + "\nP" + currentChangee.change;
+                text = currentChangee.landmarkDest + "\nP" + currentChangee.change;
             }
         } 
 

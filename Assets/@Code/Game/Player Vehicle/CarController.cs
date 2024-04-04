@@ -24,6 +24,9 @@ public class CarController : MonoBehaviour {
 
     [Space(10)]
     [Header("VARIABLES")]
+    public int health;
+    public float healthFactor = 1;
+    public int maxHealth;
     public bool isEngineOn;
     public float maxAcceleration = 30.0f;
     public float brakeAcceleration = 50.0f;
@@ -39,6 +42,12 @@ public class CarController : MonoBehaviour {
 
     private Rigidbody carRb;
     public float freeDrag;
+
+    [Space(10)]
+    [Header("HEALTH PARTICLES")]
+    [SerializeField] private GameObject flamesSmall;
+    [SerializeField] private GameObject flamesMedium;
+    [SerializeField] private GameObject flamesLarge;
 
     [Space(10)]
     [Header("PASSENGERS")]
@@ -434,7 +443,7 @@ public class CarController : MonoBehaviour {
                 wheelRPM = Mathf.Abs(wheel.wheelCollider.rpm) * gearRatios[gear] * differentialRatio;
                 RPM = Mathf.Lerp(RPM, Mathf.Max(idleRPM, wheelRPM), Time.deltaTime * 3f);
                 torque = (horsePowerToRPMCurve.Evaluate(RPM / redLine) * motorPower / RPM) * gearRatios[gear] * differentialRatio * 5252f;//*clutch
-                wheel.wheelCollider.motorTorque = moveInput * torque;
+                wheel.wheelCollider.motorTorque = moveInput * torque * healthFactor;
             }
             // if(wheel.axle == Axle.Rear) wheel.wheelCollider.motorTorque = moveInput * maxAcceleration;
         }
@@ -577,6 +586,43 @@ public class CarController : MonoBehaviour {
         }
     }
 
+    private void AddHealth(int mod) {
+        health += mod;
+
+        if(health <= 0) {
+            health = 0;
+
+            healthFactor = 0.2f;
+        } else if(health < 25) {
+            flamesSmall.SetActive(false);
+            flamesMedium.SetActive(false);
+
+            flamesLarge.SetActive(true);
+
+            healthFactor = 0.4f;
+        } else if(health < 50) {
+            flamesSmall.SetActive(false);
+            flamesLarge.SetActive(false);
+
+            flamesMedium.SetActive(true);
+
+            healthFactor = 0.6f;
+        } else if(health < 75) {
+            flamesMedium.SetActive(false);
+            flamesLarge.SetActive(false);
+
+            flamesSmall.SetActive(true);
+
+            healthFactor = 0.8f;
+        } else {
+            flamesSmall.SetActive(false);
+            flamesMedium.SetActive(false);
+            flamesLarge.SetActive(false);
+
+            healthFactor = 1f;
+        }
+    }
+
     // COLLISIONS ===========================================================
 
     private void OnCollisionEnter(Collision other) {
@@ -587,9 +633,11 @@ public class CarController : MonoBehaviour {
             float relativeVelocity = other.relativeVelocity.magnitude;
 
             if(relativeVelocity > 6) {
-                // print("playing audio");
-                AudioManager.current.PlayUI(14);
                 // damage vehicle
+                AddHealth(-(int)relativeVelocity);
+                NotificationManager.current.NewNotif("VEHICLE DAMAGED!", "Jeepney health: " + health);
+
+                AudioManager.current.PlayUI(14);
             }
         }
     }

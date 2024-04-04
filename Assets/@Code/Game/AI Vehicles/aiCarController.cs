@@ -53,7 +53,7 @@ public class aiCarController : MonoBehaviour {
 
     private void Start() {
         maxMotorTorque = UnityEngine.Random.Range(maxMotorTorqueRange.x, maxMotorTorqueRange.y + 1);
-        print("MAX MOTOR TORQUE: " + maxMotorTorque);
+        // print("MAX MOTOR TORQUE: " + maxMotorTorque);
         // maxMotorTorque = gearFactor;
         GetComponent<Rigidbody>().drag = freeDrag;
         audioSource = GetComponent<AudioSource>();

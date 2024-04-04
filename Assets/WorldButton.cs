@@ -3,10 +3,12 @@ using UnityEngine.Events;
 
 public class WorldButton : MonoBehaviour, IInteractable, ITooltipable {
     public bool isOn;
+    [SerializeField] private bool isMovable;
     public GameObject interactor;
     [SerializeField] private Vector3 onPosition;
     [SerializeField] private Vector3 offPosition;
     [SerializeField] private float pressTime;
+    [SerializeField] private bool isAudioUI;
     [SerializeField] private AudioHandler audioHandler;
 
     [System.Serializable]
@@ -14,7 +16,7 @@ public class WorldButton : MonoBehaviour, IInteractable, ITooltipable {
     public OnClickEvent onClickEvent;
 
     [SerializeField] private string header;
-    [SerializeField] private string desc;
+    [TextArea] [SerializeField] private string desc;
 
     private void Start() {
         
@@ -29,13 +31,17 @@ public class WorldButton : MonoBehaviour, IInteractable, ITooltipable {
         isOn = !isOn;
 
         //Animation
-        if(isOn) LeanTween.moveLocal(gameObject, onPosition, pressTime).setEaseOutElastic();
-        else LeanTween.moveLocal(gameObject, offPosition, pressTime).setEaseOutElastic();
+        if(isMovable) {
+            if(isOn) LeanTween.moveLocal(gameObject, onPosition, pressTime).setEaseOutElastic();
+            else LeanTween.moveLocal(gameObject, offPosition, pressTime).setEaseOutElastic();
+        }
 
         onClickEvent.Invoke();
 
-        //Audio
-        if(audioHandler) {
+        //AUDIO
+        if(isAudioUI) {
+            AudioManager.current.PlayUI(1);
+        } else if(audioHandler) {
             audioHandler.Play(1);
             if(isOn) audioHandler.Play(2);
             else audioHandler.Play(3);

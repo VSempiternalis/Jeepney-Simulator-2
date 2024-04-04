@@ -46,7 +46,7 @@ public class PersonHandler : MonoBehaviour {
     private List<Transform> destinations = new List<Transform>();
     private List<Vector3> posDestinations = new List<Vector3>();
     public string from;
-    public string to;
+    public string landmarkDest;
     private bool isInTo;
 
     [Space(10)]
@@ -212,13 +212,13 @@ public class PersonHandler : MonoBehaviour {
     private void Wait() {
         if(Time.time >= waitTime) MakeWander();
 
-        if(!player.isTakingPassengers || !isPassenger || (player.carCon && !player.carCon.HasFreeSeats())) return;
-        // else if(!player.isTakingPassengers && ) return;
-        // else if(!DestinationsManager.current.destinations.Contains(to)) return;
+        if(!player.isPickups || !isPassenger || (player.carCon && !player.carCon.HasFreeSeats())) return;
+        // else if(!player.isPickups && ) return;
+        else if(!RouteSelector.current.destinations.Contains(landmarkDest)) return;
 
-        //[Call jeep when close]
+        //[!+Call jeep when close]
         distToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        if(distToPlayer <= callDist && player.isDriving && player.isTakingPassengers && player.carCon.HasFreeSeats()) {
+        if(distToPlayer <= callDist && player.isDriving && player.isPickups && player.carCon.HasFreeSeats()) {
             // popup.Say(sayHandler.GetSay("Call"), false);
             // transform.LookAt(player.transform, Vector3.up);
             FacePos(player.transform.position);
@@ -311,7 +311,7 @@ public class PersonHandler : MonoBehaviour {
     #region SINGLE FRAME FUNCTIONS =================================================================================================
 
     public void ExitVehicle() {
-        DestinationsUIManager.current.RemoveDestination(to);
+        DestinationsUIManager.current.RemoveDestination(landmarkDest);
 
         posDestinations.Clear();
 
@@ -451,7 +451,7 @@ public class PersonHandler : MonoBehaviour {
     }
 
     public void AddDestination() {
-        DestinationsUIManager.current.AddDestination(to);
+        DestinationsUIManager.current.AddDestination(landmarkDest);
     }
 
     #endregion
@@ -590,7 +590,7 @@ public class PersonHandler : MonoBehaviour {
             // print("vehicle layer");
             // Calculate the relative velocity between the two colliding objects
             float relativeVelocity = other.relativeVelocity.magnitude;
-            print("relvel: " + relativeVelocity);
+            // print("relvel: " + relativeVelocity);
 
             if(relativeVelocity > velocityThresh) StartRagdoll();
 
@@ -625,22 +625,22 @@ public class PersonHandler : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        if(other.gameObject.layer == dropAreaLayer && other.name.Contains(to) && state == "Waiting to arrive") {
+        if(other.gameObject.layer == dropAreaLayer && other.name.Contains(landmarkDest) && state == "Waiting landmarkDest arrive") {
             voiceHandler.Say("Stop");
         } else if(other.gameObject.layer == spawnAreaLayer) currentSpot = other.transform;
     }
 
     private void OnTriggerStay(Collider other) {
-        if(other.gameObject.layer == dropAreaLayer && other.name.Contains(to)) {
+        if(other.gameObject.layer == dropAreaLayer && other.name.Contains(landmarkDest)) {
             dropSpot = other.GetComponent<DropSpot>();
             Arrived(); //Drop;
         }
-        // else if(other.gameObject.layer == 8 && other.name.Contains(to)) { //Area
+        // else if(other.gameObject.layer == 8 && other.name.Contains(landmarkDest)) { //Area
         // }
     }
 
     private void OnTriggerExit(Collider other) {
-        if(other.gameObject.layer == dropAreaLayer && other.name.Contains(to) && state == "Waiting to drop") state = "Waiting to arrive";
+        if(other.gameObject.layer == dropAreaLayer && other.name.Contains(landmarkDest) && state == "Waiting to drop") state = "Waiting to arrive";
         // else if(other.gameObject.layer == spawnAreaLayer) currentSpot = null;
     }
 

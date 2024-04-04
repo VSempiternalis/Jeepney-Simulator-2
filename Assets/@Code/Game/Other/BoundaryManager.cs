@@ -6,10 +6,12 @@ public class BoundaryManager : MonoBehaviour {
     public static BoundaryManager current;
 
     private SaveLoadSystem sls;
-    private bool doBoundary;
+    public bool doBoundary;
     public int deposit;
     public int boundary;
     public int lateFee;
+    public int failureCharge;
+    public int failureChargePerPerson;
     public int total;
     public int shiftLength;
 
@@ -29,6 +31,7 @@ public class BoundaryManager : MonoBehaviour {
     [SerializeField] private List<TMP_Text> depositTexts = new List<TMP_Text>();
     [SerializeField] private List<TMP_Text> boundaryTexts = new List<TMP_Text>();
     [SerializeField] private List<TMP_Text> lateFeeTexts = new List<TMP_Text>();
+    [SerializeField] private List<TMP_Text> failureChargeTexts = new List<TMP_Text>();
     [SerializeField] private List<TMP_Text> totalTexts = new List<TMP_Text>();
 
     [SerializeField] private Transform spawnPoint;
@@ -85,6 +88,7 @@ public class BoundaryManager : MonoBehaviour {
         CalculateNewBoundary();
         UpdateTexts();
         ResetVicMoney();
+        RouteSelector.current.NewShift(3); //3 is dests to lock
     }
 
     public void TryAddLateFee() {
@@ -104,12 +108,21 @@ public class BoundaryManager : MonoBehaviour {
         boundary = shiftFactor + dayFactor + baseBoundary;
     }
 
+    public void CalculateFailureCharge() {
+        if(!PlayerDriveInput.current.carCon) return;
+
+        int passengers = PlayerDriveInput.current.carCon.GetComponent<CarController>().passengerCount;
+        failureCharge = passengers * failureChargePerPerson;
+
+        if(passengers > 0) NotificationManager.current.NewNotif("FAILURE CHARGE", "You have " + passengers + " undelivered passengers. You have been given a P" + failureCharge + " failure charge.");
+    }
+
     private void CalculateTotal() {
-        total = deposit - (boundary + lateFee);
+        total = deposit - (boundary + lateFee + failureCharge);
     }
 
     public void UpdateTexts() {
-        total = deposit - (boundary + lateFee);
+        CalculateTotal();
 
         foreach(TMP_Text depositText in depositTexts) {
             if(deposit < 0) depositText.text = "-P" + Mathf.Abs(deposit);
@@ -122,6 +135,10 @@ public class BoundaryManager : MonoBehaviour {
         
         foreach(TMP_Text lateFeeText in lateFeeTexts) {
             lateFeeText.text = "-P" + lateFee;
+        }
+        
+        foreach(TMP_Text failureChargeText in failureChargeTexts) {
+            failureChargeText.text = "-P" + failureCharge;
         }
         
         foreach(TMP_Text totalText in totalTexts) {
@@ -149,7 +166,7 @@ public class BoundaryManager : MonoBehaviour {
 
     public void CompleteShift() {
         if(total >= 0 || !doBoundary) {
-            deposit -= boundary + lateFee;
+            deposit -= total;
             string text = "CONGRATULATIONS! YOU MADE THE BOUNDARY!\n\nSaving game...\n";
             if(!doBoundary) text = "Saving game...";
 
@@ -157,6 +174,7 @@ public class BoundaryManager : MonoBehaviour {
                 //Reset
                 TimeManager.current.NewShift();
                 SaveLoadSystem.current.SaveGame();
+                RouteSelector.current.NewShift(3); //3 is dests to lock
                 am.PlayUI(3);
 
                 CalculateNewBoundary();
@@ -193,7 +211,9 @@ public class BoundaryManager : MonoBehaviour {
             });
         }
         lateFee = 0;
-        PlayerDriveInput.current.isTakingPassengers = true;
+        failureCharge = 0;
+        // PlayerDriveInput.current.isPickups = true;
+        PlayerDriveInput.current.SetPickups(SaveLoadSystem.current.isPassengerPickups);
         //notif
 
         //Clear jeepney seats

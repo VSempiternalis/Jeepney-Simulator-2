@@ -71,9 +71,9 @@ public class SaveLoadSystem : MonoBehaviour {
         Setup();
     }
 
-    private void Update() {
+    // private void Update() {
         
-    }
+    // }
 
     #region SETUP AND SAVES =========================================================================================
 
@@ -125,7 +125,7 @@ public class SaveLoadSystem : MonoBehaviour {
         TimeManager.current.shiftLength = shiftLength;
         BoundaryManager.current.shiftLength = shiftLength;
 
-        PlayerDriveInput.current.isTakingPassengers = isPassengerPickups;
+        PlayerDriveInput.current.isPickups = isPassengerPickups;
 
         // freeridePanel.SetActive(true);
         careerPanel.SetActive(false);
@@ -171,7 +171,7 @@ public class SaveLoadSystem : MonoBehaviour {
         // TimeManager.current.SetTimeTo(480);
         // TimeManager.current.days = PlayerPrefs.GetInt("Career_Day", 1);
 
-        PlayerDriveInput.current.isTakingPassengers = isPassengerPickups;
+        PlayerDriveInput.current.isPickups = isPassengerPickups;
 
         //SETUPS
         // TimeManager.current.Setup();

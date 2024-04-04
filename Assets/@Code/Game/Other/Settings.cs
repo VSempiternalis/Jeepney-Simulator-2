@@ -126,7 +126,7 @@ public class Settings : MonoBehaviour {
         SetZoomSens(3);
         SetTutorialPanels(true);
         SetAutoTrans(true);
-        SetRenderDist(5);
+        SetRenderDist(3);
         SetSpawnDistance(100);
     }
 

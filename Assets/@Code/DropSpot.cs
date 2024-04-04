@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class DropSpot : MonoBehaviour {
     [SerializeField] private Transform dropField;
+    public bool isIllegal;
 
     private void Start() {
         

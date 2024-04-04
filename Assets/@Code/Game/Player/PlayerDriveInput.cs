@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
-// using UnityEngine.Animations.Rigging;
 
 public class PlayerDriveInput : MonoBehaviour {
     public static PlayerDriveInput current;
@@ -13,7 +12,9 @@ public class PlayerDriveInput : MonoBehaviour {
 
     public bool isSitting;
     public bool isDriving;
-    public bool isTakingPassengers;
+    // public bool isTakingPassengers; //settings
+    public bool isPickups; //in-game
+    [SerializeField] private GameObject pickupsOffSign;
 
     [SerializeField] private GameObject fpa; //firstpersonaudio
 
@@ -111,7 +112,7 @@ public class PlayerDriveInput : MonoBehaviour {
     }
 
     public void SetIsDriving(bool newIsDriving, CarController newCarCon, Transform seat) {
-        // print("set is driving");
+        print("set is driving: " + newCarCon.name);
         isDriving = newIsDriving;
         carCon = newCarCon;
         if(carCon) {
@@ -127,5 +128,22 @@ public class PlayerDriveInput : MonoBehaviour {
         Key_ChangerScrollUp = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_ChangerScrollUp", "E"));
         Key_ChangerScrollDown = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_ChangerScrollDown", "Q"));
         Key_TakePayment = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_TakePayment", "F"));
+    }
+
+    // public void StopPickups() {
+    //     NotificationManager.current.NewNotif("PICKUPS STOPPED", "You can no longer pick up passengers.");
+
+    //     isPickups = false;
+    // }
+
+    public void SetPickups(bool newVal) {
+        if(isPickups == newVal) return;
+
+        isPickups = newVal;
+
+        if(!isPickups) NotificationManager.current.NewNotif("PICKUPS STOPPED", "You can no longer pick up passengers. Finish shift in Billy's Office (Terminal) to reset!");
+
+        pickupsOffSign.SetActive(!isPickups);
+        // print(pickupsOffSign.activeSelf? "true":"false");
     }
 }

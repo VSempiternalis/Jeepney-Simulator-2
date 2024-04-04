@@ -30,7 +30,8 @@ public class SeatHandler : MonoBehaviour, IInteractable, ITooltipable {
             player.SetParent(null);
 
             if(carCon) {
-                player.GetComponent<PlayerDriveInput>().SetIsDriving(false, null, transform);
+                player.GetComponent<PlayerDriveInput>().SetIsDriving(false, carCon, transform);
+                // player.GetComponent<PlayerDriveInput>().SetIsDriving(false, null, transform);
                 carCon.DriverExit();
             }
             else player.GetComponent<PlayerDriveInput>().SetIsSitting(false, false, transform);

@@ -153,7 +153,7 @@ public class SpawnArea : MonoBehaviour {
             newPerson.GetComponent<TGCharacterAppearance>().Start();
 
             newPerson.GetComponent<PersonHandler>().from = spawn.parent.name;
-            newPerson.GetComponent<PersonHandler>().to = GetDestination(spawn.parent.name);
+            newPerson.GetComponent<PersonHandler>().landmarkDest = GetDestination(spawn.parent.name);
 
             if(crosswalk != null) newPerson.GetComponent<PersonHandler>().CrossRoad(crosswalk.otherCrosswalk);
             else newPerson.GetComponent<PersonHandler>().MakeWait();

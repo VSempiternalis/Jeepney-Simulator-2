@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class PlayerInteraction : MonoBehaviour {
@@ -55,6 +56,8 @@ public class PlayerInteraction : MonoBehaviour {
     private bool inArea;
     [SerializeField] private uiAnimGroup playerDestUI;
     [SerializeField] private uiAnimGroup inAreaUI;
+    [SerializeField] private Color green;
+    [SerializeField] private Color red;
 
     [Space(10)]
     [Header("KEYBINDS")]
@@ -347,8 +350,17 @@ public class PlayerInteraction : MonoBehaviour {
             am.PlayUI(6);
         } else if(!inAreaUI.isIn && go.layer == layerArea) { // && areaUI.text != other.name
             inArea = true;
-
             inAreaUI.In();
+
+            if(other.gameObject.GetComponent<DropSpot>().isIllegal) {
+                inAreaUI.GetComponent<Image>().color = red;
+                inAreaUI.transform.GetChild(0).GetComponent<TMP_Text>().color = red;
+                inAreaUI.transform.GetChild(0).GetComponent<TMP_Text>().text = "YOU ARE IN AN ILLEGAL UNLOADING AREA";
+            } else {
+                inAreaUI.GetComponent<Image>().color = green;
+                inAreaUI.transform.GetChild(0).GetComponent<TMP_Text>().color = green;
+                inAreaUI.transform.GetChild(0).GetComponent<TMP_Text>().text = "YOU ARE IN AN UNLOADING AREA";
+            }
 
             //Audio
             am.PlayUI(8);
