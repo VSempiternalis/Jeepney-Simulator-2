@@ -24,21 +24,34 @@ public class SeatHandler : MonoBehaviour, IInteractable, ITooltipable {
     public void Interact(GameObject interactor) {
         // print("interacting");
         Transform player = interactor.transform;
+
+        bool isTutorial = player.GetComponent<PlayerDriveInputTUTORIAL>();
+
         if(transform.childCount > 1) {
             //EXIT
             player.position = exitPoint.position;
             player.SetParent(null);
 
             if(carCon) {
-                player.GetComponent<PlayerDriveInput>().SetIsDriving(false, carCon, transform);
-                // player.GetComponent<PlayerDriveInput>().SetIsDriving(false, null, transform);
-                carCon.DriverExit();
+                if(isTutorial) {
+                    player.GetComponent<PlayerDriveInputTUTORIAL>().SetIsDriving(false, carCon, transform);
+                    carCon.DriverExit();
+                } else {
+                    player.GetComponent<PlayerDriveInput>().SetIsDriving(false, carCon, transform);
+                    carCon.DriverExit();
+                }
             }
+            else if(isTutorial) player.GetComponent<PlayerDriveInputTUTORIAL>().SetIsSitting(false, false, transform);
             else player.GetComponent<PlayerDriveInput>().SetIsSitting(false, false, transform);
         } else {
             //ENTER
-            if(carCon) player.GetComponent<PlayerDriveInput>().SetIsDriving(true, carCon, transform);
-            else player.GetComponent<PlayerDriveInput>().SetIsSitting(true, false, transform);
+            if(isTutorial) {
+                if(carCon) player.GetComponent<PlayerDriveInputTUTORIAL>().SetIsDriving(true, carCon, transform);
+                else player.GetComponent<PlayerDriveInputTUTORIAL>().SetIsSitting(true, false, transform);
+            } else {
+                if(carCon) player.GetComponent<PlayerDriveInput>().SetIsDriving(true, carCon, transform);
+                else player.GetComponent<PlayerDriveInput>().SetIsSitting(true, false, transform);
+            }
 
             player.SetParent(transform);
             player.localPosition = localPosPlayer;

@@ -86,11 +86,13 @@ public class PersonHandler : MonoBehaviour {
     [Space(10)]
     private float nextSecUpdate;
     private PlayerDriveInput player;
+    private PlayerDriveInputTUTORIAL pdit;
     [SerializeField] private float distToPlayer;
     public CarController carCon;
 
     private void Start() {
         player = GameObject.Find("PLAYER").GetComponent<PlayerDriveInput>();
+        pdit = GameObject.Find("PLAYER").GetComponent<PlayerDriveInputTUTORIAL>();
         ani = GetComponent<Animator>();
 
         //Populate money
@@ -120,7 +122,8 @@ public class PersonHandler : MonoBehaviour {
         voiceHandler.SetAudioClips(voiceType.payAudios, voiceType.stopAudios, voiceType.deathAudios);
         // patience = maxPatience;
 
-        isPayments = SaveLoadSystem.current.isPayments;
+        isPayments = true;
+        if(SaveLoadSystem.current != null) isPayments = SaveLoadSystem.current.isPayments;
 
         nextSecUpdate = Time.time + 1;
     }
@@ -212,28 +215,54 @@ public class PersonHandler : MonoBehaviour {
     private void Wait() {
         if(Time.time >= waitTime) MakeWander();
 
-        if(!player.isPickups || !isPassenger || (player.carCon && !player.carCon.HasFreeSeats())) return;
-        // else if(!player.isPickups && ) return;
-        else if(!RouteSelector.current.destinations.Contains(landmarkDest)) return;
+        if(pdit != null) { //TUTORIAL
+            if(!pdit.isPickups || !isPassenger || (pdit.carCon && !pdit.carCon.HasFreeSeats())) return;
+            // else if(!pdit.isPickups && ) return;
+            else if(!RouteSelector.current.destinations.Contains(landmarkDest)) return;
 
-        //[!+Call jeep when close]
-        distToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        if(distToPlayer <= callDist && player.isDriving && player.isPickups && player.carCon.HasFreeSeats()) {
-            // popup.Say(sayHandler.GetSay("Call"), false);
-            // transform.LookAt(player.transform, Vector3.up);
-            FacePos(player.transform.position);
-            //[HAIL]
-            //GetComponent<Test_script>().Hail();
-            carCon = player.carCon;
+            //[!+Call jeep when close]
+            distToPlayer = Vector3.Distance(transform.position, pdit.transform.position);
+            if(distToPlayer <= callDist && pdit.isDriving && pdit.isPickups && pdit.carCon.HasFreeSeats()) {
+                // popup.Say(sayHandler.GetSay("Call"), false);
+                // transform.LookAt(pdit.transform, Vector3.up);
+                FacePos(pdit.transform.position);
+                //[HAIL]
+                //GetComponent<Test_script>().Hail();
+                carCon = pdit.carCon;
 
-            // print("Car mag: " + carCon.GetComponent<Rigidbody>().velocity.magnitude + " mag thresh: " + magnitudeThresh);
-            if(carCon.GetComponent<Rigidbody>().velocity.magnitude <= magnitudeThresh) {
-                // print("Past magnitude thresh");
-                MakeMoveToVehicle();
+                // print("Car mag: " + carCon.GetComponent<Rigidbody>().velocity.magnitude + " mag thresh: " + magnitudeThresh);
+                if(carCon.GetComponent<Rigidbody>().velocity.magnitude <= magnitudeThresh) {
+                    // print("Past magnitude thresh");
+                    MakeMoveToVehicle();
+                }
+            } else {
+                //face player
+                //hail anim
             }
-        } else {
-            //face player
-            //hail anim
+        } else { //NOT TUTORIAL
+            if(!player.isPickups || !isPassenger || (player.carCon && !player.carCon.HasFreeSeats())) return;
+            // else if(!player.isPickups && ) return;
+            else if(!RouteSelector.current.destinations.Contains(landmarkDest)) return;
+
+            //[!+Call jeep when close]
+            distToPlayer = Vector3.Distance(transform.position, player.transform.position);
+            if(distToPlayer <= callDist && player.isDriving && player.isPickups && player.carCon.HasFreeSeats()) {
+                // popup.Say(sayHandler.GetSay("Call"), false);
+                // transform.LookAt(player.transform, Vector3.up);
+                FacePos(player.transform.position);
+                //[HAIL]
+                //GetComponent<Test_script>().Hail();
+                carCon = player.carCon;
+
+                // print("Car mag: " + carCon.GetComponent<Rigidbody>().velocity.magnitude + " mag thresh: " + magnitudeThresh);
+                if(carCon.GetComponent<Rigidbody>().velocity.magnitude <= magnitudeThresh) {
+                    // print("Past magnitude thresh");
+                    MakeMoveToVehicle();
+                }
+            } else {
+                //face player
+                //hail anim
+            }
         }
     }
 
@@ -431,7 +460,7 @@ public class PersonHandler : MonoBehaviour {
     }
 
     private void EnterVehicle() {
-        print("ENTER VEHICLE");
+        // print("ENTER VEHICLE");
         carCon.TakeSeat(transform);
 
         GetComponent<CapsuleCollider>().isTrigger = true;
@@ -625,7 +654,7 @@ public class PersonHandler : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        if(other.gameObject.layer == dropAreaLayer && other.name.Contains(landmarkDest) && state == "Waiting landmarkDest arrive") {
+        if(other.gameObject.layer == dropAreaLayer && other.name.Contains(landmarkDest) && state == "Waiting to arrive") {
             voiceHandler.Say("Stop");
         } else if(other.gameObject.layer == spawnAreaLayer) currentSpot = other.transform;
     }

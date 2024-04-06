@@ -152,7 +152,12 @@ public class BoundaryManager : MonoBehaviour {
         }
     }
 
-    public void AddToDeposit() {
+    public void AddToDeposit(int mod) {
+        deposit += mod;
+        UpdateTexts();
+    }
+
+    public void StorageToDeposit() {
         deposit += storage.value;
 
         // CalculateTotal();
@@ -165,8 +170,15 @@ public class BoundaryManager : MonoBehaviour {
     }
 
     public void CompleteShift() {
+        if(deposit <= 0) {
+            NotificationManager.current.NewNotif("EMPTY DEPOSIT", "You need to deposit your earnings first to pay the boundary.");
+            AudioManager.current.PlayUI(7);
+            return;
+        }
+
         if(total >= 0 || !doBoundary) {
-            deposit -= total;
+            deposit = total;
+            // AddToDeposit(-total);
             string text = "CONGRATULATIONS! YOU MADE THE BOUNDARY!\n\nSaving game...\n";
             if(!doBoundary) text = "Saving game...";
 
@@ -197,6 +209,7 @@ public class BoundaryManager : MonoBehaviour {
                 SaveLoadSystem.current.OnLose();
                 UpdateTexts();
                 ResetVicMoney();
+                PlayerDriveInput.current.GetComponent<PlayerInteraction>().ClearItems(); //yes, this is stupid
                 TimeManager.current.ResetShiftTime();
 
                 am.PlayUI(5);

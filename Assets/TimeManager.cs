@@ -129,6 +129,7 @@ public class TimeManager : MonoBehaviour {
         isShiftOn = false;
         BoundaryManager.current.CalculateFailureCharge();
         BoundaryManager.current.UpdateTexts();
+        JeepneyPanel.current.UpdateReqs();
 
         // if(shiftTimeLeft <= 0) 
         //notif

@@ -196,7 +196,7 @@ namespace TGStylizedWorld
                     hairItem = Hairs[hairIndexes[hairIndex]];
                     hatEnabled = hairItem.AllowHair;
                     glassesEnabled = hairItem.AllowGlasses;
-                    hairItem.Hair.gameObject.SetActive(true);
+                    if(hairItem.Hair != null) hairItem.Hair.gameObject.SetActive(true);
                     break;
                 case TGPartMode.Hidden:
                     foreach (TGHairItem item in Hairs)
@@ -224,7 +224,7 @@ namespace TGStylizedWorld
                         {
                             if (hairItem.HairSkins[(int)HairsRandomSkins[hairColorIndex]])
                             {
-                                hairItem.Hair.material = hairItem.HairSkins[(int)HairsRandomSkins[hairColorIndex]];
+                                if(hairItem.Hair) hairItem.Hair.material = hairItem.HairSkins[(int)HairsRandomSkins[hairColorIndex]];
                             }
                         }
                         break;

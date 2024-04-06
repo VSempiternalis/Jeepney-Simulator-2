@@ -270,6 +270,8 @@ public class PlayerInteraction : MonoBehaviour {
 
     private void TakeItemOver() {
         if(rightHand.childCount >= maxItemsOnHand) {
+            NotificationManager.current.NewNotif("HANDS FULL", "You are holding too many items! ");
+            // AudioManager.current.PlayUI(7);
             // Fader.current.YawnGray(0.5f, "My hands are full", 0.5f);
             return;
         }
@@ -295,6 +297,11 @@ public class PlayerInteraction : MonoBehaviour {
 
         //audio
         am.PlayUI(0);
+    }
+
+    public void ClearItems() {
+        rightHand.GetComponent<StorageHandler>().Clear();
+        UpdateOnhandUI();
     }
 
     private void UpdateOnhandUI() {
@@ -348,11 +355,11 @@ public class PlayerInteraction : MonoBehaviour {
 
             //Audio
             am.PlayUI(6);
-        } else if(!inAreaUI.isIn && go.layer == layerArea) { // && areaUI.text != other.name
+        } else if(!inAreaUI.isIn && go.layer == layerArea && go.GetComponent<DropSpot>()) { // && areaUI.text != other.name
             inArea = true;
             inAreaUI.In();
 
-            if(other.gameObject.GetComponent<DropSpot>().isIllegal) {
+            if(go.GetComponent<DropSpot>().isIllegal) {
                 inAreaUI.GetComponent<Image>().color = red;
                 inAreaUI.transform.GetChild(0).GetComponent<TMP_Text>().color = red;
                 inAreaUI.transform.GetChild(0).GetComponent<TMP_Text>().text = "YOU ARE IN AN ILLEGAL UNLOADING AREA";

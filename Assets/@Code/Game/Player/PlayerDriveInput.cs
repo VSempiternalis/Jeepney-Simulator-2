@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using TMPro;
 
 public class PlayerDriveInput : MonoBehaviour {
     public static PlayerDriveInput current;
@@ -34,6 +35,11 @@ public class PlayerDriveInput : MonoBehaviour {
     private KeyCode Key_ChangerScrollUp;
     private KeyCode Key_ChangerScrollDown;
     private KeyCode Key_TakePayment;
+
+    [Space(10)]
+    [Header("NAME")]
+    [SerializeField] private TMP_InputField nameInput;
+    [SerializeField] private GameObject nameNoJeepneyDetected;
 
     private void Awake() {
         current = this;
@@ -112,15 +118,27 @@ public class PlayerDriveInput : MonoBehaviour {
     }
 
     public void SetIsDriving(bool newIsDriving, CarController newCarCon, Transform seat) {
-        print("set is driving: " + newCarCon.name);
+        // print("set is driving: " + newCarCon.name);
         isDriving = newIsDriving;
         carCon = newCarCon;
+        JeepneyPanel.current.SetCarcon(carCon);
         if(carCon) {
             carCon.moveInput = 0;
             carCon.steerInput = 0; 
         }
 
         SetIsSitting(isDriving, true, seat);
+
+        //NAMING
+        if(!isDriving) {
+            //UI
+            nameNoJeepneyDetected.SetActive(true);
+            nameInput.interactable = false;
+        } else {
+            nameNoJeepneyDetected.SetActive(false);
+            nameInput.name = carCon.jeepName;
+            nameInput.interactable = true;
+        }
     }
 
     private void OnKeyChangeEvent() {
@@ -145,5 +163,9 @@ public class PlayerDriveInput : MonoBehaviour {
 
         pickupsOffSign.SetActive(!isPickups);
         // print(pickupsOffSign.activeSelf? "true":"false");
+    }
+
+    public void RenameJeep() {
+        carCon.Rename(nameInput.text);
     }
 }

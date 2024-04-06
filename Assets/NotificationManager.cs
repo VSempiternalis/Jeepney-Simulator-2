@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class NotificationManager : MonoBehaviour {
     public static NotificationManager current;
@@ -19,9 +18,25 @@ public class NotificationManager : MonoBehaviour {
         // if(Input.GetKeyDown(KeyCode.F11)) NewNotif("F11 PRESSED!", "The time is: " + Time.time);
     }
 
+    public void Clear() {
+        // print("Clearing");
+        foreach(Transform notif in notifs) {
+            // Destroy(notif.GetComponent<GameObject>());
+            notif.GetComponent<Notification>().DestroySelf();
+        }
+    }
+
     public void NewNotif(string header, string desc) {
-        if(notifs.childCount > 4) {
+        if(!Settings.current.isTutorialPanelsOn) return;
+        // print("notifs count: " + notifs.childCount);
+
+        if(notifs.childCount > 3) {
             notifs.GetChild(0).GetComponent<Notification>().DestroySelf();
+        }
+
+        //remove dupes
+        foreach(Transform notif in notifs) {
+            if(notif.GetComponent<Notification>().headerText.text == header) return;
         }
 
         AudioManager.current.PlayUI(13);

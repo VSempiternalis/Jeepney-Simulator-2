@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 [ExecuteInEditMode]
 public class Zoom : MonoBehaviour {
     [SerializeField] private PlayerInteraction player;
+    [SerializeField] private bool canScroll;
 
     Camera camera;
     public float defaultFOV = 60;
@@ -22,10 +24,11 @@ public class Zoom : MonoBehaviour {
         }
     }
 
-    void Update()
-    {
+    void Update() {
+        if(player != null) canScroll = player.CanScroll();
+
         // Update the currentZoom and the camera's fieldOfView.
-        if(Input.mouseScrollDelta.y != 0 && player.CanScroll()) {
+        if(Input.mouseScrollDelta.y != 0 && canScroll) {
             currentZoom += Input.mouseScrollDelta.y * sensitivity * .05f;
             currentZoom = Mathf.Clamp01(currentZoom);
             camera.fieldOfView = Mathf.Lerp(defaultFOV, maxZoomFOV, currentZoom);

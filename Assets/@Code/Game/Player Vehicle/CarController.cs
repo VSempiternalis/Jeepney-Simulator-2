@@ -16,11 +16,16 @@ public class CarController : MonoBehaviour {
     public int fuelCapacity;
     // public bool hasFuel;
     // public bool engineIsOn;
-    public int fuelLoss; //fuel lost per frame
+    public int fuelLoss; //fuel lost per fixed frame
     // public bool isFuelLossActive;
     [SerializeField] private float minFuelNeedleRotation;
     [SerializeField] private float maxFuelNeedleRotation;
     public bool isPumpingFuel;
+
+    [Space(10)]
+    [Header("NAME")]
+    public string jeepName;
+    [SerializeField] private List<TMP_Text> namePlates;
 
     [Space(10)]
     [Header("VARIABLES")]
@@ -94,6 +99,7 @@ public class CarController : MonoBehaviour {
     [SerializeField] private float minSpeedNeedleRotation;
     [SerializeField] private float maxSpeedNeedleRotation;
     [SerializeField] private int gear;
+    public int maxGear;
     private float wheelRPM;
     [SerializeField] private AnimationCurve horsePowerToRPMCurve;
 
@@ -229,10 +235,10 @@ public class CarController : MonoBehaviour {
         }
 
         //reset fuel to full
-        fuelAmount = fuelCapacity;
+        // fuelAmount = fuelCapacity;
     }
 
-    // INPUTS ============================================================================
+    #region INPUTS ======================================================================
 
     private void OnKeyChangeEvent() {
         //Set keys
@@ -255,6 +261,9 @@ public class CarController : MonoBehaviour {
         brakeInput = false;
 
         //movement
+        if(Input.GetKey(Key_DriveForward) && !isEngineOn && !carEngineButton.isOn) {
+            carEngineButton.Interact(gameObject);
+        }
         
         if(isEngineOn && fuelAmount > 0) {
             if(Input.GetKey(Key_DriveForward)) {
@@ -284,7 +293,10 @@ public class CarController : MonoBehaviour {
         }
         
         //Lights
-        if(Input.GetKeyDown(Key_Headlights)) headlights.SetActive(!headlights.activeSelf);
+        if(Input.GetKeyDown(Key_Headlights)) {
+            headlights.SetActive(!headlights.activeSelf);
+            AudioManager.current.PlayUI(0);            
+        }
 
         //Steering
         if(Input.GetKey(Key_SteerLeft)) steerInput = -1;
@@ -311,10 +323,12 @@ public class CarController : MonoBehaviour {
         if(Input.GetKeyDown(Key_Horn)) Horn();
     }
 
-    // PASSENGERS ============================================================================
+    #endregion
+
+    #region PASSENGERS ======================================================================
 
     public void TakeSeat(Transform passenger) {
-        print("Taking seat");
+        // print("Taking seat");
         UpdateSeatsTaken();
 
         //Get free seats
@@ -332,7 +346,7 @@ public class CarController : MonoBehaviour {
         Transform seatSpot = seatSpots[seatIndex];
 
         //Setup
-        print("seatspot: " + seatSpot.name);
+        // print("seatspot: " + seatSpot.name);
         passenger.SetParent(seatSpot);
         passenger.localPosition = Vector3.zero;
         passenger.rotation = seatSpot.rotation;
@@ -370,7 +384,9 @@ public class CarController : MonoBehaviour {
         passengerCount --;
     }
 
-    // FUEL ===================================================================================
+    #endregion
+
+    #region FUEL ======================================================================
 
     private void FuelDrain() {
         if(!isEngineOn) return;
@@ -408,7 +424,9 @@ public class CarController : MonoBehaviour {
         }
     }
 
-    // DRIVING ============================================================================
+    #endregion
+
+    #region DRIVING ======================================================================
 
     private void Horn() {
         audioHazard.PlayOneShot(hornAudio);
@@ -420,7 +438,7 @@ public class CarController : MonoBehaviour {
     }
 
     public void SetEngine(bool newIsOn) {
-        print("Sett Engine. newIsOn: " + newIsOn + " isPumpingFuel: " + isPumpingFuel);
+        // print("Sett Engine. newIsOn: " + newIsOn + " isPumpingFuel: " + isPumpingFuel);
         if(isPumpingFuel && !isEngineOn) return;
 
         isEngineOn = newIsOn;
@@ -453,8 +471,8 @@ public class CarController : MonoBehaviour {
         foreach(Wheel wheel in wheels) {
             if(wheel.axle == Axle.Front) {
                 float steerAngle = steerInput * turnSens * maxSteerAngle;
-                // wheel.wheelCollider.steerAngle = steerAngle;
-                wheel.wheelCollider.steerAngle = Mathf.Lerp(wheel.wheelCollider.steerAngle, steerAngle, 1.0f);
+                // wheel.wheelCollider.steerAngle = Mathf.Lerp(wheel.wheelCollider.steerAngle, steerAngle, 1.0f);
+                wheel.wheelCollider.steerAngle = Mathf.Lerp(wheel.wheelCollider.steerAngle, steerAngle, swRotSpeed);
             }
         }
     }
@@ -472,6 +490,8 @@ public class CarController : MonoBehaviour {
     }
 
     private void ShiftGear(int gearAdd) {
+        if(gearAdd > 0 && gear == maxGear) return;
+
         if(gearAdd > 0 && gear != gearRatios.Length - 1) {
             gear ++;
         } else if(gearAdd < 0 && gear != 0) {
@@ -486,6 +506,15 @@ public class CarController : MonoBehaviour {
 
         GearAnimAudio();
     }
+    
+    private void AutoTrans() {
+        if(gear != 0 && RPM > 6800) ShiftGear(1);
+        else if(gear > 2 && RPM < 5000) ShiftGear(-1);
+    }
+
+    #endregion
+
+    #region ANIMS ======================================================================
 
     private void GearAnimAudio() {
         UpdateGearText();
@@ -524,11 +553,6 @@ public class CarController : MonoBehaviour {
         }
     }
 
-    private void AutoTrans() {
-        if(gear != 0 && RPM > 6800) ShiftGear(1);
-        else if(gear > 2 && RPM < 5000) ShiftGear(-1);
-    }
-
     private void UpdateGearText() {
         string returnText  = (gear-1).ToString();
         if(gear == 0) returnText = "R";
@@ -545,7 +569,7 @@ public class CarController : MonoBehaviour {
         Color rpmColor = white;
         if(RPM > 6800) {
             rpmColor = red;
-            if(!metalAudioSource.isPlaying) metalAudioSource.Play();
+            if(gear != maxGear && !metalAudioSource.isPlaying) metalAudioSource.Play();
         }
         rpmText.text = RPM.ToString("0 000");
         if(rpmText.color != rpmColor) rpmText.color = rpmColor;
@@ -586,7 +610,11 @@ public class CarController : MonoBehaviour {
         }
     }
 
-    private void AddHealth(int mod) {
+    #endregion
+
+    #region OTHERS ======================================================================
+
+    public void AddHealth(int mod) {
         health += mod;
 
         if(health <= 0) {
@@ -623,7 +651,16 @@ public class CarController : MonoBehaviour {
         }
     }
 
-    // COLLISIONS ===========================================================
+    public void Rename(string newName) {
+        jeepName = newName;
+        foreach(TMP_Text namePlate in namePlates) {
+            namePlate.text = jeepName;
+        }
+    }
+
+    #endregion
+
+    #region COLLISIONS ======================================================================
 
     private void OnCollisionEnter(Collision other) {
         // print("car collision");
@@ -641,4 +678,6 @@ public class CarController : MonoBehaviour {
             }
         }
     }
+
+    #endregion
 }

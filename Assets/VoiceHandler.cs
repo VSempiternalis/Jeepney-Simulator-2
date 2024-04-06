@@ -23,6 +23,7 @@ public class VoiceHandler : MonoBehaviour {
     }
 
     public void Say(string sayType) {
+        print("Saying: " + sayType);
         if(audioSource.isPlaying) return;
         
         List<AudioClip> audios = new List<AudioClip>();
@@ -30,6 +31,7 @@ public class VoiceHandler : MonoBehaviour {
         if(sayType == "Pay") {
             audios = payAudios;
         } else if(sayType == "Stop") {
+            print("Saying stop");
             audios = stopAudios;
         } else if(sayType == "Death") {
             audios = deathAudios;

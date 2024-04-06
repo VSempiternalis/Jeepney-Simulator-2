@@ -23,6 +23,10 @@ public class MainMenuManager : MonoBehaviour {
         StartCoroutine(LoadLevel("Career", isNewGame));
     }
 
+    public void StartTutorial() {
+        StartCoroutine(LoadLevel("Tutorial", true));
+    }
+
     IEnumerator LoadLevel(string gameMode, bool isNewGame) {
         loadingScreen.In();
         loadingScreen.GetComponent<CanvasGroup>().blocksRaycasts = true;
@@ -31,17 +35,32 @@ public class MainMenuManager : MonoBehaviour {
 
         // SceneManager.LoadScene("SCENE - Game");
 
-        AsyncOperation operation = SceneManager.LoadSceneAsync("SCENE - Game");
-        PlayerPrefs.SetString("Game_GameMode", gameMode);
-        PlayerPrefs.SetInt("Game_isNewGame", isNewGame? 1:0);
+        if(gameMode == "Tutorial") {
+            AsyncOperation operation = SceneManager.LoadSceneAsync("SCENE - Tutorial");
+            PlayerPrefs.SetString("Game_GameMode", gameMode);
+            PlayerPrefs.SetInt("Game_isNewGame", isNewGame? 1:0);
 
-        //LOADING BAR
-        print("(MAIN MENU) Game_isNewGame: " + (isNewGame? 1:0));
-        while(!operation.isDone) {
-            float progress = Mathf.Clamp01(operation.progress/0.9f);
-            print("Loading bar: " + progress);
-            loadingProgress.LeanScaleX(progress, 1f);
-            yield return null;
+            //LOADING BAR
+            print("(MAIN MENU) Game_isNewGame: " + (isNewGame? 1:0));
+            while(!operation.isDone) {
+                float progress = Mathf.Clamp01(operation.progress/0.9f);
+                print("Loading bar: " + progress);
+                loadingProgress.LeanScaleX(progress, 1f);
+                yield return null;
+            }
+        } else {
+            AsyncOperation operation = SceneManager.LoadSceneAsync("SCENE - Game");
+            PlayerPrefs.SetString("Game_GameMode", gameMode);
+            PlayerPrefs.SetInt("Game_isNewGame", isNewGame? 1:0);
+
+            //LOADING BAR
+            print("(MAIN MENU) Game_isNewGame: " + (isNewGame? 1:0));
+            while(!operation.isDone) {
+                float progress = Mathf.Clamp01(operation.progress/0.9f);
+                print("Loading bar: " + progress);
+                loadingProgress.LeanScaleX(progress, 1f);
+                yield return null;
+            }
         }
     }
 

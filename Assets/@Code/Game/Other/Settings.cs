@@ -6,9 +6,10 @@ using UnityEngine.Rendering;
 using System.Collections.Generic;
 
 public class Settings : MonoBehaviour {
-    public Settings current;
+    public static Settings current;
 
     public AudioMixer audioMixer;
+    public AudioMixer bgmMixer;
 
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject playerCam;
@@ -19,6 +20,8 @@ public class Settings : MonoBehaviour {
     [Header("AUDIO")]
     [SerializeField] private Slider masterVolSlider;
     [SerializeField] private TMP_Text masterVolumeText;
+    [SerializeField] private Slider bgmVolSlider;
+    [SerializeField] private TMP_Text bgmVolumeText;
 
     [Space(10)]
     [Header("VIDEO")]
@@ -55,6 +58,7 @@ public class Settings : MonoBehaviour {
     [SerializeField] private Slider spawnDistSlider;
     [SerializeField] private TMP_Text spawnDistText;
 
+    public bool isTutorialPanelsOn;
     [SerializeField] private CanvasGroup tutorialUI; //help/page at game start
     [SerializeField] private uiAnimGroup tutorialPanels;
 
@@ -102,7 +106,7 @@ public class Settings : MonoBehaviour {
 
     private void Update() {
         //Toggle Settings
-        if(Input.GetKeyDown(KeyCode.Escape) && tutorialUI.alpha < 1) {
+        if(Input.GetKeyDown(KeyCode.Escape) && tutorialUI != null && tutorialUI.alpha < 1) {
             ToggleSettings();
         }
     }
@@ -110,6 +114,7 @@ public class Settings : MonoBehaviour {
     public void LoadDefaultSettings() {
         print("[SETTINGS] Loading default settings");
         SetMasterVolume(0);
+        SetBGMVolume(0);
         // SetMusic
         
         SetGraphicsPreset(2);
@@ -134,6 +139,8 @@ public class Settings : MonoBehaviour {
         // print("[SETTINGS] Loading saved settings");
         float volume = PlayerPrefs.GetFloat("Settings_MasterVolume");
         SetMasterVolume(volume);
+        float bgmVolume = PlayerPrefs.GetFloat("Settings_BGMVolume");
+        SetBGMVolume(bgmVolume);
 
         int qualityIndex = PlayerPrefs.GetInt("Settings_GraphicsPreset");
         SetGraphicsPreset(qualityIndex);
@@ -193,6 +200,14 @@ public class Settings : MonoBehaviour {
         masterVolSlider.value = newVol;
 
         PlayerPrefs.SetFloat("Settings_MasterVolume", newVol);
+    }
+
+    public void SetBGMVolume(float newVol) {
+        bgmMixer.SetFloat("BGMVolume", newVol);
+        bgmVolumeText.text = ((newVol + 20) * 5) + "";
+        bgmVolSlider.value = newVol;
+
+        PlayerPrefs.SetFloat("Settings_BGMVolume", newVol);
     }
 
     #endregion
@@ -324,6 +339,10 @@ public class Settings : MonoBehaviour {
     }
 
     public void SetTutorialPanels(bool newValue) {
+        if(tutorialPanels == null) return;
+
+        isTutorialPanelsOn = newValue;
+
         if(newValue) tutorialPanels.In();
         else tutorialPanels.Out();
 
@@ -335,6 +354,8 @@ public class Settings : MonoBehaviour {
     }
 
     public void SetAutoTrans(bool newValue) {
+        if(carCon == null) return;
+
         carCon.isAutoTrans = newValue;
 
         autoTransToggle.isOn = newValue;

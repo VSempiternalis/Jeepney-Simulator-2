@@ -22,7 +22,8 @@ public class DoorHandler : MonoBehaviour, IInteractable, ITooltipable {
     [SerializeField] private AudioHandler audioHandler;
 
     public bool isLocked;
-    [SerializeField] private bool isHouseDoor;
+    [SerializeField] private bool isOfficeDoor;
+    [SerializeField] private bool isOfficeDoorTUTORIAL;
 
     private void Start() {
         // audioHandler = GetComponent<AudioHandler>();
@@ -57,7 +58,18 @@ public class DoorHandler : MonoBehaviour, IInteractable, ITooltipable {
         if(isLocked) {
             //Play jiggle audio
             // audioHandler.Play(2);
-            // if(isHouseDoor) Fader.current.YawnGray(0.5f, "I can't get in unless I pay the bills first", 0.5f);
+            return;
+        }
+        
+        if(isOfficeDoor && RouteSelector.current.destinations.Count <= 3) {
+            NotificationManager.current.NewNotif("NOT ENOUGH LANDMARKS", "You must have at least four active (ON or LOCKED) landmarks to start your shift. Go to the route selector and click on a red landmark!");
+            AudioManager.current.PlayUI(7);
+            return;
+        }
+        
+        if(isOfficeDoorTUTORIAL && RouteSelector.current.destinations.Count <= 1) {
+            NotificationManager.current.NewNotif("NOT ENOUGH LANDMARKS", "You must have at least three active (ON or LOCKED) landmarks in the tutorial to start your shift. Go to the route selector and click on a red landmark!");
+            AudioManager.current.PlayUI(7);
             return;
         }
         

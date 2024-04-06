@@ -3,9 +3,10 @@ using System.Collections;
 using TMPro;
 
 public class Notification : MonoBehaviour {
-    [SerializeField] private TMP_Text headerText;
+    public TMP_Text headerText;
     [SerializeField] private TMP_Text descText;
     [SerializeField] private GameObject descImg;
+    [SerializeField] private bool isPermanent;
     [SerializeField] private float duration;
 
     private void Start() {
@@ -29,16 +30,24 @@ public class Notification : MonoBehaviour {
         // print("Setup: " + header);
         // descImg.SetActive(false);
         // descImg.SetActive(true);
-
-        transform.localPosition = new Vector3(-125, -435.3f, 0);
-        LeanTween.moveLocalX(gameObject, 125, 0.5f).setEaseOutQuart();
+        
+        gameObject.SetActive(true);
+        // transform.parent.gameObject.SetActive(true);
 
         headerText.text = header;
         descText.text = desc;
         
-        gameObject.SetActive(true);
+        // gameObject.SetActive(false);
+        // transform.parent.gameObject.SetActive(false);
 
-        StartCoroutine(TimerCoroutine());
+        // transform.localPosition = new Vector3(-125, -435.3f, 0);
+        transform.localPosition = new Vector3(-125, -435.3f, 0);
+        LeanTween.moveLocalX(gameObject, 125, 0.5f).setEaseOutQuart();
+        
+        // gameObject.SetActive(true);
+        // transform.parent.gameObject.SetActive(true);
+
+        if(!isPermanent) StartCoroutine(TimerCoroutine());
     }
 
     //Runs every second

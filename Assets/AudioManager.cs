@@ -78,7 +78,7 @@ public class AudioManager : MonoBehaviour {
     }
 
     public void PlayFuelPump(bool newVal) {
-        if(newVal) fuelPumpAudio.Play();
+        if(newVal && !fuelPumpAudio.isPlaying) fuelPumpAudio.Play();
         else fuelPumpAudio.Stop();
     }
 }

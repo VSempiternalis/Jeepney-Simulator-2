@@ -9,6 +9,7 @@ public class VicCamManager : MonoBehaviour {
 
     [SerializeField] private float transitionTime;
     [SerializeField] private PlayerDriveInput pdi;
+    [SerializeField] private PlayerDriveInputTUTORIAL pdit;
 
     [Space(10)]
     [Header("KEYBINDS")]
@@ -21,10 +22,12 @@ public class VicCamManager : MonoBehaviour {
     private void Start() {
         OnKeyChangeEvent();
         pdi = GetComponent<PlayerDriveInput>();
+        pdit = GetComponent<PlayerDriveInputTUTORIAL>();
     }
 
     private void Update() {
-        if(pdi.isDriving) GetInput();
+        if(pdit != null && pdit.isDriving) GetInput();
+        else if(pdi != null && pdi.isDriving) GetInput();
     }
 
     private void GetInput() {
