@@ -419,9 +419,9 @@ public class CarController : MonoBehaviour {
 
         AudioManager.current.PlayFuelPump(newVal);
 
-        if(isPumpingFuel && isEngineOn) {
-            carEngineButton.Interact(gameObject);
-        }
+        // if(isPumpingFuel && isEngineOn) {
+        //     carEngineButton.Interact(gameObject);
+        // }
     }
 
     #endregion
@@ -439,7 +439,7 @@ public class CarController : MonoBehaviour {
 
     public void SetEngine(bool newIsOn) {
         // print("Sett Engine. newIsOn: " + newIsOn + " isPumpingFuel: " + isPumpingFuel);
-        if(isPumpingFuel && !isEngineOn) return;
+        // if(isPumpingFuel && !isEngineOn) return;
 
         isEngineOn = newIsOn;
         if(isEngineOn) smokeParticles.Play();
@@ -453,6 +453,8 @@ public class CarController : MonoBehaviour {
     }
 
     private void Move() {
+        if(isPumpingFuel) return;
+
         // torque = CalculateTorque();
         torque = 0;
         foreach(Wheel wheel in wheels) {
@@ -554,7 +556,7 @@ public class CarController : MonoBehaviour {
     }
 
     private void UpdateGearText() {
-        string returnText  = (gear-1).ToString();
+        string returnText  = (gear-1) + "/" + (maxGear-1);
         if(gear == 0) returnText = "R";
         else if(gear == 1) returnText = "N";
         gearText.text = returnText;
@@ -617,6 +619,22 @@ public class CarController : MonoBehaviour {
     public void AddHealth(int mod) {
         health += mod;
 
+        UpdateFlameFX();
+    }
+
+    public void SetHealth(int newVal) {
+        health = newVal;
+
+        UpdateFlameFX();
+    }
+
+    public void SetMaxGear(int newVal) {
+        maxGear = newVal;
+
+        UpdateGearText();
+    }
+
+    private void UpdateFlameFX() {
         if(health <= 0) {
             health = 0;
 

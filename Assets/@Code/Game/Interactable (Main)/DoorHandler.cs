@@ -35,21 +35,7 @@ public class DoorHandler : MonoBehaviour, IInteractable, ITooltipable {
     }
 
     private void Update() {
-        // if(state == "Closing") {
-        //     if(pivot.transform.localRotation.eulerAngles.y >= closedYRot - limit && pivot.transform.localRotation.eulerAngles.y <= closedYRot + limit) {
-        //         state = "Closed";
-        //         pivot.transform.localRotation = Quaternion.Euler(closedXRot, closedYRot, closedZRot);
-        //     } else {
-        //         pivot.transform.localRotation = Quaternion.Slerp(pivot.transform.localRotation, Quaternion.Euler(closedXRot, closedYRot, closedZRot), rotationSpeed*Time.deltaTime);
-        //     }
-        // } else if(state == "Opening") {
-        //     if(pivot.transform.localRotation.eulerAngles.y >= openYRot - limit && pivot.transform.localRotation.eulerAngles.y <= openYRot + limit) {
-        //         state = "Open";
-        //         pivot.transform.localRotation = Quaternion.Euler(openXRot, openYRot, openZRot);
-        //     } else {
-        //         pivot.transform.localRotation = Quaternion.Slerp(pivot.transform.localRotation, Quaternion.Euler(openXRot, openYRot, openZRot), rotationSpeed*Time.deltaTime);
-        //     }
-        // }
+        
     }
 
     #region INTERFACE FUNCTIONS
