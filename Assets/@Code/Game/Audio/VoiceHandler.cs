@@ -5,9 +5,12 @@ using System.Collections.Generic;
 public class VoiceHandler : MonoBehaviour {
     private AudioSource audioSource;
 
-    [SerializeField] private List<AudioClip> payAudios;
-    [SerializeField] private List<AudioClip> stopAudios;
-    [SerializeField] private List<AudioClip> deathAudios;
+    //should be clear on start, to be filled by person handler
+    [SerializeField] public List<AudioClip> payAudios;
+    [SerializeField] public List<AudioClip> changeAudios;
+    [SerializeField] public List<AudioClip> stopAudios;
+    [SerializeField] public List<AudioClip> dropAudios;
+    [SerializeField] public List<AudioClip> deathAudios;
 
     private void Start() {
         audioSource = GetComponent<AudioSource>();
@@ -29,8 +32,12 @@ public class VoiceHandler : MonoBehaviour {
 
         if(sayType == "Pay") {
             audios = payAudios;
+        } else if(sayType == "Change") {
+            audios = changeAudios;
         } else if(sayType == "Stop") {
             audios = stopAudios;
+        } else if(sayType == "Drop") {
+            audios = dropAudios;
         } else if(sayType == "Death") {
             audios = deathAudios;
         }
@@ -38,14 +45,16 @@ public class VoiceHandler : MonoBehaviour {
         Play(audios, GetRandomIndex(audios));
     }
 
-    public void SetAudioClips(List<AudioClip> newPayAudios, List<AudioClip> newStopAudios, List<AudioClip> newDeathAudios) {
+    public void SetAudioClips(List<AudioClip> newPayAudios, List<AudioClip> newChangeAudios, List<AudioClip> newStopAudios, List<AudioClip> newDropAudios, List<AudioClip> newDeathAudios) {
         payAudios = newPayAudios;
+        changeAudios = newChangeAudios;
         stopAudios = newStopAudios;
+        dropAudios = newDropAudios;
         deathAudios = newDeathAudios;
     }
     
     public void Play(List<AudioClip> audios, int i) {
-        if(i >= audios.Count) return;
+        if(i >= audios.Count || audios.Count == 0) return;
         audioSource.enabled = true;
 
         audioSource.pitch = Random.Range(0.9f, 1.1f);

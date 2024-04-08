@@ -5,7 +5,7 @@ public class Carousel : MonoBehaviour {
     [SerializeField] private int childCount;
 
     private void Start() {
-        // childCount = transform.childCount;
+        childCount = transform.childCount;
 
         // foreach(Transform child in transform) {
         //     child.gameObject.SetActive(true);

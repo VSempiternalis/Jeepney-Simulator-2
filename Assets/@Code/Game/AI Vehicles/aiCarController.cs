@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 
 
-public class aiCarController : MonoBehaviour {
+public class aiCarController : MonoBehaviour, IHealth {
     [Header("VARIABLES")]
     // [SerializeField] private List<AxleInfo> axleInfos;
     [SerializeField] private Vector2 maxMotorTorqueRange;
@@ -17,6 +17,14 @@ public class aiCarController : MonoBehaviour {
     private Vector2 moveInput;
     public int gear = 1;
     public float gearFactor;
+
+    [Space(10)]
+    [Header("HEALTH")]
+    public int health;
+    public float healthFactor;
+    [SerializeField] private int maxHealth;
+    [SerializeField] private GameObject smokeFX;
+    [SerializeField] private GameObject fireFX;
 
     [Space(10)]
     [Header("COMPONENTS")]
@@ -76,7 +84,7 @@ public class aiCarController : MonoBehaviour {
         float motor = 0;
         float steering = maxSteeringAngle * -moveInput.x;
 
-        motor = maxMotorTorque * moveInput.y;
+        motor = maxMotorTorque * moveInput.y * healthFactor;
 
         foreach(Wheel wheel in wheels) {
             wheel.wheelCollider.motorTorque = motor;
@@ -130,6 +138,29 @@ public class aiCarController : MonoBehaviour {
     public void StopBrake() {
         isBraking = false;
         GetComponent<Rigidbody>().drag = freeDrag;
+    }
+
+    public void AddHealth(int newVal) {
+        health += newVal;
+
+        //fx
+        if(smokeFX == null || fireFX == null) return;
+         
+        if(health <= 0) {
+            health = 0;
+            healthFactor = 0.1f;
+
+            smokeFX.SetActive(true);
+            fireFX.SetActive(true);
+        } else if(health < 50) {
+            healthFactor = 0.5f;
+            smokeFX.SetActive(true);
+            fireFX.SetActive(false);
+        } else {
+            healthFactor = 1;
+            smokeFX.SetActive(false);
+            fireFX.SetActive(false);
+        }
     }
 
     // public void SwitchGear(int add) {

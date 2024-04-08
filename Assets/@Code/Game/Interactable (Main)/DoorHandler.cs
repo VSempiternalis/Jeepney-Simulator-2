@@ -60,19 +60,21 @@ public class DoorHandler : MonoBehaviour, IInteractable, ITooltipable {
         }
         
         if(state == "Open") {
-            state = "Closing";
-            audioHandler.Play(2);
-            // Tween close rotation
-            LeanTween.rotateLocal(pivot.gameObject, new Vector3(closedXRot, closedYRot, closedZRot), rotationSpeed)
-                .setEaseOutExpo()
-                .setOnComplete(() => state = "Closed");
+            // state = "Closing";
+            NewState("Closing");
+            // audioHandler.Play(2);
+            // // Tween close rotation
+            // LeanTween.rotateLocal(pivot.gameObject, new Vector3(closedXRot, closedYRot, closedZRot), rotationSpeed)
+            //     .setEaseOutExpo()
+            //     .setOnComplete(() => state = "Closed");
         } else if(state == "Closed") {
-            state = "Opening";
-            audioHandler.Play(1);
-            // Tween open rotation
-            LeanTween.rotateLocal(pivot.gameObject, new Vector3(openXRot, openYRot, openZRot), rotationSpeed)
-                .setEaseOutExpo()
-                .setOnComplete(() => state = "Open");
+            // state = "Opening";
+            NewState("Opening");
+            // audioHandler.Play(1);
+            // // Tween open rotation
+            // LeanTween.rotateLocal(pivot.gameObject, new Vector3(openXRot, openYRot, openZRot), rotationSpeed)
+            //     .setEaseOutExpo()
+            //     .setOnComplete(() => state = "Open");
         } else if(state == "Opening" && pivot.transform.localRotation.eulerAngles.y > openYRot) {
             state = "Closing";
             audioHandler.Play(2);
@@ -82,6 +84,24 @@ public class DoorHandler : MonoBehaviour, IInteractable, ITooltipable {
                 .setOnComplete(() => state = "Closed");
         } else if(state == "Closing" && pivot.transform.localRotation.eulerAngles.y < closedYRot) {
             state = "Opening";
+            audioHandler.Play(1);
+            // Tween open rotation
+            LeanTween.rotateLocal(pivot.gameObject, new Vector3(openXRot, openYRot, openZRot), rotationSpeed)
+                .setEaseOutExpo()
+                .setOnComplete(() => state = "Open");
+        }
+    }
+
+    public void NewState(string newState) {
+        state = newState;
+
+        if(state == "Closing") {
+            audioHandler.Play(2);
+            // Tween close rotation
+            LeanTween.rotateLocal(pivot.gameObject, new Vector3(closedXRot, closedYRot, closedZRot), rotationSpeed)
+                .setEaseOutExpo()
+                .setOnComplete(() => state = "Closed");
+        } else if(state == "Opening") {
             audioHandler.Play(1);
             // Tween open rotation
             LeanTween.rotateLocal(pivot.gameObject, new Vector3(openXRot, openYRot, openZRot), rotationSpeed)

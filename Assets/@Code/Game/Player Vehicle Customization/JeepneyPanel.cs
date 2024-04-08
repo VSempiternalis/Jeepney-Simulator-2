@@ -5,7 +5,6 @@ public class JeepneyPanel : MonoBehaviour {
     public static JeepneyPanel current;
     private BoundaryManager bm;
     private CarController carcon;
-    private string gameMode;
     
     [SerializeField] private GameObject main;
     [SerializeField] private GameObject noJeepneyDetected;
@@ -14,7 +13,7 @@ public class JeepneyPanel : MonoBehaviour {
     private int health;
     private int maxHealth;
     private int missingHealth;
-    [SerializeField] private int pesoPerHealth;
+    [SerializeField] private float pesoPerHealth;
     private int repairCost;
     [SerializeField] private TMP_Text repairButtonText;
     [SerializeField] private TMP_Text healthText;
@@ -65,7 +64,6 @@ public class JeepneyPanel : MonoBehaviour {
     }
 
     public void Setup() {
-        gameMode = SaveLoadSystem.current.gameMode;
         carcon = PlayerDriveInput.current.carCon;
 
         UpdateReqs();
