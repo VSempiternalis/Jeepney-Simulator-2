@@ -58,7 +58,7 @@ public class BoundaryManager : MonoBehaviour {
 
     private void Update() {
         //DEBUG. REMOVE!
-        if(Input.GetKeyDown(KeyCode.F10)) CompleteShift();
+        // if(Input.GetKeyDown(KeyCode.F10)) CompleteShift();
     }
 
     private void ResetVicMoney() {
@@ -166,7 +166,7 @@ public class BoundaryManager : MonoBehaviour {
     }
 
     public void CompleteShift() {
-        if(deposit <= 0) {
+        if(deposit == 0) {
             NotificationManager.current.NewNotif("EMPTY DEPOSIT", "You need to deposit your earnings first to pay the boundary.");
             AudioManager.current.PlayUI(7);
             return;
@@ -182,7 +182,6 @@ public class BoundaryManager : MonoBehaviour {
                 //Reset
                 TimeManager.current.NewShift();
                 SaveLoadSystem.current.SaveGame();
-                RouteSelector.current.NewShift(3); //3 is dests to lock
                 PlayerDriveInput.current.carCon.GetComponent<JeepneySLS>().Save();
 
                 am.PlayUI(3);
@@ -209,7 +208,7 @@ public class BoundaryManager : MonoBehaviour {
                 ResetVicMoney();
                 PlayerDriveInput.current.GetComponent<PlayerInteraction>().ClearItems(); //yes, this is stupid
                 TimeManager.current.ResetShiftTime();
-                PlayerDriveInput.current.carCon.GetComponent<JeepneySLS>().Load();
+                PlayerDriveInput.current.carCon.GetComponent<JeepneySLS>().LoadPrevious();
 
                 am.PlayUI(5);
                 
@@ -226,8 +225,9 @@ public class BoundaryManager : MonoBehaviour {
         failureCharge = 0;
         // PlayerDriveInput.current.isPickups = true;
         PlayerDriveInput.current.SetPickups(SaveLoadSystem.current.isPassengerPickups);
+        RouteSelector.current.NewShift(3); //3 is dests to lock
         //Door
-        if(officeDoor.state == "Open" || officeDoor.state == "Opening") officeDoor.Interact(gameObject);
+        if(officeDoor.state == "Open" || officeDoor.state == "Opening") officeDoor.NewState("Closing"); //Interact(gameObject);
 
         //Clear jeepney seats
         carCon.NewDay();

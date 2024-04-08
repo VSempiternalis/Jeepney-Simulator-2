@@ -119,7 +119,7 @@ public class PersonHandler : MonoBehaviour {
         voiceHandler = GetComponent<VoiceHandler>();
         int voiceIndex = Random.Range(0, voices.childCount);
         VoiceType voiceType = voices.GetChild(voiceIndex).GetComponent<VoiceType>();
-        voiceHandler.SetAudioClips(voiceType.payAudios, voiceType.stopAudios, voiceType.deathAudios);
+        voiceHandler.SetAudioClips(voiceType.payAudios, voiceType.changeAudios, voiceType.stopAudios, voiceType.dropAudios, voiceType.deathAudios);
         // patience = maxPatience;
 
         isPayments = true;
@@ -370,6 +370,7 @@ public class PersonHandler : MonoBehaviour {
         // Juber.current.AddReview(rating);
         
         dropStartTime = Time.time;
+        voiceHandler.Say("Drop");
         SetState("Dropping");
     }
     
@@ -391,6 +392,7 @@ public class PersonHandler : MonoBehaviour {
         if(state == "Dropping") return;
         if(state == "Waiting for change") {
             if(!hasSentChangeNotif) {
+                voiceHandler.Say("Change");
                 NotificationManager.current.NewNotif("PASSENGER NEEDS CHANGE!", "You've taken a passenger to their destination but they are still waiting for their change.");
                 hasSentChangeNotif = true;
             }
@@ -606,7 +608,6 @@ public class PersonHandler : MonoBehaviour {
     }
 
     #endregion
-
     #region TRIGGERS ======================================================================================================
   
     private void OnCollisionEnter(Collision other) {
@@ -648,7 +649,7 @@ public class PersonHandler : MonoBehaviour {
         //death audio
         // audioSource.enabled = true;
         // audioSource.volume = 1;
-        //[!] GetComponent<VoiceHandler>().Say("Death");
+        voiceHandler.Say("Death");
         // audioSource.PlayOneShot(deathSounds[Random.Range(0, deathSounds.Length - 1)]);
         // audioSource.PlayOneShot(collisionSounds[Random.Range(0, collisionSounds.Length - 1)]);
     }

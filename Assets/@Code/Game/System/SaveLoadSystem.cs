@@ -7,6 +7,7 @@ public class SaveLoadSystem : MonoBehaviour {
     public static SaveLoadSystem current;
 
     public string gameMode;
+    public bool isNewGame;
 
     // public int days;
     // public int deposit;
@@ -59,7 +60,7 @@ public class SaveLoadSystem : MonoBehaviour {
         careerPanel.SetActive(true);
 
         gameMode = PlayerPrefs.GetString("Game_GameMode");
-        bool isNewGame = PlayerPrefs.GetInt("Game_isNewGame") == 1? true:false;
+        isNewGame = PlayerPrefs.GetInt("Game_isNewGame") == 1? true:false;
 
         // print("(GAME) Game_isNewGame: " + (isNewGame? 1:0));
 
@@ -222,7 +223,7 @@ public class SaveLoadSystem : MonoBehaviour {
     }
 
     private void NewCareer() {
-        // print("NEW CAREER!");
+        print("NEW CAREER!");
 
         //DEPOSIT
         // deposit = PlayerPrefs.GetInt("Freeride_Deposit", 0);

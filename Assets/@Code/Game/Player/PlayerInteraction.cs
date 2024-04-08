@@ -300,11 +300,14 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     public void ClearItems() {
+        print("clearitems");
         rightHand.GetComponent<StorageHandler>().Clear();
-        UpdateOnhandUI();
+        ClearOnhandUI();
+        // UpdateOnhandUI();
     }
 
     private void UpdateOnhandUI() {
+        print("updateonhandui");
         ClearOnhandUI();
 
         //Repopulate onhand ui
@@ -325,6 +328,7 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     private void ClearOnhandUI() {
+        print("clearonhandui");
         List<Transform> removeList = new List<Transform>();
 
         foreach(Transform onhandItem in onhandUI) {

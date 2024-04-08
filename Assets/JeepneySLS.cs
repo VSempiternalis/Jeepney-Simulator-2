@@ -6,17 +6,35 @@ public class JeepneySLS : MonoBehaviour {
     private string gameMode;
     private SaveLoadSystem sls;
     private CarController carcon;
+    private UpgradesPanel up;
+
+    //UPGRADES
+    [SerializeField] private GameObject upgBells;
+    [SerializeField] private GameObject upgAntennas;
+    [SerializeField] private GameObject upgCircleLights;
+    [SerializeField] private GameObject upgBumperLights;
+    [SerializeField] private GameObject upgFrontGrills;
+    [SerializeField] private GameObject upgSideGrills;
+    [SerializeField] private GameObject upgHorns;
+    [SerializeField] private GameObject upgBackGrills;
+    [SerializeField] private GameObject upgTopGrills;
+    [SerializeField] private GameObject upgBoomerang;
+    [SerializeField] private GameObject upgWings;
+    [SerializeField] private GameObject upgTopLights;
+    [SerializeField] private GameObject upgCoinHolder1;
+    [SerializeField] private GameObject upgCoinHolder2;
 
     private void Start() {
         sls = SaveLoadSystem.current;
+        up = UpgradesPanel.current;
         carcon = GetComponent<CarController>();
     }
 
     private void Update() {
-        if(gameMode == null && sls.gameMode != null) {
+        if(gameMode == null && sls.gameMode != null && TimeManager.current) {
             gameMode = sls.gameMode;
 
-            Load();
+            LoadPrevious();
         }
     }
 
@@ -55,7 +73,20 @@ public class JeepneySLS : MonoBehaviour {
         #endregion
         #region UPGRADES ================================================================================
 
-
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgBells", upgBells.activeSelf? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgAntennas", upgAntennas.activeSelf? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgCircleLights", upgCircleLights.activeSelf? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgBumperLights", upgBumperLights.activeSelf? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgFrontGrills", upgFrontGrills.activeSelf? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgSideGrills", upgSideGrills.activeSelf? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgHorns", upgHorns.activeSelf? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgBackGrills", upgBackGrills.activeSelf? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgTopGrills", upgTopGrills.activeSelf? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgBoomerang", upgBoomerang.activeSelf? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgWings", upgWings.activeSelf? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgTopLights", upgTopLights.activeSelf? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgCoinHolder1", upgCoinHolder1.activeSelf? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgCoinHolder2", upgCoinHolder2.activeSelf? 1:0);
 
         #endregion
         #region CUSTOMIZATION ================================================================================
@@ -70,7 +101,7 @@ public class JeepneySLS : MonoBehaviour {
         #endregion
     }
 
-    public void Load() { //DEFAULT VALUES MUST BE SET
+    public void LoadSaved() { //DEFAULT VALUES MUST BE SET
         print("Loading jeepney settings. carcon: " + carcon.name);
 
         #region STATS ================================================================================
@@ -86,7 +117,7 @@ public class JeepneySLS : MonoBehaviour {
         //fuel
         int fuel = PlayerPrefs.GetInt(gameMode + "_Jeepney_Fuel", 50000);
         //fuel eff
-        int fuelLoss = PlayerPrefs.GetInt(gameMode + "_Jeepney_FuelLoss", 100); //Realizing late (right now), that 'eff' is the worst possible name for this variable
+        int fuelLoss = PlayerPrefs.GetInt(gameMode + "_Jeepney_FuelLoss", 1); //Realizing late (right now), that 'eff' is the worst possible name for this variable
         //max gear
         int maxGear = PlayerPrefs.GetInt(gameMode + "_Jeepney_MaxGear", 8);
 
@@ -100,7 +131,20 @@ public class JeepneySLS : MonoBehaviour {
         #endregion
         #region UPGRADES ================================================================================
 
-
+        up.Toggle(upgBells.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgBells", 0) == 1? true:false));
+        up.Toggle(upgAntennas.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgAntennas", 0) == 1? true:false));
+        up.Toggle(upgCircleLights.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgCircleLights", 0) == 1? true:false));
+        up.Toggle(upgBumperLights.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgBumperLights", 0) == 1? true:false));
+        up.Toggle(upgFrontGrills.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgFrontGrills", 0) == 1? true:false));
+        up.Toggle(upgSideGrills.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgSideGrills", 0) == 1? true:false));
+        up.Toggle(upgHorns.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgHorns", 0) == 1? true:false));
+        up.Toggle(upgBackGrills.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgBackGrills", 0) == 1? true:false));
+        up.Toggle(upgTopGrills.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgTopGrills", 0) == 1? true:false));
+        up.Toggle(upgBoomerang.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgBoomerang", 0) == 1? true:false));
+        up.Toggle(upgWings.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgWings", 0) == 1? true:false));
+        up.Toggle(upgTopLights.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgTopLights", 0) == 1? true:false));
+        up.Toggle(upgCoinHolder1.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgCoinHolder1", 0) == 1? true:false));
+        up.Toggle(upgCoinHolder2.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgCoinHolder2", 0) == 1? true:false));
 
         #endregion
         #region CUSTOMIZATION ================================================================================
@@ -127,5 +171,73 @@ public class JeepneySLS : MonoBehaviour {
         #endregion
 
         JeepneyPanel.current.UpdateReqs();
+    }
+
+    private void LoadDefault() {
+        
+        print("Loading default jeepney settings. carcon: " + carcon.name);
+
+        #region STATS ================================================================================
+
+        //STANDARD: Playerprefs key names should have the same name as the variables
+
+        //max health
+        int maxHealth = 100;
+        //health
+        int health = 100;
+        //fuel cap
+        int fuelCap = 50000;
+        //fuel
+        int fuel = 50000;
+        //fuel eff
+        int fuelLoss = 1; //Realizing late (right now), that 'eff' is the worst possible name for this variable
+        //max gear
+        int maxGear = 4;
+
+        print("maxHealth: " + maxHealth);
+        print("health: " + health);
+        print("fuelCap: " + fuelCap);
+        print("fuel: " + fuel);
+        print("fuelLoss: " + fuelLoss);
+        print("maxGear: " + maxGear);
+
+        #endregion
+        #region UPGRADES ================================================================================
+
+        //all upgrades off
+        up.SetAsDefault();
+
+        #endregion
+        #region CUSTOMIZATION ================================================================================
+
+
+
+        #endregion
+        #region OTHERS ================================================================================
+
+        string jeepName = "Jeepney Name";
+
+        #endregion
+        #region APPLICAITON ================================================================================
+
+        carcon.maxHealth = maxHealth;
+        carcon.SetHealth(health);
+        carcon.fuelCapacity = fuelCap;
+        carcon.fuelAmount = fuel;
+        carcon.fuelLoss = fuelLoss;
+        // carcon.maxGear = maxGear;
+        carcon.SetMaxGear(maxGear);
+        carcon.Rename(jeepName);
+
+        #endregion
+
+        JeepneyPanel.current.UpdateReqs();
+    }
+
+    public void LoadPrevious() { //load previous save or default
+        bool isNewGame = TimeManager.current.days == 1? true:false;
+
+        if(isNewGame) LoadDefault();
+        else LoadSaved();
     }
 }

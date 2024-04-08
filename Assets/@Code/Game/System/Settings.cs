@@ -74,7 +74,7 @@ public class Settings : MonoBehaviour {
         // Add Resolutions
         resolutionOptions = new List<string>();
         for(int i = 0; i < resolutions.Length; i++) {
-            string resolution = resolutions[i].width + " x " + resolutions[i].height;
+            string resolution = resolutions[i].width + " x " + resolutions[i].height + " (" + resolutions[i].refreshRate + "hz)";
             resolutionOptions.Add(resolution);
         }
 
@@ -88,7 +88,7 @@ public class Settings : MonoBehaviour {
         // PlayerPrefs.SetInt("IsNewPlay", 0);
 
         // If new player, set settings to default
-        if(PlayerPrefs.GetInt("IsNewPlay") == 0) {
+        if(PlayerPrefs.GetInt("IsNewPlay", 0) == 0) {
             // print("NEW PLAYER");
             currentResolutionIndex = 0;
             currentResolutionIndex = resolutionOptions.Count - 1;
@@ -113,7 +113,7 @@ public class Settings : MonoBehaviour {
 
     public void LoadDefaultSettings() {
         print("[SETTINGS] Loading default settings");
-        SetMasterVolume(0);
+        SetMasterVolume(0); //0 is full
         SetBGMVolume(0);
         // SetMusic
         
@@ -137,9 +137,9 @@ public class Settings : MonoBehaviour {
 
     private void LoadSavedSettings() {
         // print("[SETTINGS] Loading saved settings");
-        float volume = PlayerPrefs.GetFloat("Settings_MasterVolume");
+        float volume = PlayerPrefs.GetFloat("Settings_MasterVolume", 0);
         SetMasterVolume(volume);
-        float bgmVolume = PlayerPrefs.GetFloat("Settings_BGMVolume");
+        float bgmVolume = PlayerPrefs.GetFloat("Settings_BGMVolume", 0);
         SetBGMVolume(bgmVolume);
 
         int qualityIndex = PlayerPrefs.GetInt("Settings_GraphicsPreset");
@@ -158,8 +158,8 @@ public class Settings : MonoBehaviour {
         SetMouseSens(mouseSens);
         float zoomSens = PlayerPrefs.GetFloat("Settings_ZoomSens", 3f);
         SetZoomSens(zoomSens);
-        SetTutorialPanels(PlayerPrefs.GetInt("Settings_IsTutorialPanels") == 1? true : false);
-        SetAutoTrans(PlayerPrefs.GetInt("Settings_IsAutomaticTransmission") == 1? true : false);
+        SetTutorialPanels(PlayerPrefs.GetInt("Settings_IsTutorialPanels", 1) == 1? true : false);
+        SetAutoTrans(PlayerPrefs.GetInt("Settings_IsAutomaticTransmission", 1) == 1? true : false);
         float renderDist = PlayerPrefs.GetFloat("Settings_RenderDist", 5);
         SetRenderDist(renderDist);
         int spawnDist = PlayerPrefs.GetInt("Settings_SpawnDist", 100);
