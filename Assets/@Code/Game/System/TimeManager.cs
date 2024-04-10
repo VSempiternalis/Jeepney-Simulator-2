@@ -47,6 +47,8 @@ public class TimeManager : MonoBehaviour {
 
     private AudioManager am;
 
+    [SerializeField] private Target billyTarget;
+
     private void Awake() {
         current = this;
         // PlayerPrefs.DeleteAll();
@@ -88,12 +90,15 @@ public class TimeManager : MonoBehaviour {
     public void NewShift() {
         // print("NEW SHIFT");
         days ++;
+        if(billyTarget) billyTarget.enabled = false;
+
         UpdateDayTexts();
 
         ResetShiftTime();
     }
 
     public void ResetShiftTime() {
+        if(billyTarget) billyTarget.enabled = false;
         shiftTimeLeft = shiftLength * 60;
         UpdateShiftTimers();
     }
@@ -188,6 +193,7 @@ public class TimeManager : MonoBehaviour {
             am.PlayUI(10);
             //notif
             NotificationManager.current.NewNotif("FIVE MINUTES LEFT!", "There's only five minutes left in your shift.");
+            if(billyTarget) billyTarget.enabled = true;
         } else if(shiftTimeLeft == 180) {
             am.PlayUI(10);
             //notif

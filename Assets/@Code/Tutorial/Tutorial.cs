@@ -137,7 +137,7 @@ public class Tutorial : MonoBehaviour {
         }
         else if(step == 3) {
             nm.Clear();
-            nm.NewNotif("GRABBING MULTIPLE ITEMS", "Next up, grab as many pieces as you can.\n\n(Hold [LEFT CLICK] to grab multiple items)");
+            nm.NewNotif("GRABBING MULTIPLE ITEMS", "Next up, grab ten pieces.\n\n(Hold [LEFT CLICK] to grab multiple items)");
         }
         else if(step == 4) nm.NewNotif("DROPPING ITEMS", "Now, place all the pieces back on the chess board. It works the same way as grabbing.\n\n(Press/Hold [RIGHT CLICK] to drop items)");
         else if(step == 5) nm.NewNotif("GRABBING ALL ITEMS", "You can also try to grab all the items in one click.\n\n(Press [MIDDLE CLICK] on the CHESS BOARD to grab all items)");
@@ -288,7 +288,7 @@ public class Tutorial : MonoBehaviour {
         }
         else if(step == 40) {
             nm.Clear();
-            nm.NewNotif("DEPOSIT INCOME", "Grab your earnings as you can and deposit them in my office. Don't forget to turn your engine off.\n\n([RIGHT CLICK] on boundary mat to deposit money)");
+            nm.NewNotif("DEPOSIT INCOME", "Grab your earnings and deposit them in my office. Don't forget to turn your engine off.\n\n([LEFT CLICK)] on driver's seat to exit jeepney)\n\n([RIGHT CLICK] on boundary mat to deposit money)");
             officeTarget.enabled = false;
             boundaryTarget.enabled = true;
         }

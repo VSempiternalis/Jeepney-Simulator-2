@@ -119,6 +119,7 @@ public class JeepneyPanel : MonoBehaviour {
 
     private void UpdateBar(Transform bar, float value, float maxValue) {
         float ratio = value/maxValue;
+        if(float.IsNaN(ratio)) ratio = 0.01f;
         bar.localScale = new Vector3(ratio, 1, 1);
         bar.localPosition = new Vector3(-((1-ratio)/2), 0, -0.0001f);
     }
