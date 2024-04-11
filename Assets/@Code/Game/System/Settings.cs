@@ -196,7 +196,8 @@ public class Settings : MonoBehaviour {
 
     public void SetMasterVolume(float newVol) {
         audioMixer.SetFloat("MasterVolume", newVol);
-        masterVolumeText.text = ((newVol + 20) * 5) + "";
+        // masterVolumeText.text = ((newVol + 80)) + "";
+        masterVolumeText.text = ((newVol + 25) * 4) + "";
         masterVolSlider.value = newVol;
 
         PlayerPrefs.SetFloat("Settings_MasterVolume", newVol);
@@ -204,7 +205,8 @@ public class Settings : MonoBehaviour {
 
     public void SetBGMVolume(float newVol) {
         bgmMixer.SetFloat("BGMVolume", newVol);
-        bgmVolumeText.text = ((newVol + 20) * 5) + "";
+        // bgmVolumeText.text = ((newVol + 80)) + "";
+        bgmVolumeText.text = ((newVol + 25) * 4) + "";
         bgmVolSlider.value = newVol;
 
         PlayerPrefs.SetFloat("Settings_BGMVolume", newVol);

@@ -148,6 +148,13 @@ public class BoundaryManager : MonoBehaviour {
         }
     }
 
+    public bool CanPay(int value) {
+        if(deposit >= value) {
+            AddToDeposit(-value);
+            return true;
+        } else return false;
+    }
+
     public void AddToDeposit(int mod) {
         deposit += mod;
         UpdateTexts();
