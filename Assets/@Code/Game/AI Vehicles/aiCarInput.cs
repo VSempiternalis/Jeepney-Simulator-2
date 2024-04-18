@@ -23,6 +23,8 @@ public class aiCarInput : MonoBehaviour {
     }
 
     private void Update() {
+        if(CA_frontMed == null) return;
+
         //MoveInput
         Vector2 moveInput = new Vector2(0, 0);
         //if(!isBraking) moveInput.y = 1;

@@ -95,6 +95,7 @@ public class FreerideManager : MonoBehaviour {
     }
 
     public void SetEvents(bool newVal) {
+        print("Set events: " + (newVal? 1:0));
         PlayerPrefs.SetInt("Freeride_IsEvents", newVal? 1:0);
     }
 

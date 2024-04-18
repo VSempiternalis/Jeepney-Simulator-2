@@ -190,7 +190,7 @@ public class Settings : MonoBehaviour {
         TimeManager.current.isPauseShift = !isOn;
 
         //stop movement
-        if(!player.GetComponent<PlayerDriveInput>().isDriving) {
+        if(player.GetComponent<PlayerDriveInput>() && !player.GetComponent<PlayerDriveInput>().isDriving) {
             player.GetComponent<FirstPersonMovement>().enabled = isOn;
             player.GetComponent<Jump>().enabled = isOn;
             player.GetComponent<Crouch>().enabled = isOn;

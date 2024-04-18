@@ -36,11 +36,6 @@ public class Despawner : MonoBehaviour {
             nextSecUpdate ++;
             DistanceCheck();
         }
-        
-        // if(Time.time >= (nextSecUpdate)) {
-        //     nextSecUpdate ++;
-        //     DistanceCheck();
-        // }
     }
 
     private void DistanceCheck() {

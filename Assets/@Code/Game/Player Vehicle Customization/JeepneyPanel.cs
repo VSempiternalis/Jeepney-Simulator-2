@@ -8,6 +8,7 @@ public class JeepneyPanel : MonoBehaviour {
     
     [SerializeField] private GameObject main;
     [SerializeField] private GameObject noJeepneyDetected;
+    // public bool isFreeride;
 
     [Header("HEALTH")]
     private int health;
@@ -64,13 +65,15 @@ public class JeepneyPanel : MonoBehaviour {
     }
 
     public void Setup() {
-        carcon = PlayerDriveInput.current.carCon;
+        SetCarcon(PlayerDriveInput.current.carCon);
 
         UpdateReqs();
     }
 
     public void SetCarcon(CarController newCarcon) {
         carcon = newCarcon;
+
+        // if(SaveLoadSystem.current.gameMode == "Freeride") SetMaxGear(9);
     }
 
     public void UpdateReqs() {
@@ -223,4 +226,9 @@ public class JeepneyPanel : MonoBehaviour {
     }
 
     #endregion
+
+    // public void SetMaxGear(int i) {
+    //     carcon.maxGear = i;
+    //     UpdateReqs();
+    // }
 }

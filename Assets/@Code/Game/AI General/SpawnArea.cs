@@ -44,6 +44,7 @@ public class SpawnArea : MonoBehaviour {
     [Space(10)]
 
     [Header("ROAD EVENTS")]
+    public bool isRoadEvents;
     [SerializeField] private Transform roadEventPoolSize1;
     [SerializeField] private Transform roadEventPoolSize2;
     [SerializeField] private Transform roadEventPoolSize3;
@@ -167,6 +168,7 @@ public class SpawnArea : MonoBehaviour {
     }
 
     private void TrySpawnVehicle(Transform spot) {
+        // print("try spawn vic " + Time.time);
         //Spawn roll
         int spawnRoll = Random.Range(0, 101);
         if(spawnRoll >= vehicleSpawnChance) return;
@@ -211,6 +213,7 @@ public class SpawnArea : MonoBehaviour {
 
         //max spawn
         if(roadEventCount >= maxRoadEventCount) return;
+        if(res.triggerCount > 0) return;
 
         //check if event happens
         int randInt = Random.Range(0, 101);
@@ -240,6 +243,6 @@ public class SpawnArea : MonoBehaviour {
     // Try spawn on enter
     private void OnTriggerEnter(Collider other) {
         if(other.gameObject.layer == personSpawnLayer) TrySpawnPerson(other.transform);
-        else if(other.gameObject.layer == roadEventSpawnLayer) TrySpawnRoadEvent(other.GetComponent<RoadEventSpawn>());
+        else if(isRoadEvents && other.gameObject.layer == roadEventSpawnLayer) TrySpawnRoadEvent(other.GetComponent<RoadEventSpawn>());
     }
 }

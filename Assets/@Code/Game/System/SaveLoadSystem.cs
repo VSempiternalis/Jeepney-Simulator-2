@@ -75,6 +75,7 @@ public class SaveLoadSystem : MonoBehaviour {
         TimeManager.current.Setup();
         BoundaryManager.current.Setup(gameMode);
         JeepneyPanel.current.Setup();
+        SpawnArea.current.isRoadEvents = isEvents;
 
         Setup();
     }
@@ -111,6 +112,9 @@ public class SaveLoadSystem : MonoBehaviour {
             foreach(GameObject go in customizationFreeride) {
                 go.SetActive(true);
             }
+
+            //gear
+            // JeepneyPanel.current.SetMaxGear(9);
         } else {
             foreach(GameObject go in customizationFreeride) {
                 go.SetActive(false);
@@ -136,7 +140,7 @@ public class SaveLoadSystem : MonoBehaviour {
         isPayments = PlayerPrefs.GetInt("Freeride_IsPayments", 1) == 1? true:false;
         isEvents = PlayerPrefs.GetInt("Freeride_IsEvents", 1) == 1? true:false;
         isShifts = PlayerPrefs.GetInt("Freeride_IsShifts", 1) == 1? true:false;
-        
+        print("isEvents: " + (isEvents? 1:0));
         //MAX POP
         populationCount = PlayerPrefs.GetInt("Freeride_PopulationCount", 50);
         SpawnArea.current.maxPersonCount = populationCount;
@@ -345,7 +349,7 @@ public class SaveLoadSystem : MonoBehaviour {
         //LOADING BAR
         while(!operation.isDone) {
             float progress = Mathf.Clamp01(operation.progress/0.9f);
-            print(progress);
+            // print(progress);
             loadingProgress.LeanScaleX(progress, 1f);
             yield return null;
         }

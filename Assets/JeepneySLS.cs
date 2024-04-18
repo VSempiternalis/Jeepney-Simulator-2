@@ -98,6 +98,11 @@ public class JeepneySLS : MonoBehaviour {
 
         //SKIN
         PlayerPrefs.SetString(gameMode + "_Jeepney_SkinsOwned", sc.GetSkinsOwned());
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_CurrentSkin", sc.GetCurrentSkin());
+        PlayerPrefs.SetString(gameMode + "_Jeepney_SWSkinsOwned", sc.GetSWSkinsOwned());
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_CurrentSWSkin", sc.GetCurrentSWSkin());
+        PlayerPrefs.SetString(gameMode + "_Jeepney_SeatSkinsOwned", sc.GetSeatSkinsOwned());
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_CurrentSeatSkin", sc.GetCurrentSeatSkin());
 
         #endregion
         #region OTHERS ================================================================================
@@ -126,6 +131,7 @@ public class JeepneySLS : MonoBehaviour {
         int fuelLoss = PlayerPrefs.GetInt(gameMode + "_Jeepney_FuelLoss", 1); //Realizing late (right now), that 'eff' is the worst possible name for this variable
         //max gear
         int maxGear = PlayerPrefs.GetInt(gameMode + "_Jeepney_MaxGear", 8);
+        if(SaveLoadSystem.current.gameMode == "Freeride") maxGear = 8;
 
         print("maxHealth: " + maxHealth);
         print("health: " + health);
@@ -157,6 +163,11 @@ public class JeepneySLS : MonoBehaviour {
 
         //SKINS
         sc.LoadSavedSkins(PlayerPrefs.GetString(gameMode + "_Jeepney_SkinsOwned"));
+        sc.LoadSkin(PlayerPrefs.GetInt(gameMode + "_Jeepney_CurrentSkin"));
+        sc.LoadSavedSWSkins(PlayerPrefs.GetString(gameMode + "_Jeepney_SWSkinsOwned"));
+        sc.LoadSWSkin(PlayerPrefs.GetInt(gameMode + "_Jeepney_CurrentSWSkin"));
+        sc.LoadSavedSeatSkins(PlayerPrefs.GetString(gameMode + "_Jeepney_SeatSkinsOwned"));
+        sc.LoadSeatSkin(PlayerPrefs.GetInt(gameMode + "_Jeepney_CurrentSeatSkin"));
 
         #endregion
         #region OTHERS ================================================================================
@@ -200,6 +211,7 @@ public class JeepneySLS : MonoBehaviour {
         int fuelLoss = 1; //Realizing late (right now), that 'eff' is the worst possible name for this variable
         //max gear
         int maxGear = 4;
+        if(SaveLoadSystem.current.gameMode == "Freeride") maxGear = 8;
 
         print("maxHealth: " + maxHealth);
         print("health: " + health);

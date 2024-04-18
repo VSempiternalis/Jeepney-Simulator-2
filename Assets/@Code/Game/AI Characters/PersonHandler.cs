@@ -554,8 +554,9 @@ public class PersonHandler : MonoBehaviour {
 
         // GetComponent<Rigidbody>().freezeRotation = false;
         GetComponent<Rigidbody>().isKinematic = false;
-        GetComponent<Rigidbody>().useGravity = true;
+        // GetComponent<Rigidbody>().useGravity = true;
         GetComponent<CapsuleCollider>().enabled = true;
+        GetComponent<BoxCollider>().enabled = false;
     }
 
     public void CrossRoad(Transform otherCrosswalk) {
@@ -637,21 +638,17 @@ public class PersonHandler : MonoBehaviour {
 
         // GetComponent<Rigidbody>().freezeRotation = false;
         // GetComponent<Rigidbody>().isKinematic = true;
-        GetComponent<Rigidbody>().useGravity = false;
+        // GetComponent<Rigidbody>().useGravity = true;
+        // GetComponent<Rigidbody>().useGravity = false;
         GetComponent<CapsuleCollider>().enabled = false;
+        GetComponent<BoxCollider>().enabled = true;
         SetState("Death");
         // GetComponent<Test_script>().ChangeState("Standing");
         // GetComponent<Test_script>().enabled = false;
         // GetComponent<PersonController>().enabled = false;
 
-        //blood particles
-
         //death audio
-        // audioSource.enabled = true;
-        // audioSource.volume = 1;
         voiceHandler.Say("Death");
-        // audioSource.PlayOneShot(deathSounds[Random.Range(0, deathSounds.Length - 1)]);
-        // audioSource.PlayOneShot(collisionSounds[Random.Range(0, collisionSounds.Length - 1)]);
     }
 
     private void OnTriggerEnter(Collider other) {

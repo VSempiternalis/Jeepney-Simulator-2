@@ -95,12 +95,12 @@ public class aiCarController : MonoBehaviour, IHealth {
     }
 
     public void Reset() {
-        ca.EmptyCheck();
+        if(ca != null) ca.EmptyCheck();
     }
 
     public void SetActive(bool newIsActive) {
         isActive = newIsActive;
-        if(isActive) smokeParticles.Play();
+        if(isActive && smokeParticles != null) smokeParticles.Play();
         else smokeParticles.Stop();
     }
 
