@@ -62,6 +62,7 @@ public class PlayerInteractionTUTORIAL : MonoBehaviour {
     [Space(10)]
     [Header("KEYBINDS")]
     private KeyCode Key_HUDToggle;
+    private KeyCode Key_GrabAllItems;
 
     [Space(10)]
     [Header("AUDIO")]
@@ -86,12 +87,14 @@ public class PlayerInteractionTUTORIAL : MonoBehaviour {
 
     private void OnKeyChangeEvent() {
         Key_HUDToggle = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_HUDToggle", "F12"));
+        Key_GrabAllItems = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GrabAllItems", KeyCode.Mouse2.ToString()));
     }
 
     private void GetInput() {
         lMouseDown = Input.GetMouseButtonDown(0);
         rMouseDown = Input.GetMouseButtonDown(1);
-        mMouseDown = Input.GetMouseButtonDown(2);
+        mMouseDown = Input.GetKeyDown(Key_GrabAllItems);
+        // mMouseDown = Input.GetMouseButtonDown(2);
 
         lMouseHold = Input.GetMouseButton(0);
         rMouseHold = Input.GetMouseButton(1);

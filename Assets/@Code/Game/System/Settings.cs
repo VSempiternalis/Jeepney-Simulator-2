@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEngine.Rendering;
 using System.Collections.Generic;
+using SojaExiles;
 
 public class Settings : MonoBehaviour {
     public static Settings current;
@@ -180,6 +181,22 @@ public class Settings : MonoBehaviour {
             settingsPanel.Out();
         }
         UpdateCursor();
+
+        SetPlayer(!isCursorOn);
+    }
+
+    public void SetPlayer(bool isOn) {
+        //pause shift
+        TimeManager.current.isPauseShift = !isOn;
+
+        //stop movement
+        if(!player.GetComponent<PlayerDriveInput>().isDriving) {
+            player.GetComponent<FirstPersonMovement>().enabled = isOn;
+            player.GetComponent<Jump>().enabled = isOn;
+            player.GetComponent<Crouch>().enabled = isOn;
+        }
+        if(player.GetComponent<PlayerInteraction>()) player.GetComponent<PlayerInteraction>().enabled = isOn;
+        if(player.GetComponent<PlayerDriveInput>()) player.GetComponent<PlayerDriveInput>().enabled = isOn;
     }
 
     public void UpdateCursor() {

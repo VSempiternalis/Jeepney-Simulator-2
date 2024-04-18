@@ -82,6 +82,10 @@ public class Despawner : MonoBehaviour {
             spawnArea.personCount --;
             GetComponent<PersonHandler>().Reset();
         }
+        else if(objectType == "Road Event") {
+            spawnArea.roadEventCount --;
+            GetComponent<RoadEvent>().Reset();
+        }
 
         newPos = transform.position;
         newPos.y += 1000f;

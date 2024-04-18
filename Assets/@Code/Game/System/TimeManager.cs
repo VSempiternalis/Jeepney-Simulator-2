@@ -22,6 +22,7 @@ public class TimeManager : MonoBehaviour {
     //SHIFTS
     [Space(10)]
     [Header("SHIFT")]
+    public bool isPauseShift;
     public int shiftLength;
     private bool isShifts;
     private bool isShiftOn;
@@ -142,6 +143,9 @@ public class TimeManager : MonoBehaviour {
     }
 
     private void UpdateShiftTime() {
+        //paused in settings
+        if(isPauseShift) return;
+
         //OVERTIME!
         if(shiftTimeLeft == 1) {
             am.PlayUI(11);
@@ -180,7 +184,8 @@ public class TimeManager : MonoBehaviour {
         //HOURS
         float totalHoursFloat = shiftTimeLeft / 60.0f;
         int totalHours = Mathf.FloorToInt(totalHoursFloat);
-        shiftHoursLeft = totalHours % 24;
+        shiftHoursLeft = totalHours % 60;
+        // shiftHoursLeft = totalHours % 24;
 
         //Update clocks
         string tempHours = shiftHoursLeft + "";

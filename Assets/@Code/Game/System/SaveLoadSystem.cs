@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 
 public class SaveLoadSystem : MonoBehaviour {
@@ -51,6 +52,11 @@ public class SaveLoadSystem : MonoBehaviour {
     [SerializeField] private Settings settings;
     [SerializeField] private uiAnimGroup tutorialUI;
 
+    [Space(10)]
+    [Header("CUSTOMIZATION")]
+    [SerializeField] private List<GameObject> customizationFreeride;
+    [SerializeField] private List<GameObject> customizationCareer;
+
     private void Awake() {
         current = this;
     }
@@ -96,6 +102,23 @@ public class SaveLoadSystem : MonoBehaviour {
             settings.ToggleCursor();
             settings.UpdateCursor();
         }
+        
+        //CUSTOMIZATION
+        if(gameMode == "Freeride") {
+            foreach(GameObject go in customizationCareer) {
+                go.SetActive(false);
+            }
+            foreach(GameObject go in customizationFreeride) {
+                go.SetActive(true);
+            }
+        } else {
+            foreach(GameObject go in customizationFreeride) {
+                go.SetActive(false);
+            }
+            foreach(GameObject go in customizationCareer) {
+                go.SetActive(true);
+            }
+        }
     }
 
     private void Setup() {
@@ -123,7 +146,7 @@ public class SaveLoadSystem : MonoBehaviour {
         SpawnArea.current.maxVicCount = trafficCount;
         
         //SHIFT LENGTH
-        shiftLength = PlayerPrefs.GetInt("Freeride_ShiftLength", 15);
+        shiftLength = PlayerPrefs.GetInt("Freeride_ShiftLength", 20);
         TimeManager.current.shiftLength = shiftLength;
         BoundaryManager.current.shiftLength = shiftLength;
 
@@ -164,7 +187,7 @@ public class SaveLoadSystem : MonoBehaviour {
         trafficCount = PlayerPrefs.GetInt("Career_MaxTraffic", 25);
         SpawnArea.current.maxVicCount = trafficCount;
         
-        shiftLength = PlayerPrefs.GetInt("Career_ShiftLength", 15);
+        shiftLength = PlayerPrefs.GetInt("Career_ShiftLength", 20);
         TimeManager.current.shiftLength = shiftLength;
         BoundaryManager.current.shiftLength = shiftLength;
         

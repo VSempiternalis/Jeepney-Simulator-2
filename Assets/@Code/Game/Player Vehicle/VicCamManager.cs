@@ -30,6 +30,11 @@ public class VicCamManager : MonoBehaviour {
         else if(pdi != null && pdi.isDriving) GetInput();
     }
 
+    public bool CanInteract() {
+        if(pdi.isDriving && transform.localPosition != camPos1) return false;
+        return true;
+    }
+
     private void GetInput() {
         Vector3 newPos;
 

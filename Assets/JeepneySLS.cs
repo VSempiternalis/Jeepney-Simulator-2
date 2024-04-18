@@ -7,6 +7,7 @@ public class JeepneySLS : MonoBehaviour {
     private SaveLoadSystem sls;
     private CarController carcon;
     private UpgradesPanel up;
+    private SkinCustomizer sc;
 
     //UPGRADES
     [SerializeField] private GameObject upgBells;
@@ -24,10 +25,14 @@ public class JeepneySLS : MonoBehaviour {
     [SerializeField] private GameObject upgCoinHolder1;
     [SerializeField] private GameObject upgCoinHolder2;
 
+    //SKINS
+    public int currentSkinIndex; //jeep body
+
     private void Start() {
         sls = SaveLoadSystem.current;
         up = UpgradesPanel.current;
         carcon = GetComponent<CarController>();
+        sc = GetComponent<SkinCustomizer>();
     }
 
     private void Update() {
@@ -91,7 +96,8 @@ public class JeepneySLS : MonoBehaviour {
         #endregion
         #region CUSTOMIZATION ================================================================================
 
-
+        //SKIN
+        PlayerPrefs.SetString(gameMode + "_Jeepney_SkinsOwned", sc.GetSkinsOwned());
 
         #endregion
         #region OTHERS ================================================================================
@@ -149,7 +155,8 @@ public class JeepneySLS : MonoBehaviour {
         #endregion
         #region CUSTOMIZATION ================================================================================
 
-
+        //SKINS
+        sc.LoadSavedSkins(PlayerPrefs.GetString(gameMode + "_Jeepney_SkinsOwned"));
 
         #endregion
         #region OTHERS ================================================================================
@@ -210,7 +217,8 @@ public class JeepneySLS : MonoBehaviour {
         #endregion
         #region CUSTOMIZATION ================================================================================
 
-
+        //SKINS
+        sc.LoadDefaultSkins();
 
         #endregion
         #region OTHERS ================================================================================

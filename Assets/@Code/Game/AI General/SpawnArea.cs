@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TGStylizedWorld;
+using UnityEditor.ShaderGraph;
 
 public class SpawnArea : MonoBehaviour {
     public static SpawnArea current;
@@ -15,6 +16,7 @@ public class SpawnArea : MonoBehaviour {
     [SerializeField] private LayerMask spawnsLayerMask;
     [SerializeField] private int vicSpawnLayer;
     [SerializeField] private int personSpawnLayer;
+    [SerializeField] private int roadEventSpawnLayer;
     private VehicleSpawn currentVehicleSpawn;
     private VehicleSpawn currentPersonSpawn;
     [SerializeField] private Transform personPool;
@@ -39,6 +41,15 @@ public class SpawnArea : MonoBehaviour {
 
     [SerializeField] private GameObject personPF;
     [SerializeField] private Vector2Int personSpawnRange;
+    [Space(10)]
+
+    [Header("ROAD EVENTS")]
+    [SerializeField] private Transform roadEventPoolSize1;
+    [SerializeField] private Transform roadEventPoolSize2;
+    [SerializeField] private Transform roadEventPoolSize3;
+    public int roadEventCount;
+    public int maxRoadEventCount;
+    public int roadEventSpawnChance;
 
     [SerializeField] private List<Transform> landmarkSpawnParents;
     [SerializeField] private Transform landmarkSpawns;
@@ -95,27 +106,6 @@ public class SpawnArea : MonoBehaviour {
 
             yield return new WaitForSeconds(vehicleSpawnInterval);
         }
-
-        // while (true) {
-        //     Collider[] vicSpots = Physics.OverlapSphere(transform.position, spawnDist, vicSpawnLayerMask);
-
-        //     for(int i = 0; i < vicSpots.Length; i++) {
-        //         Collider vicSpot = vicSpots[i];
-
-        //         if(Vector3.Distance(transform.position, vicSpot.transform.position) >= spawnDist - 10) {
-        //             currentVehicleSpawn = vicSpot.GetComponent<VehicleSpawn>();
-
-        //             if(currentVehicleSpawn.triggerCount == 0) {
-        //                 currentVehicleSpawn.isSpawnable = !currentVehicleSpawn.isSpawnable;
-        //                 TrySpawnVehicle(vicSpot.transform);
-        //             }
-        //             else if(Vector3.Distance(transform.position, vicSpot.transform.position) > spawnDist)
-        //                 currentVehicleSpawn.isSpawnable = true;
-        //         }
-        //     }
-
-        //     yield return new WaitForSeconds(vehicleSpawnInterval);
-        // }
     }
 
     private void TrySpawnPerson(Transform spawn) {
@@ -215,9 +205,41 @@ public class SpawnArea : MonoBehaviour {
 
         vicCount ++;
     }
+
+    private void TrySpawnRoadEvent(RoadEventSpawn res) {
+        print("ROAD EVENT SPAWN: " + res.name);
+
+        //max spawn
+        if(roadEventCount >= maxRoadEventCount) return;
+
+        //check if event happens
+        int randInt = Random.Range(0, 101);
+        if(randInt >= roadEventSpawnChance) return;
+
+        Transform pool;
+
+        //get random event for size
+        if(res.laneSize == 1) pool = roadEventPoolSize1;
+        else if(res.laneSize == 2) pool = roadEventPoolSize2;
+        else pool = roadEventPoolSize3;
+
+        //skip if no events in pool
+        if(pool.childCount == 0) return;
+
+        //spawn
+        int randInt2 = Random.Range(0, pool.childCount);
+        RoadEvent re = pool.GetChild(randInt2).GetComponent<RoadEvent>();
+        re.transform.position = res.transform.position;
+        re.transform.rotation = res.transform.rotation;
+        re.transform.parent = world;
+        re.gameObject.SetActive(true);
+
+        roadEventCount ++;
+    }
     
     // Try spawn on enter
     private void OnTriggerEnter(Collider other) {
         if(other.gameObject.layer == personSpawnLayer) TrySpawnPerson(other.transform);
+        else if(other.gameObject.layer == roadEventSpawnLayer) TrySpawnRoadEvent(other.GetComponent<RoadEventSpawn>());
     }
 }

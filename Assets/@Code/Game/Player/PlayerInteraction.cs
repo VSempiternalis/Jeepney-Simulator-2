@@ -5,6 +5,7 @@ using TMPro;
 
 public class PlayerInteraction : MonoBehaviour {
     [SerializeField] private Camera playerCam;
+    [SerializeField] private VicCamManager vcm;
     
     private GameObject itemOver;
     [SerializeField] private float reachDist = 1.5f;
@@ -62,6 +63,7 @@ public class PlayerInteraction : MonoBehaviour {
     [Space(10)]
     [Header("KEYBINDS")]
     private KeyCode Key_HUDToggle;
+    private KeyCode Key_GrabAllItems;
 
     [Space(10)]
     [Header("AUDIO")]
@@ -86,12 +88,14 @@ public class PlayerInteraction : MonoBehaviour {
 
     private void OnKeyChangeEvent() {
         Key_HUDToggle = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_HUDToggle", "F12"));
+        Key_GrabAllItems = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Key_GrabAllItems", KeyCode.Mouse2.ToString()));
     }
 
     private void GetInput() {
         lMouseDown = Input.GetMouseButtonDown(0);
         rMouseDown = Input.GetMouseButtonDown(1);
-        mMouseDown = Input.GetMouseButtonDown(2);
+        mMouseDown = Input.GetKeyDown(Key_GrabAllItems);
+        // mMouseDown = Input.GetMouseButtonDown(2);
 
         lMouseHold = Input.GetMouseButton(0);
         rMouseHold = Input.GetMouseButton(1);
@@ -167,6 +171,7 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     private void Interaction() {
+
         //HIDE UI
         if(hudToggleDown) {
             // gameHUD.SetActive(!gameHUD.activeSelf);
@@ -175,6 +180,7 @@ public class PlayerInteraction : MonoBehaviour {
         }
         
         if(!itemOver) return;
+        if(!vcm.CanInteract()) return;
 
         //LEFT CLICK
         if(lMouseDown) {

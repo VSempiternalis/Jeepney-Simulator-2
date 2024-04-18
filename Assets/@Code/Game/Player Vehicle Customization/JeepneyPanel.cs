@@ -134,7 +134,7 @@ public class JeepneyPanel : MonoBehaviour {
 
         if(bm.deposit >= repairCost) {
             carcon.AddHealth(missingHealth);
-            Purchase(repairCost);
+            Purchase(repairCost, 16);
         } else Fail();
     }
 
@@ -147,7 +147,7 @@ public class JeepneyPanel : MonoBehaviour {
         if(bm.deposit >= maxHealthUpgCost) {
             carcon.maxHealth += maxHealthUpgAdd;
             carcon.AddHealth(maxHealthUpgAdd);
-            Purchase(maxHealthUpgCost);
+            Purchase(maxHealthUpgCost, 18);
         } else Fail();
     }
 
@@ -161,7 +161,7 @@ public class JeepneyPanel : MonoBehaviour {
 
         if(bm.deposit >= refuelCost) {
             carcon.AddFuel(missingFuel);
-            Purchase(refuelCost);
+            Purchase(refuelCost, 19);
         } else Fail();
     }
 
@@ -175,7 +175,7 @@ public class JeepneyPanel : MonoBehaviour {
             carcon.fuelCapacity += fuelCapUpgAdd;
             carcon.AddFuel(fuelCapUpgAdd);
 
-            Purchase(fuelCapUpgCost);
+            Purchase(fuelCapUpgCost, 18);
         } else Fail();
     }
 
@@ -188,7 +188,7 @@ public class JeepneyPanel : MonoBehaviour {
         if(bm.deposit >= effCost) {
             carcon.fuelLoss -= effAdd;
 
-            Purchase(effCost);
+            Purchase(effCost, 18);
         } else Fail();
     }
 
@@ -202,19 +202,20 @@ public class JeepneyPanel : MonoBehaviour {
 
         if(bm.deposit >= gearUpgCost) {
             carcon.maxGear ++;
-            Purchase(gearUpgCost);
+            Purchase(gearUpgCost, 18);
         } else Fail();
     }
 
     #endregion
     #region REPETITIVE ==================================================
 
-    private void Purchase(int cost) {
+    private void Purchase(int cost, int audioIndex) {
         bm.AddToDeposit(-cost);
         UpdateReqs();
 
         //audio
-        AudioManager.current.PlayUI(2);
+        // AudioManager.current.PlayUI(2);
+        AudioManager.current.PlayUI(audioIndex);
     }
 
     private void Fail() {

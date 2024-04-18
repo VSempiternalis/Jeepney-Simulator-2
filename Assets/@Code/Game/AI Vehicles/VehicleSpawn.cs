@@ -3,8 +3,8 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class VehicleSpawn : MonoBehaviour {
     [SerializeField] private LayerMask triggerLayer;
-    [SerializeField] private LayerMask vehicleLayer;
-    [SerializeField] private LayerMask playerLayer;
+    // [SerializeField] private LayerMask vehicleLayer;
+    // [SerializeField] private LayerMask playerLayer;
 
     public NodeHandler node;
     public bool isSpawnable;

@@ -42,21 +42,14 @@ public class UpgradesPanel : MonoBehaviour {
         foreach(Upgrade upgrade in upgrades) {
             if(upgrade.upgName == newUpgName) {
                 print("FOUND " + newUpgName);
-                // check if already bought
-                // if(upgradesBought.Contains(upgrade.upgName)) {
-                //     NotificationManager.current.NewNotif("ALREADY BOUGHT", "This upgrade has already been purchased!");
-                //     return;
-                // }
-
                 // check if can afford
                 if(allFree || bm.deposit >= upgrade.price) {
                     bm.AddToDeposit(-upgrade.price);
+                    AudioManager.current.PlayUI(15);
                     Toggle(upgrade.upgName, true); //must be string for JeepneySLS
                 } else {
                     NotificationManager.current.NewNotif("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.");
                 }
-            } else {
-                // print("CANNOT FIND UPGRADE IN DICT: " + upgrade.upgName);
             }
         }
     }
