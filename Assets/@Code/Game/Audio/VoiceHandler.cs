@@ -42,7 +42,7 @@ public class VoiceHandler : MonoBehaviour {
             audios = deathAudios;
         }
 
-        Play(audios, GetRandomIndex(audios.Count));
+        Play(audios, GetRandomIndex(audios));
     }
 
     public void SetAudioClips(List<AudioClip> newPayAudios, List<AudioClip> newChangeAudios, List<AudioClip> newStopAudios, List<AudioClip> newDropAudios, List<AudioClip> newDeathAudios) {
@@ -61,7 +61,7 @@ public class VoiceHandler : MonoBehaviour {
         audioSource.PlayOneShot(audios[i]);
     }
 
-    private int GetRandomIndex(int audioCount) {
-        return Random.Range(0, audioCount);
+    private int GetRandomIndex(List<AudioClip> audios) {
+        return Random.Range(0, audios.Count-1);
     }
 }

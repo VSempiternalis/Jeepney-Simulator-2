@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TGStylizedWorld;
-// using UnityEditor.ShaderGraph;
+using UnityEditor.ShaderGraph;
 
 public class SpawnArea : MonoBehaviour {
     public static SpawnArea current;
@@ -209,7 +209,7 @@ public class SpawnArea : MonoBehaviour {
     }
 
     private void TrySpawnRoadEvent(RoadEventSpawn res) {
-        // print("ROAD EVENT SPAWN: " + res.name);
+        print("ROAD EVENT SPAWN: " + res.name);
 
         //max spawn
         if(roadEventCount >= maxRoadEventCount) return;

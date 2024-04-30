@@ -173,7 +173,6 @@ public class BoundaryManager : MonoBehaviour {
     }
 
     public void CompleteShift() {
-        print("COMPLETE SHIFT");
         if(deposit == 0) {
             NotificationManager.current.NewNotif("EMPTY DEPOSIT", "You need to deposit your earnings first to pay the boundary.");
             AudioManager.current.PlayUI(7);
@@ -189,7 +188,6 @@ public class BoundaryManager : MonoBehaviour {
             Fader.current.FadeToBlack(1f, text, () => {
                 //Reset
                 TimeManager.current.NewShift();
-                LotteryManager.current.NewNums(); //MUST BE AFTER TIME RESET
                 SaveLoadSystem.current.SaveGame();
                 PlayerDriveInput.current.carCon.GetComponent<JeepneySLS>().Save();
 
@@ -217,7 +215,6 @@ public class BoundaryManager : MonoBehaviour {
                 ResetVicMoney();
                 PlayerDriveInput.current.GetComponent<PlayerInteraction>().ClearItems(); //yes, this is stupid
                 TimeManager.current.ResetShiftTime();
-                LotteryManager.current.NewNums(); //MUST BE AFTER TIME RESET
                 PlayerDriveInput.current.carCon.GetComponent<JeepneySLS>().LoadPrevious();
 
                 am.PlayUI(5);

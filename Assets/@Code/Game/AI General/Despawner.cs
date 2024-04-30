@@ -64,15 +64,16 @@ public class Despawner : MonoBehaviour {
         // //     // test = false;
         // // }
 
+        //Dont despawn when in vehicle
+        // if(transform.parent != null && transform.parent.name.Contains("Seat") && GetComponent<Test_script>() && GetComponent<Test_script>().state != "Sitting") return;
+        
+        //[!] if(GetComponent<PersonController>() != null && (GetComponent<PersonController>().state == "Waiting to drop" || GetComponent<PersonController>().state == "Waiting for change" || GetComponent<PersonController>().state == "Waiting to pay")) return;
+
         if(objectType == "Vehicle") {
             spawnArea.vicCount --;
             GetComponent<aiCarController>().Reset();
         }
         else if(objectType == "Person") {
-            //Dont despawn when in vehicle
-            if(!GetComponent<PersonHandler>().CanReset()) return;
-
-            // print("despawning: " + name);
             spawnArea.personCount --;
             GetComponent<PersonHandler>().Reset();
         }

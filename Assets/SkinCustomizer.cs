@@ -256,7 +256,7 @@ public class SkinCustomizer : MonoBehaviour {
             returnString += isOwned? "1":"0";
         }
 
-        // print("Saving skins owned: " + returnString);
+        print("Saving skins owned: " + returnString);
         return returnString;
     }
 
@@ -267,7 +267,7 @@ public class SkinCustomizer : MonoBehaviour {
             returnString += isOwned? "1":"0";
         }
 
-        // print("Saving sw skins owned: " + returnString);
+        print("Saving sw skins owned: " + returnString);
         return returnString;
     }
 
@@ -278,7 +278,7 @@ public class SkinCustomizer : MonoBehaviour {
             returnString += isOwned? "1":"0";
         }
 
-        // print("Saving seat skins owned: " + returnString);
+        print("Saving seat skins owned: " + returnString);
         return returnString;
     }
 
@@ -295,7 +295,7 @@ public class SkinCustomizer : MonoBehaviour {
 
     //LOADING
     public void LoadSavedSkins(string skinsString) {
-        // print("Loading skins owned: " + skinsString);
+        print("Loading skins owned: " + skinsString);
 
         foreach(char c in skinsString) {
             bool isOwned = (c == '1');
@@ -306,7 +306,7 @@ public class SkinCustomizer : MonoBehaviour {
     }
 
     public void LoadSavedSWSkins(string skinsString) {
-        // print("Loading sw skins owned: " + skinsString);
+        print("Loading sw skins owned: " + skinsString);
 
         foreach(char c in skinsString) {
             bool isOwned = (c == '1');
@@ -317,7 +317,7 @@ public class SkinCustomizer : MonoBehaviour {
     }
 
     public void LoadSavedSeatSkins(string skinsString) {
-        // print("Loading seat skins owned: " + skinsString);
+        print("Loading seat skins owned: " + skinsString);
 
         foreach(char c in skinsString) {
             bool isOwned = (c == '1');

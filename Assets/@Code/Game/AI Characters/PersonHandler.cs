@@ -1,7 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using UnityEngine.TextCore.Text;
 
 public class PersonHandler : MonoBehaviour {
     [Header("COMPONENTS")]
@@ -165,7 +163,7 @@ public class PersonHandler : MonoBehaviour {
                     // changePointStorage.Clear();
                     List<GameObject> removeList = new List<GameObject>();
                     foreach(GameObject item in changePointStorage.items) {
-                        if(item.GetComponent<Value>() && item.GetComponent<Value>().value <= change && item.GetComponent<Value>().value != 0) {
+                        if(item.GetComponent<Value>() && item.GetComponent<Value>().value <= change) {
                             GetChange(item.GetComponent<Value>().value);
                             removeList.Add(item);
                         }
@@ -219,17 +217,22 @@ public class PersonHandler : MonoBehaviour {
 
         if(pdit != null) { //TUTORIAL
             if(!pdit.isPickups || !isPassenger || (pdit.carCon && !pdit.carCon.HasFreeSeats())) return;
+            // else if(!pdit.isPickups && ) return;
             else if(!RouteSelector.current.destinations.Contains(landmarkDest)) return;
 
             //[!+Call jeep when close]
             distToPlayer = Vector3.Distance(transform.position, pdit.transform.position);
             if(distToPlayer <= callDist && pdit.isDriving && pdit.isPickups && pdit.carCon.HasFreeSeats()) {
+                // popup.Say(sayHandler.GetSay("Call"), false);
+                // transform.LookAt(pdit.transform, Vector3.up);
                 FacePos(pdit.transform.position);
                 //[HAIL]
                 //GetComponent<Test_script>().Hail();
                 carCon = pdit.carCon;
 
+                // print("Car mag: " + carCon.GetComponent<Rigidbody>().velocity.magnitude + " mag thresh: " + magnitudeThresh);
                 if(carCon.GetComponent<Rigidbody>().velocity.magnitude <= magnitudeThresh) {
+                    // print("Past magnitude thresh");
                     MakeMoveToVehicle();
                 }
             } else {
@@ -556,16 +559,6 @@ public class PersonHandler : MonoBehaviour {
         GetComponent<BoxCollider>().enabled = false;
     }
 
-    public bool CanReset() {
-        bool canReset = true;
-
-        //if in jeep, dont reset
-        if(state == "Waiting to pay" || state == "Waiting for change" || state == "Waiting to arrive" || state == "Waiting to drop") canReset = false;
-
-        // print(name + " state: " + state + ". can reset: " + (canReset? "yes":"no"));
-        return canReset;
-    }
-
     public void CrossRoad(Transform otherCrosswalk) {
         // print(name + " crossing road");
         crossRoad = otherCrosswalk;
@@ -660,10 +653,7 @@ public class PersonHandler : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         if(other.gameObject.layer == dropAreaLayer && other.name.Contains(landmarkDest) && state == "Waiting to arrive") {
-            if(!AudioManager.current.isSayingStop) {
-                voiceHandler.Say("Stop");
-                AudioManager.current.SayStop();
-            }
+            voiceHandler.Say("Stop");
         } else if(other.gameObject.layer == spawnAreaLayer) currentSpot = other.transform;
     }
 
