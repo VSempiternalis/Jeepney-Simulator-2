@@ -19,6 +19,8 @@ public class ChunksManager : MonoBehaviour {
     }
 
     private void ChunkCheck() {
+        loadDist = ((int)PlayerPrefs.GetFloat("Settings_RenderDist", 30)*100) + 200;
+
         // print(Time.time + " chunk check");
         Vector3 playerPos = player.position;
         foreach(Transform chunk in chunksList) {

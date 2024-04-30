@@ -209,8 +209,8 @@ public class CarController : MonoBehaviour {
         Brake();
         FuelDrain();
 
-        if(fuelAmount < 5000 && fuelAmount > 4997) NotificationManager.current.NewNotif("LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refill!");
-        else if(fuelAmount < 10 && fuelAmount > 7 ) NotificationManager.current.NewNotif("NO FUEL!", "You have run out of fuel! Call a tow truck [T].");
+        if(fuelAmount < 5000 && fuelAmount > 4990) NotificationManager.current.NewNotif("LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refill!");
+        else if(fuelAmount < 10 && fuelAmount > 7 ) NotificationManager.current.NewNotif("NO FUEL!", "You have run out of fuel! Call a tow truck.");
     }
 
     // CHECKS ======================================================================
@@ -688,10 +688,11 @@ public class CarController : MonoBehaviour {
             // print("in layer");
             // Calculate the relative velocity between the two colliding objects
             float relativeVelocity = other.relativeVelocity.magnitude;
+            // print("COLLISION: relvel:" + relativeVelocity);
 
-            if(relativeVelocity > 6) {
+            if(relativeVelocity > 7) { //tolerance
                 // damage vehicle
-                AddHealth(-(int)(relativeVelocity/2));
+                AddHealth(-(int)(relativeVelocity));
                 NotificationManager.current.NewNotif("VEHICLE DAMAGED!", "Jeepney health: " + health);
 
                 //damage other

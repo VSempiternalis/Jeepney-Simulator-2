@@ -96,6 +96,12 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
         items.Remove(removeItem);
     }
 
+    public void DestroyItem(GameObject removeItem) {
+        RemoveItem(removeItem);
+
+        Destroy(removeItem);
+    }
+
     public void Clear() {
         List<GameObject> removeList = new List<GameObject>();
 

@@ -21,6 +21,8 @@ public class AudioManager : MonoBehaviour {
     [SerializeField] private float smoothness;
     [SerializeField] private float maxAmbVolume;
 
+    public bool isSayingStop;
+
     private void Awake() {
         current = this;
     }
@@ -40,6 +42,16 @@ public class AudioManager : MonoBehaviour {
         //         isTransitioning = false;
         //     }
         // }
+    }
+
+    public void SayStop() {
+        isSayingStop = true;
+        StartCoroutine(ResetSayStop(3f));
+    }
+
+    IEnumerator ResetSayStop(float delay) {
+        yield return new WaitForSeconds(delay);
+        isSayingStop = false;
     }
 
     // private void InitializePool() {
