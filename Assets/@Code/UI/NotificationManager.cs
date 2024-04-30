@@ -30,7 +30,7 @@ public class NotificationManager : MonoBehaviour {
     }
 
     public void NewNotif(string header, string desc) {
-        if(!Settings.current.isTutorialPanelsOn) return;
+        // if(!Settings.current.isTutorialPanelsOn) return;
         // print("notifs count: " + notifs.childCount);
 
         if(notifs.childCount > 3) {

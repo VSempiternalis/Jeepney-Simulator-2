@@ -186,7 +186,7 @@ public class PlayerInteraction : MonoBehaviour {
         if(lMouseDown) {
             //INTERACTABLE
             if(itemOver.layer == layerInteractable) {
-                if(itemOver.GetComponent<IInteractable>() != null) itemOver.GetComponent<IInteractable>().Interact(gameObject);
+                if(itemOver.GetComponent<IInteractable>() != null && !GetComponent<Crouch>().IsCrouched) itemOver.GetComponent<IInteractable>().Interact(gameObject);
             } 
             //ITEM
             else if(itemOver.layer == layerItem) {
@@ -306,14 +306,14 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     public void ClearItems() {
-        print("clearitems");
+        // print("clearitems");
         rightHand.GetComponent<StorageHandler>().Clear();
         ClearOnhandUI();
         // UpdateOnhandUI();
     }
 
     private void UpdateOnhandUI() {
-        print("updateonhandui");
+        // print("updateonhandui");
         ClearOnhandUI();
 
         //Repopulate onhand ui
@@ -334,7 +334,7 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     private void ClearOnhandUI() {
-        print("clearonhandui");
+        // print("clearonhandui");
         List<Transform> removeList = new List<Transform>();
 
         foreach(Transform onhandItem in onhandUI) {

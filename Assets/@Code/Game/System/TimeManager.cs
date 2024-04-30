@@ -9,7 +9,7 @@ public class TimeManager : MonoBehaviour {
 
     public int time;
     private float minutes;
-    [SerializeField] private float secsPerRealMinute = 1f; //wrong name for variable
+    public float secsPerRealMinute = 1f; //wrong name for variable
     public int hours;
     public int days;
     // [SerializeField] private TMP_Text daysUI;
@@ -32,7 +32,7 @@ public class TimeManager : MonoBehaviour {
     // private bool isShiftEnded; //should only turn to true after 
     private int shiftHoursLeft;
     private int shiftMinutesLeft;
-    private int shiftTimeLeft;
+    public int shiftTimeLeft;
     [SerializeField] private List<TMP_Text> shiftTimeTexts = new List<TMP_Text>();
     // [SerializeField] private TMP_Text shiftTimeTextRed;
     [SerializeField] private Color white;
@@ -87,7 +87,7 @@ public class TimeManager : MonoBehaviour {
 
     #region SHIFTS ==========================================================================================
 
-    //Runs when player doesnt make the boundary
+    //Runs when player makes the boundary
     public void NewShift() {
         // print("NEW SHIFT");
         days ++;
@@ -101,6 +101,7 @@ public class TimeManager : MonoBehaviour {
     public void ResetShiftTime() {
         if(billyTarget) billyTarget.enabled = false;
         shiftTimeLeft = shiftLength * 60;
+        print("shift time left: " + shiftTimeLeft);
         UpdateShiftTimers();
     }
 
