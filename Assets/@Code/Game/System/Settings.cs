@@ -62,7 +62,6 @@ public class Settings : MonoBehaviour {
     public bool isTutorialPanelsOn;
     [SerializeField] private CanvasGroup tutorialUI; //help/page at game start
     [SerializeField] private uiAnimGroup tutorialPanels;
-    [SerializeField] private GameObject propaganda;
 
     [SerializeField] private CarController carCon;
 
@@ -367,7 +366,6 @@ public class Settings : MonoBehaviour {
         else tutorialPanels.Out();
 
         tutorialPanelsToggle.isOn = newValue;
-        propaganda.SetActive(!newValue);
 
         //Saving
         // print("SAVING Fog: " + isFog);

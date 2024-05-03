@@ -312,7 +312,7 @@ public class PlayerInteraction : MonoBehaviour {
         // UpdateOnhandUI();
     }
 
-    private void UpdateOnhandUI() {
+    public void UpdateOnhandUI() {
         // print("updateonhandui");
         ClearOnhandUI();
 

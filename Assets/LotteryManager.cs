@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using TMPro;
 
 public class LotteryManager : MonoBehaviour {
     public static LotteryManager current;
@@ -25,6 +26,13 @@ public class LotteryManager : MonoBehaviour {
     private bool goldAnnounced;
 
     public List<GameObject> tickets;
+
+    [SerializeField] private TMP_Text bronze1Text;
+    [SerializeField] private TMP_Text bronze2Text;
+    [SerializeField] private TMP_Text bronze3Text;
+    [SerializeField] private TMP_Text silver1Text;
+    [SerializeField] private TMP_Text silver2Text;
+    [SerializeField] private TMP_Text gold1Text;
 
     private void Awake() {
         current = this;
@@ -53,7 +61,15 @@ public class LotteryManager : MonoBehaviour {
             //     bronzeAnnounced = true;
             // } //7 mins left: announce silver nums
             // else 
-            if(tm.shiftTimeLeft < 420 && !bronzeAnnounced) {
+            if(tm.shiftTimeLeft < 540 && !bronzeAnnounced) {
+                //SET TEXTS IN GCSO building
+                bronze1Text.text = bronzeNums[0].ToString();
+                bronze2Text.text = bronzeNums[1].ToString();
+                bronze3Text.text = bronzeNums[2].ToString();
+                silver1Text.text = silverNums[0].ToString();
+                silver2Text.text = silverNums[1].ToString();
+                gold1Text.text = goldNums[0].ToString();
+
                 // NotificationManager.current.NewNotif("SILVER WINNERS!", "The Luto SILVER PRIZE numbers are the following: " + silverNums[0] + " and " + silverNums[1] + "\n\nIf you have winning numbers, please proceed to the GCSO building in BBC to claim your P750 reward.\n\nCONGRATULATIONS!");
                 // silverAnnounced = true;
 
@@ -66,7 +82,7 @@ public class LotteryManager : MonoBehaviour {
                 ticketPrinter.SetActive(false);
                 ticketStorage.gameObject.SetActive(true);
                 bronzeAnnounced = true;
-            } else if(tm.shiftTimeLeft < 410 && !silverAnnounced) {
+            } else if(tm.shiftTimeLeft < 530 && !silverAnnounced) {
                 NotificationManager.current.NewNotif("SILVER PRIZE WINNERS!", "The Luto SILVER PRIZE numbers are in! They are: " +
                 silverNums[0] + " and " + silverNums[1] + "!\n\nPRIZE: P750");
                 // "\n\nSILVER:" + silverNums[0] + " and " + silverNums[1] +
@@ -74,7 +90,7 @@ public class LotteryManager : MonoBehaviour {
                 // "\n\nCONGRATULATIONS To the winners! You may now proceed to the GCSO building in BBC to claim your P750 prize!");
                 
                 silverAnnounced = true;
-            } else if(tm.shiftTimeLeft < 400 && !goldAnnounced) {
+            } else if(tm.shiftTimeLeft < 520 && !goldAnnounced) {
                 NotificationManager.current.NewNotif("GOLD PRIZE WINNERS!", "And finally, the Luto GOLD JACKPOT numbers is...\n\n" +
                 goldNums[0] + "!\n\nPRIZE: P2000" +
                 // "\n\nSILVER:" + silverNums[0] + " and " + silverNums[1] +
@@ -142,8 +158,6 @@ public class LotteryManager : MonoBehaviour {
     }
 
     public void NewNums() {
-        print("NEW NUMS");
-
         bronzeNums.Clear();
         silverNums.Clear();
         goldNums.Clear();
@@ -156,12 +170,22 @@ public class LotteryManager : MonoBehaviour {
         ticketPrinter.SetActive(true);
         ticketStorage.gameObject.SetActive(false);
 
+        //RESET TEXTS IN GCSO building
+        bronze1Text.text = "?";
+        bronze2Text.text = "?";
+        bronze3Text.text = "?";
+        silver1Text.text = "?";
+        silver2Text.text = "?";
+        gold1Text.text = "?";
+
         //remove all previous tickets
         foreach(GameObject ticket in tickets) {
             ticket.GetComponent<ItemHandler>().TakeItem(transform);
             Destroy(ticket);
         }
         tickets.Clear();
+
+        PlayerDriveInput.current.GetComponent<PlayerInteraction>().UpdateOnhandUI();
 
         while(true) {
             int rNum = Random.Range(0, 100);

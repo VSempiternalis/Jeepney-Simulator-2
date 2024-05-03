@@ -634,7 +634,7 @@ public class PersonHandler : MonoBehaviour {
 
             // Apply the velocity to the object's Rigidbody
             Vector3 impactVelocity = other.relativeVelocity;
-            GetComponent<Rigidbody>().velocity = impactVelocity * 2;
+            GetComponent<Rigidbody>().velocity = impactVelocity * 3;
             transform.LookAt(other.gameObject.transform);
         }
     }

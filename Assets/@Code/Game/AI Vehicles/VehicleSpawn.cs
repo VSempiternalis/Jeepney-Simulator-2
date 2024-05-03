@@ -16,7 +16,7 @@ public class VehicleSpawn : MonoBehaviour {
     }
 
     private void Update() {
-        DrawLines();
+        // DrawLines();
     }
 
     private void DrawLines() {

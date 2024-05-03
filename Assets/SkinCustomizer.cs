@@ -137,11 +137,12 @@ public class SkinCustomizer : MonoBehaviour {
 
     public void SetDisplay(int index) {
         print("set display: " + skinsOwned.Count);
-        currentSkin = skins[index];
+        // currentSkin = skins[index];
+        Skin displaySkin = skins[index];
 
         //set image
-        displayImage.material = currentSkin.displayImage;
-        nameText.text = currentSkin.skinName;
+        displayImage.material = displaySkin.displayImage;
+        nameText.text = displaySkin.skinName;
 
         //show right button
         if(skinsOwned[index]) {
@@ -150,17 +151,18 @@ public class SkinCustomizer : MonoBehaviour {
         } else {
             buttonOn.SetActive(false);
             buttonOff.SetActive(true);
-            buttonOffText.text = "BUY - P" + currentSkin.price;
+            buttonOffText.text = "BUY - P" + displaySkin.price;
         }
     }
 
     public void SetSWDisplay(int index) {
         print("set sw display: " + swSkinsOwned.Count);
-        currentSWSkin = swSkins[index];
+        // currentSWSkin = swSkins[index];
+        SteeringWheelSkin displaySWSkin = swSkins[index];
 
         //set image
-        swDisplayImage.material = currentSWSkin.displayImage;
-        swNameText.text = currentSWSkin.skinName;
+        swDisplayImage.material = displaySWSkin.displayImage;
+        swNameText.text = displaySWSkin.skinName;
 
         //show right button
         if(swSkinsOwned[index]) {
@@ -169,16 +171,17 @@ public class SkinCustomizer : MonoBehaviour {
         } else {
             swButtonOn.SetActive(false);
             swButtonOff.SetActive(true);
-            swButtonOffText.text = "BUY - P" + currentSWSkin.price;
+            swButtonOffText.text = "BUY - P" + displaySWSkin.price;
         }
     }
 
     public void SetSeatDisplay(int index) {
-        currentSeatsSkin = seatsSkins[index];
+        // currentSeatsSkin = seatsSkins[index];
+        SeatsSkin displaySeatSkin = seatsSkins[index];
 
         //set image
-        seatDisplayImage.material = currentSeatsSkin.displayImage;
-        seatNameText.text = currentSeatsSkin.skinName;
+        seatDisplayImage.material = displaySeatSkin.displayImage;
+        seatNameText.text = displaySeatSkin.skinName;
 
         //show right button
         if(seatSkinsOwned[index]) {
@@ -187,7 +190,7 @@ public class SkinCustomizer : MonoBehaviour {
         } else {
             seatButtonOn.SetActive(false);
             seatButtonOff.SetActive(true);
-            seatButtonOffText.text = "BUY - P" + currentSeatsSkin.price;
+            seatButtonOffText.text = "BUY - P" + displaySeatSkin.price;
         }
     }
 
@@ -330,14 +333,17 @@ public class SkinCustomizer : MonoBehaviour {
     //LOAD CURRENT SKINS
     public void LoadSkin(int index) {
         SetDisplay(index);
+        currentSkin = skins[index];
         SetSkinToCurrent();
     }
     public void LoadSWSkin(int index) {
         SetSWDisplay(index);
+        currentSWSkin = swSkins[index];
         SetSWSkinToCurrent();
     }
     public void LoadSeatSkin(int index) {
         SetSeatDisplay(index);
+        currentSeatsSkin = seatsSkins[index];
         SetSeatSkinToCurrent();
     }
 

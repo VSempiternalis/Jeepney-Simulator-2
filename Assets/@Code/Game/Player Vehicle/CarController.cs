@@ -690,9 +690,9 @@ public class CarController : MonoBehaviour {
             float relativeVelocity = other.relativeVelocity.magnitude;
             // print("COLLISION: relvel:" + relativeVelocity);
 
-            if(relativeVelocity > 7) { //tolerance
+            if(relativeVelocity > 8) { //tolerance
                 // damage vehicle
-                AddHealth(-(int)(relativeVelocity));
+                AddHealth(-(int)(relativeVelocity/2));
                 NotificationManager.current.NewNotif("VEHICLE DAMAGED!", "Jeepney health: " + health);
 
                 //damage other
