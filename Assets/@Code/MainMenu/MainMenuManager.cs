@@ -44,7 +44,7 @@ public class MainMenuManager : MonoBehaviour {
             print("(MAIN MENU) Game_isNewGame: " + (isNewGame? 1:0));
             while(!operation.isDone) {
                 float progress = Mathf.Clamp01(operation.progress/0.9f);
-                print("Loading bar: " + progress);
+                // print("Loading bar: " + progress);
                 loadingProgress.LeanScaleX(progress, 1f);
                 yield return null;
             }
@@ -57,7 +57,7 @@ public class MainMenuManager : MonoBehaviour {
             print("(MAIN MENU) Game_isNewGame: " + (isNewGame? 1:0));
             while(!operation.isDone) {
                 float progress = Mathf.Clamp01(operation.progress/0.9f);
-                print("Loading bar: " + progress);
+                // print("Loading bar: " + progress);
                 loadingProgress.LeanScaleX(progress, 1f);
                 yield return null;
             }

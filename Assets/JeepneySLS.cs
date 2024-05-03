@@ -255,6 +255,8 @@ public class JeepneySLS : MonoBehaviour {
     }
 
     public void LoadPrevious() { //load previous save or default
+        if(gameMode == "Freeride") return;
+        
         bool isNewGame = TimeManager.current.days == 1? true:false;
 
         if(isNewGame) LoadDefault();

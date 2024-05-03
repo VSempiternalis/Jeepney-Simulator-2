@@ -9,9 +9,12 @@ public class SkinCustomizer : MonoBehaviour {
     [SerializeField] private List<Skin> skins;
     [SerializeField] private List<SteeringWheelSkin> swSkins;
     [SerializeField] private List<SeatsSkin> seatsSkins;
-    private Skin currentSkin;
+    private Skin currentSkin; //DISPLAY
+    private Skin currentSkinOnJeep; //ON JEEP
     private SteeringWheelSkin currentSWSkin;
+    private SteeringWheelSkin currentSWSkinOnJeep; //ON JEEP
     private SeatsSkin currentSeatsSkin;
+    private SeatsSkin currentSeatsSkinOnJeep; //ON JEEP
     [SerializeField] private List<bool> skinsOwned;
     [SerializeField] private List<bool> swSkinsOwned;
     [SerializeField] private List<bool> seatSkinsOwned;
@@ -137,12 +140,12 @@ public class SkinCustomizer : MonoBehaviour {
 
     public void SetDisplay(int index) {
         print("set display: " + skinsOwned.Count);
-        // currentSkin = skins[index];
-        Skin displaySkin = skins[index];
+        currentSkin = skins[index];
+        // Skin displaySkin = skins[index];
 
         //set image
-        displayImage.material = displaySkin.displayImage;
-        nameText.text = displaySkin.skinName;
+        displayImage.material = currentSkin.displayImage;
+        nameText.text = currentSkin.skinName;
 
         //show right button
         if(skinsOwned[index]) {
@@ -151,18 +154,18 @@ public class SkinCustomizer : MonoBehaviour {
         } else {
             buttonOn.SetActive(false);
             buttonOff.SetActive(true);
-            buttonOffText.text = "BUY - P" + displaySkin.price;
+            buttonOffText.text = "BUY - P" + currentSkin.price;
         }
     }
 
     public void SetSWDisplay(int index) {
         print("set sw display: " + swSkinsOwned.Count);
-        // currentSWSkin = swSkins[index];
-        SteeringWheelSkin displaySWSkin = swSkins[index];
+        currentSWSkin = swSkins[index];
+        // SteeringWheelSkin displaySWSkin = swSkins[index];
 
         //set image
-        swDisplayImage.material = displaySWSkin.displayImage;
-        swNameText.text = displaySWSkin.skinName;
+        swDisplayImage.material = currentSWSkin.displayImage;
+        swNameText.text = currentSWSkin.skinName;
 
         //show right button
         if(swSkinsOwned[index]) {
@@ -171,17 +174,17 @@ public class SkinCustomizer : MonoBehaviour {
         } else {
             swButtonOn.SetActive(false);
             swButtonOff.SetActive(true);
-            swButtonOffText.text = "BUY - P" + displaySWSkin.price;
+            swButtonOffText.text = "BUY - P" + currentSWSkin.price;
         }
     }
 
     public void SetSeatDisplay(int index) {
-        // currentSeatsSkin = seatsSkins[index];
-        SeatsSkin displaySeatSkin = seatsSkins[index];
+        currentSeatsSkin = seatsSkins[index];
+        // SeatsSkin displaySeatSkin = seatsSkins[index];
 
         //set image
-        seatDisplayImage.material = displaySeatSkin.displayImage;
-        seatNameText.text = displaySeatSkin.skinName;
+        seatDisplayImage.material = currentSeatsSkin.displayImage;
+        seatNameText.text = currentSeatsSkin.skinName;
 
         //show right button
         if(seatSkinsOwned[index]) {
@@ -190,7 +193,7 @@ public class SkinCustomizer : MonoBehaviour {
         } else {
             seatButtonOn.SetActive(false);
             seatButtonOff.SetActive(true);
-            seatButtonOffText.text = "BUY - P" + displaySeatSkin.price;
+            seatButtonOffText.text = "BUY - P" + currentSeatsSkin.price;
         }
     }
 
@@ -220,6 +223,8 @@ public class SkinCustomizer : MonoBehaviour {
         Material[] roofMats = roof.materials;
         roofMats[1] = currentSkin.roofSkin;
         roof.materials = roofMats;
+
+        currentSkinOnJeep = currentSkin;
     }
 
     public void SetSWSkinToCurrent() {
@@ -229,6 +234,8 @@ public class SkinCustomizer : MonoBehaviour {
         Material[] swMats = swMesh.materials;
         swMats[0] = currentSWSkin.skin;
         swMesh.materials = swMats;
+
+        currentSWSkinOnJeep = currentSWSkin;
     }
 
     public void SetSeatSkinToCurrent() {
@@ -246,6 +253,8 @@ public class SkinCustomizer : MonoBehaviour {
         foreach(MeshRenderer mesh in rearMeshes) {
             mesh.materials = rearMats;
         }
+
+        currentSeatsSkinOnJeep = currentSeatsSkin;
     }
 
     #endregion SET SKIN TO CURRENT
@@ -287,13 +296,16 @@ public class SkinCustomizer : MonoBehaviour {
 
     //SAVE CURRENT SKIN
     public int GetCurrentSkin() {
-        return skins.IndexOf(currentSkin);
+        print("GetCurrentSkin: " + skins.IndexOf(currentSkinOnJeep));
+        return skins.IndexOf(currentSkinOnJeep);
     }
     public int GetCurrentSWSkin() {
-        return swSkins.IndexOf(currentSWSkin);
+        print("GetCurrentSWSkin: " + swSkins.IndexOf(currentSWSkinOnJeep));
+        return swSkins.IndexOf(currentSWSkinOnJeep);
     }
     public int GetCurrentSeatSkin() {
-        return seatsSkins.IndexOf(currentSeatsSkin);
+        print("GetCurrentSeatsSkin: " + seatsSkins.IndexOf(currentSeatsSkinOnJeep));
+        return seatsSkins.IndexOf(currentSeatsSkinOnJeep);
     }
 
     //LOADING
@@ -333,22 +345,24 @@ public class SkinCustomizer : MonoBehaviour {
     //LOAD CURRENT SKINS
     public void LoadSkin(int index) {
         SetDisplay(index);
-        currentSkin = skins[index];
+        // currentSkin = skins[index];
         SetSkinToCurrent();
     }
     public void LoadSWSkin(int index) {
+        print("Loading sws skin: " + index + " / " + swSkins.Count);
         SetSWDisplay(index);
-        currentSWSkin = swSkins[index];
+        // currentSWSkin = swSkins[index];
         SetSWSkinToCurrent();
     }
     public void LoadSeatSkin(int index) {
         SetSeatDisplay(index);
-        currentSeatsSkin = seatsSkins[index];
+        // currentSeatsSkin = seatsSkins[index];
         SetSeatSkinToCurrent();
     }
 
     //DEFAULT
     public void LoadDefaultSkins() {
+        print("Loading default skins");
         // populate skins owned list
         for(int i = 0; i < skins.Count; i++) {
             skinsOwned.Add(false);
@@ -361,8 +375,11 @@ public class SkinCustomizer : MonoBehaviour {
         }
 
         SetDisplay(3);
+        currentSkinOnJeep = skins[3];
         SetSWDisplay(2);
+        currentSWSkinOnJeep = swSkins[2];
         SetSeatDisplay(0);
+        currentSeatsSkinOnJeep = seatsSkins[0];
 
         SetSkinToCurrent();
         SetSWSkinToCurrent();
