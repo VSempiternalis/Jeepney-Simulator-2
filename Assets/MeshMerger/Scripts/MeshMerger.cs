@@ -10,6 +10,8 @@ public class MeshMerger : MonoBehaviour
     [SerializeField] private Transform _meshPivot;
 
     [Header("Save properties")]
+    [SerializeField] private bool isAutomatic = true;
+    [SerializeField] private bool useCurrentName = true;
     [SerializeField] private string _objectName = "MergedObject";
 #if(UNITY_EDITOR)
     [SerializeField] private bool _saveMesh;
@@ -18,8 +20,15 @@ public class MeshMerger : MonoBehaviour
     private MeshSaver _meshSaver = new MeshSaver();
 #endif
 
-    public void Merge()
-    {
+    public void Merge() {
+        print("MERGING: " + gameObject.name);
+
+        if(isAutomatic) {
+            _mergeObjects = new Transform[]{transform};
+            _meshPivot = transform;
+            useCurrentName = true;
+        }
+
         Transform[] _meshesTransforms = GetTargetTranforms(_mergeObjects).Distinct().ToArray();
         Mesh[] meshes = new Mesh[_meshesTransforms.Length];
         meshes = _meshesTransforms.Select(transform => transform.GetComponent<MeshFilter>().sharedMesh).ToArray();
@@ -216,9 +225,15 @@ public class MeshMerger : MonoBehaviour
 
     private GameObject CreateGameObject(Mesh mesh, Material[] materials)
     {
-        GameObject house = new GameObject(_objectName);
+        string nameToUse = _objectName;
+        if(useCurrentName) nameToUse = "MO - " + gameObject.name;
+        GameObject house = new GameObject(nameToUse);
         house.AddComponent<MeshFilter>().sharedMesh = mesh;
         house.AddComponent<MeshRenderer>().sharedMaterials = materials;
+
+        //auto place in parent position
+        house.transform.position = transform.position;
+        house.transform.SetParent(transform);
 
         return house;
     }
