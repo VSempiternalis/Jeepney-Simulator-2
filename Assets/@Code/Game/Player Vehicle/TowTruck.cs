@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class TowTruck : MonoBehaviour {
     public static TowTruck current;
@@ -6,10 +7,14 @@ public class TowTruck : MonoBehaviour {
 
     [SerializeField] private Transform officePoint;
     private BoundaryManager bm;
+    private Rigidbody rb;
 
     //PRICES
     [SerializeField] private int towPrice;
     [SerializeField] private int towToOfficePrice;
+    [SerializeField] private int towToNearestGasStationPrice;
+
+    [SerializeField] private List<Transform> gasStations;
 
     private void Awake() {
         current = this;
@@ -17,6 +22,7 @@ public class TowTruck : MonoBehaviour {
 
     private void Start() {
         bm = BoundaryManager.current;
+        rb = GetComponent<Rigidbody>();
         // carcon = GetComponent<Transform>();
     }
 
@@ -38,6 +44,9 @@ public class TowTruck : MonoBehaviour {
         //rotation
         transform.rotation = Quaternion.identity;
 
+        rb.isKinematic = true;
+        rb.isKinematic = false;
+
         //fade
         Fader.current.Yawn(0.1f, "Towing jeepney...", 1f);
 
@@ -54,8 +63,46 @@ public class TowTruck : MonoBehaviour {
         transform.position = officePoint.position;
         transform.rotation = officePoint.rotation;
 
+        rb.isKinematic = true;
+        rb.isKinematic = false;
+
         //fade
         Fader.current.Yawn(0.1f, "Towing jeepney to Billy's Office...", 1f);
+
+        //audio
+        AudioManager.current.PlayUI(1);
+    }
+
+    public void TowToNearestGasStation() {
+        float dist = 10000;
+        Transform nearestGasStation = null;
+
+        foreach(Transform gs in gasStations) {
+            float gsDist = Vector3.Distance(transform.position, gs.position);
+
+            if(gsDist < dist) {
+                dist = gsDist;
+                nearestGasStation = gs;
+            }
+        }
+
+        if(nearestGasStation == null) return;
+
+        
+        if(!bm.CanPay(towToNearestGasStationPrice)) {
+            NotificationManager.current.NewNotif("NOT ENOUGH DEPOSIT!", "There is not enough money in your deposit to tow!");
+            return;
+        }
+
+        transform.position = nearestGasStation.position;
+        transform.rotation = nearestGasStation.rotation;
+
+        rb.isKinematic = true;
+        rb.isKinematic = false;
+
+
+        //fade
+        Fader.current.Yawn(0.1f, "Towing jeepney to nearest gas station...", 1f);
 
         //audio
         AudioManager.current.PlayUI(1);

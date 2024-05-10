@@ -106,6 +106,10 @@ public class BoundaryManager : MonoBehaviour {
 
     public void CalculateFailureCharge() {
         if(!PlayerDriveInput.current.carCon) return;
+        if(!doBoundary) {
+            failureCharge = 0;
+            return;
+        }
 
         int passengers = PlayerDriveInput.current.carCon.GetComponent<CarController>().passengerCount;
         failureCharge = passengers * failureChargePerPerson;

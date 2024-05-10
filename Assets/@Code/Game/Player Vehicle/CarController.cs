@@ -6,6 +6,7 @@ using TMPro;
 
 public class CarController : MonoBehaviour {
     [SerializeField] private GameObject headlights;
+    private TimeManager tm;
 
     [Space(10)]
     [Header("FUEL")]
@@ -180,6 +181,7 @@ public class CarController : MonoBehaviour {
     private void Start() {
         ah = GetComponent<AudioHandler>();
         carRb = GetComponent<Rigidbody>();
+        tm = TimeManager.current;
         carRb.centerOfMass = centerOfMass;
         // swStandardRot = steeringWheel.transform.rotation.eulerAngles;
         swStandardRot.x = -34.624f;
@@ -391,7 +393,7 @@ public class CarController : MonoBehaviour {
     #region FUEL ======================================================================
 
     private void FuelDrain() {
-        if(!isEngineOn) return;
+        if(!isEngineOn || tm.isPauseShift) return;
 
         AddFuel(-fuelLoss);
     }
