@@ -94,7 +94,7 @@ public class SkinCustomizer : MonoBehaviour {
     #region TRYBUY =======================================================================================
 
     public void TryBuyCurrentSkin() {
-        print("BUYING SKIN: " + currentSkin.skinName);
+        // print("BUYING SKIN: " + currentSkin.skinName);
 
         // check if can afford
         if(bm.deposit >= currentSkin.price) {
@@ -108,7 +108,7 @@ public class SkinCustomizer : MonoBehaviour {
     }
 
     public void TryBuyCurrentSWSkin() {
-        print("BUYING SKIN: " + currentSWSkin.skinName);
+        // print("BUYING SKIN: " + currentSWSkin.skinName);
 
         // check if can afford
         if(bm.deposit >= currentSWSkin.price) {
@@ -122,7 +122,7 @@ public class SkinCustomizer : MonoBehaviour {
     }
 
     public void TryBuyCurrentSeatSkin() {
-        print("BUYING SKIN: " + currentSeatsSkin.skinName);
+        // print("BUYING SKIN: " + currentSeatsSkin.skinName);
 
         // check if can afford
         if(bm.deposit >= currentSeatsSkin.price) {
@@ -139,7 +139,7 @@ public class SkinCustomizer : MonoBehaviour {
     #region SET DISPLAY ============================================================================
 
     public void SetDisplay(int index) {
-        print("set display: " + skinsOwned.Count);
+        // print("set display: " + skinsOwned.Count);
         currentSkin = skins[index];
         // Skin displaySkin = skins[index];
 
@@ -159,7 +159,7 @@ public class SkinCustomizer : MonoBehaviour {
     }
 
     public void SetSWDisplay(int index) {
-        print("set sw display: " + swSkinsOwned.Count);
+        // print("set sw display: " + swSkinsOwned.Count);
         currentSWSkin = swSkins[index];
         // SteeringWheelSkin displaySWSkin = swSkins[index];
 
@@ -349,7 +349,7 @@ public class SkinCustomizer : MonoBehaviour {
         SetSkinToCurrent();
     }
     public void LoadSWSkin(int index) {
-        print("Loading sws skin: " + index + " / " + swSkins.Count);
+        // print("Loading sws skin: " + index + " / " + swSkins.Count);
         SetSWDisplay(index);
         // currentSWSkin = swSkins[index];
         SetSWSkinToCurrent();
@@ -362,7 +362,7 @@ public class SkinCustomizer : MonoBehaviour {
 
     //DEFAULT
     public void LoadDefaultSkins() {
-        print("Loading default skins");
+        // print("Loading default skins");
         // populate skins owned list
         for(int i = 0; i < skins.Count; i++) {
             skinsOwned.Add(false);

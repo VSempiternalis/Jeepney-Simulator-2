@@ -42,10 +42,10 @@ public class SaveLoadSystem : MonoBehaviour {
 
     [Space(10)]
     [Header("SETUP")]
-    [SerializeField] private Transform spawnPoint;
-    [SerializeField] private Transform mainJeepSpawnPoint;
-    [SerializeField] private Transform player;
-    [SerializeField] private Transform mainJeep;
+    // [SerializeField] private Transform spawnPoint;
+    // [SerializeField] private Transform mainJeepSpawnPoint;
+    // [SerializeField] private Transform player;
+    // [SerializeField] private Transform mainJeep;
 
     [Space(10)]
     [Header("TUTORIAL UI")]
@@ -77,6 +77,13 @@ public class SaveLoadSystem : MonoBehaviour {
         JeepneyPanel.current.Setup();
         SpawnArea.current.isRoadEvents = isEvents;
 
+        //load houses
+        HousePanel.current.Load();
+
+        //load gamemanager player house num
+        int playerHouse = 0;
+        if(!isNewGame) playerHouse = PlayerPrefs.GetInt(gameMode + "_PlayerHouse", 0);
+        GameManager.current.SetPlayerHouse(playerHouse);
         Setup();
     }
 
@@ -126,10 +133,10 @@ public class SaveLoadSystem : MonoBehaviour {
     }
 
     private void Setup() {
-        player.position = spawnPoint.position;
-        // player.rotation = spawnPoint.rotation;
-        mainJeep.position = mainJeepSpawnPoint.position;
-        mainJeep.rotation = mainJeepSpawnPoint.rotation;
+        GameManager.current.Setup();
+        // player.position = spawnPoint.position;
+        // mainJeep.position = mainJeepSpawnPoint.position;
+        // mainJeep.rotation = mainJeepSpawnPoint.rotation;
     }
 
     private void LoadFreerideSettings() {
@@ -308,6 +315,9 @@ public class SaveLoadSystem : MonoBehaviour {
                 PlayerPrefs.SetInt("Career_HS_ShiftLength", shiftLength);
             }
         }
+        
+        //SPAWN LOCATION
+        PlayerPrefs.SetInt(gameMode + "_PlayerHouse", GameManager.current.playerSpawnLocation);
 
         Setup();
     }
@@ -316,15 +326,7 @@ public class SaveLoadSystem : MonoBehaviour {
         bool isNewGame = TimeManager.current.days == 1? true:false;
 
         GameStart(isNewGame);
-
-        // if(gameMode == "Freeride") {
-        //     if(days == 1) LoadFreerideSettings();
-        //     else LoadFreerideSettings();
-        //     LoadFreeride();
-        // } else {
-        //     LoadCareerSettings();
-        //     LoadCareer();
-        // }
+        
         Setup();
     }
 

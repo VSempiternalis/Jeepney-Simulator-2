@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 public class JeepneyPanel : MonoBehaviour {
     public static JeepneyPanel current;
@@ -16,9 +17,12 @@ public class JeepneyPanel : MonoBehaviour {
     private int missingHealth;
     [SerializeField] private float pesoPerHealth;
     private int repairCost;
-    [SerializeField] private TMP_Text repairButtonText;
-    [SerializeField] private TMP_Text healthText;
-    [SerializeField] private Transform healthBar;
+    // [SerializeField] private TMP_Text repairButtonText;
+    // [SerializeField] private TMP_Text healthText;
+    // [SerializeField] private Transform healthBar;
+    [SerializeField] private List<TMP_Text> repairButtonTexts;
+    [SerializeField] private List<TMP_Text> healthTexts;
+    [SerializeField] private List<Transform> healthBars;
 
     [Header("HEALTH UPGRADE")]
     [SerializeField] private int maxHealthUpg; //health upgrades stop when this value is reached
@@ -33,12 +37,16 @@ public class JeepneyPanel : MonoBehaviour {
     [SerializeField] private TMP_Text refuelButtonText;
     [SerializeField] private TMP_Text fuelText;
     [SerializeField] private Transform fuelBar;
+    [SerializeField] private List<TMP_Text> refuelButtonTexts;
+    [SerializeField] private List<TMP_Text> fuelTexts;
+    [SerializeField] private List<Transform> fuelBars;
 
     [Header("FUEL CAPACITY")]
     [SerializeField] private int fuelCapUpgAdd;
     [SerializeField] private int maxFuelCap;
     [SerializeField] private int fuelCapUpgCost;
     [SerializeField] private TMP_Text fuelCapUpgButtonText;
+    [SerializeField] private List<TMP_Text> fuelCapUpgButtonTexts;
 
     [Header("FUEL EFFICIENCY")]
     private int eff;
@@ -55,6 +63,9 @@ public class JeepneyPanel : MonoBehaviour {
     [SerializeField] private TMP_Text maxGearButtonText;
     [SerializeField] private TMP_Text gearText;
     [SerializeField] private Transform maxGearBar;
+    [SerializeField] private List<TMP_Text> maxGearButtonTexts;
+    [SerializeField] private List<TMP_Text> gearTexts;
+    [SerializeField] private List<Transform> maxGearBars;
 
     private void Awake() {
         current = this;
@@ -89,34 +100,63 @@ public class JeepneyPanel : MonoBehaviour {
             maxHealth = Mathf.RoundToInt(carcon.maxHealth);
             missingHealth = maxHealth - health;
             repairCost = Mathf.RoundToInt(missingHealth * pesoPerHealth);
-            repairButtonText.text = "REPAIR - P" + repairCost;
-            healthText.text = health + "/" + maxHealth;
-            UpdateBar(healthBar, health, maxHealth);
+            // repairButtonText.text = "REPAIR - P" + repairCost;
+            // healthText.text = health + "/" + maxHealth;
+            // UpdateBar(healthBar, health, maxHealth);
+            foreach(TMP_Text text in repairButtonTexts) {
+                text.text = "REPAIR - P" + repairCost;
+            }
+            foreach(TMP_Text text in healthTexts) {
+                text.text = health + "/" + maxHealth;
+            }
+            foreach(Transform bar in healthBars) {
+                UpdateBar(bar, health, maxHealth);
+            }
 
             //Fuel
             fuel = Mathf.RoundToInt(carcon.fuelAmount);
             fuelCap = Mathf.RoundToInt(carcon.fuelCapacity);
             missingFuel = fuelCap - fuel;
             refuelCost = Mathf.RoundToInt((missingFuel/1000) * GameManager.current.pricePerLiter);
-            refuelButtonText.text = "REFUEL - P" + refuelCost;
-            fuelText.text = (fuel/1000) + "L/" + (fuelCap/1000) + "L";
-            UpdateBar(fuelBar, fuel, fuelCap);
+            // refuelButtonText.text = "REFUEL - P" + refuelCost;
+            // fuelText.text = (fuel/1000) + "L/" + (fuelCap/1000) + "L";
+            // UpdateBar(fuelBar, fuel, fuelCap);
+            foreach(TMP_Text text in refuelButtonTexts) {
+                text.text = "REFUEL - P" + refuelCost;
+            }
+            foreach(TMP_Text text in fuelTexts) {
+                text.text = (fuel/1000) + "L/" + (fuelCap/1000) + "L";
+            }
+            foreach(Transform bar in fuelBars) {
+                UpdateBar(bar, fuel, fuelCap);
+            }
 
             //Fuel capacity
-            fuelCapUpgButtonText.text = "UPGRADE - P" + fuelCapUpgCost;
+            // fuelCapUpgButtonText.text = "UPGRADE - P" + fuelCapUpgCost;
+            foreach(TMP_Text text in fuelCapUpgButtonTexts) {
+                text.text = "UPGRADE - P" + fuelCapUpgCost;
+            }
 
             //Efficiency
             eff = carcon.fuelLoss;
             effButtonText.text = "UPGRADE - P" + effCost;
             effText.text = (eff * 10) + "% Fuel Loss";
-            // effText.text = eff + "/" + maxEff;
             UpdateBar(effBar, eff, maxEff);
 
             //Gear
             int carMaxGear = carcon.maxGear;
-            maxGearButtonText.text = "UPGRADE - P" + gearUpgCost;
-            gearText.text = (carMaxGear-1) + "/" + (maxGear-1);
-            UpdateBar(maxGearBar, carMaxGear-2, maxGear-2);
+            // maxGearButtonText.text = "UPGRADE - P" + gearUpgCost;
+            // gearText.text = (carMaxGear-1) + "/" + (maxGear-1);
+            // UpdateBar(maxGearBar, carMaxGear-2, maxGear-2);
+            foreach(TMP_Text text in maxGearButtonTexts) {
+                text.text = "UPGRADE - P" + gearUpgCost;
+            }
+            foreach(TMP_Text text in gearTexts) {
+                text.text = (carMaxGear-1) + "/" + (maxGear-1);
+            }
+            foreach(Transform bar in maxGearBars) {
+                UpdateBar(bar, carMaxGear-2, maxGear-2);
+            }
         // }
     }
 

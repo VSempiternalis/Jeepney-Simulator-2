@@ -69,7 +69,6 @@ public class RouteSelector : MonoBehaviour {
 
     private void AllDestsOff() {
         destinations.Clear();
-        // destinations = allDestinations;
         lockedDestinations.Clear();
 
         foreach(TMP_Text officeText in officeTexts) {
@@ -94,10 +93,4 @@ public class RouteSelector : MonoBehaviour {
             }
         }
     }
-
-    // public void ToggleAllDestinations(bool isOn) {
-    //     foreach(Toggle destButton in destinationButtons) {
-    //         if(destButton.interactable) destButton.isOn = isOn;
-        // }
-    // }
 }

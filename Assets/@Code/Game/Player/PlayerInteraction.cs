@@ -387,6 +387,8 @@ public class PlayerInteraction : MonoBehaviour {
             TimeManager.current.TryStartShift();
         } else if(go.CompareTag("EndShiftTrigger")) {
             TimeManager.current.TryEndShift();
+            GameManager.current.SetPlayerHouse(go.GetComponent<House>().houseNum);
+            // GameManager.current.playerHouse = go.GetComponent<House>().houseNum;
         }
 
         //Audio Area

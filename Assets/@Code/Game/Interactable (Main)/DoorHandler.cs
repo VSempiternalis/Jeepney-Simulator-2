@@ -43,7 +43,7 @@ public class DoorHandler : MonoBehaviour, IInteractable, ITooltipable {
     public void Interact(GameObject interactor) {
         if(isLocked) {
             //Play jiggle audio
-            // audioHandler.Play(2);
+            AudioManager.current.PlayUI(7);
             return;
         }
         

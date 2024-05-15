@@ -21,6 +21,7 @@ public class BoundaryManager : MonoBehaviour {
 
     [SerializeField] private Transform depositTo;
     [SerializeField] private StorageHandler storage;
+    [SerializeField] private List<StorageHandler> depositStorages;
 
     [SerializeField] private Color white;
     [SerializeField] private Color green;
@@ -34,8 +35,9 @@ public class BoundaryManager : MonoBehaviour {
     [SerializeField] private List<TMP_Text> failureChargeTexts = new List<TMP_Text>();
     [SerializeField] private List<TMP_Text> totalTexts = new List<TMP_Text>();
 
-    [SerializeField] private Transform spawnPoint;
-    [SerializeField] private DoorHandler officeDoor;
+    // [SerializeField] private Transform spawnPoint;
+    // [SerializeField] private DoorHandler officeDoor;
+    [SerializeField] private List<DoorHandler> doors;
 
     [Space(10)]
     [Header("VEHICLE")]
@@ -165,15 +167,19 @@ public class BoundaryManager : MonoBehaviour {
     }
 
     public void StorageToDeposit() {
-        deposit += storage.value;
+        foreach(StorageHandler depositStorage in depositStorages) {
+            deposit += depositStorage.value;
+
+            //animate
+            depositStorage.Clear();
+        }
+        // deposit += storage.value;
 
         // CalculateTotal();
         UpdateTexts();
 
         //animate
-        storage.Clear();
-
-        //audio
+        // storage.Clear();
     }
 
     public void CompleteShift() {
@@ -196,6 +202,7 @@ public class BoundaryManager : MonoBehaviour {
                 LotteryManager.current.NewNums(); //MUST BE AFTER TIME RESET
                 SaveLoadSystem.current.SaveGame();
                 PlayerDriveInput.current.carCon.GetComponent<JeepneySLS>().Save();
+                HousePanel.current.Save();
 
                 am.PlayUI(3);
 
@@ -241,7 +248,10 @@ public class BoundaryManager : MonoBehaviour {
         PlayerDriveInput.current.SetPickups(SaveLoadSystem.current.isPassengerPickups);
         RouteSelector.current.NewShift(3); //3 is dests to lock
         //Door
-        if(officeDoor.state == "Open" || officeDoor.state == "Opening") officeDoor.NewState("Closing"); //Interact(gameObject);
+        foreach(DoorHandler door in doors) {
+            if(door.state == "Open" || door.state == "Opening") door.NewState("Closing"); //Interact(gameObject);
+        }
+        // if(officeDoor.state == "Open" || officeDoor.state == "Opening") officeDoor.NewState("Closing"); //Interact(gameObject);
 
         //Clear jeepney seats
         carCon.NewDay();
