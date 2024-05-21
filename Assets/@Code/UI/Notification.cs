@@ -1,13 +1,17 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using UnityEngine.UI;
 
 public class Notification : MonoBehaviour {
     public TMP_Text headerText;
+    [SerializeField] private Image headerImg;
     [SerializeField] private TMP_Text descText;
     [SerializeField] private GameObject descImg;
     [SerializeField] private bool isPermanent;
     [SerializeField] private float duration;
+
+    [SerializeField] private Color whiteHeaderText;
 
     private void Start() {
         // gameObject.SetActive(true);
@@ -24,6 +28,11 @@ public class Notification : MonoBehaviour {
             descImg.SetActive(true);
         }
         // if(!gameObject.activeSelf) gameObject.SetActive(true);
+    }
+
+    public void SetHeaderColor(Color newColor) {
+        headerImg.color = newColor;
+        headerText.color = whiteHeaderText;
     }
 
     public void Setup(string header, string desc) {

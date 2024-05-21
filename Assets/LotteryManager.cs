@@ -73,8 +73,8 @@ public class LotteryManager : MonoBehaviour {
                 // NotificationManager.current.NewNotif("SILVER WINNERS!", "The Luto SILVER PRIZE numbers are the following: " + silverNums[0] + " and " + silverNums[1] + "\n\nIf you have winning numbers, please proceed to the GCSO building in BBC to claim your P750 reward.\n\nCONGRATULATIONS!");
                 // silverAnnounced = true;
 
-                NotificationManager.current.NewNotif("BRONZE PRIZE WINNERS!", "The Luto BRONZE PRIZE numbers are in! They are: " +
-                bronzeNums[0] + ", " + bronzeNums[1] + ", and " + bronzeNums[2] + "!\n\nPRIZE: P400");
+                NotificationManager.current.NewNotifColor("BRONZE PRIZE WINNERS!", "The Luto BRONZE PRIZE numbers are in! They are: " +
+                bronzeNums[0] + ", " + bronzeNums[1] + ", and " + bronzeNums[2] + "!\n\nPRIZE: P400", 1);
                 // "\n\nSILVER:" + silverNums[0] + " and " + silverNums[1] +
                 // "\n\nGOLD:" + goldNums[0] + 
                 // "\n\nCONGRATULATIONS To the winners! You may now proceed to the GCSO building in BBC to claim your P400 prize!");
@@ -83,19 +83,19 @@ public class LotteryManager : MonoBehaviour {
                 ticketStorage.gameObject.SetActive(true);
                 bronzeAnnounced = true;
             } else if(tm.shiftTimeLeft < 530 && !silverAnnounced) {
-                NotificationManager.current.NewNotif("SILVER PRIZE WINNERS!", "The Luto SILVER PRIZE numbers are in! They are: " +
-                silverNums[0] + " and " + silverNums[1] + "!\n\nPRIZE: P750");
+                NotificationManager.current.NewNotifColor("SILVER PRIZE WINNERS!", "The Luto SILVER PRIZE numbers are in! They are: " +
+                silverNums[0] + " and " + silverNums[1] + "!\n\nPRIZE: P750", 1);
                 // "\n\nSILVER:" + silverNums[0] + " and " + silverNums[1] +
                 // "\n\nGOLD:" + goldNums[0] + 
                 // "\n\nCONGRATULATIONS To the winners! You may now proceed to the GCSO building in BBC to claim your P750 prize!");
                 
                 silverAnnounced = true;
             } else if(tm.shiftTimeLeft < 520 && !goldAnnounced) {
-                NotificationManager.current.NewNotif("GOLD PRIZE WINNERS!", "And finally, the Luto GOLD JACKPOT numbers is...\n\n" +
+                NotificationManager.current.NewNotifColor("GOLD PRIZE WINNERS!", "And finally, the Luto GOLD JACKPOT numbers is...\n\n" +
                 goldNums[0] + "!\n\nPRIZE: P2000" +
                 // "\n\nSILVER:" + silverNums[0] + " and " + silverNums[1] +
                 // "\n\nGOLD:" + goldNums[0] + 
-                "\n\nCONGRATULATIONS To the winners! You may now proceed to the GCSO building in BBC to claim your rewards!");
+                "\n\nCONGRATULATIONS To the winners! You may now proceed to the GCSO building in BBC to claim your rewards!", 1);
                 
                 goldAnnounced = true;
             }
@@ -129,19 +129,19 @@ public class LotteryManager : MonoBehaviour {
                             print("BRONZE");
                             // removeList.Add(item);
                             BoundaryManager.current.AddToDeposit(bronzePrize);
-                            NotificationManager.current.NewNotif("BRONZE PRIZE!", "CONGRATULATIONS! You have won the BRONZE PRIZE. P400 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit);
+                            NotificationManager.current.NewNotifColor("BRONZE PRIZE!", "CONGRATULATIONS! You have won the BRONZE PRIZE. P400 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
                         }
                         else if(silverNums.Contains(num)) {
                             print("SILVER");
                             // removeList.Add(item);
                             BoundaryManager.current.AddToDeposit(silverPrize);
-                            NotificationManager.current.NewNotif("BRONZE PRIZE!", "CONGRATULATIONS! You have won the SILVER PRIZE. P750 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit);
+                            NotificationManager.current.NewNotifColor("SILVER PRIZE!", "CONGRATULATIONS! You have won the SILVER PRIZE. P750 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
                         }
                         else if(goldNums.Contains(num)) {
                             print("GOLD");
                             // removeList.Add(item);
                             BoundaryManager.current.AddToDeposit(goldPrize);
-                            NotificationManager.current.NewNotif("BRONZE PRIZE!", "CONGRATULATIONS! You have won the GOLD PRIZE. P2000 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit);
+                            NotificationManager.current.NewNotifColor("GOLD PRIZE!", "CONGRATULATIONS! You have won the GOLD PRIZE. P2000 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
                         }
                         else print("ERROR!");
                     }

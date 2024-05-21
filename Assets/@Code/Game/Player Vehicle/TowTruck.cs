@@ -32,7 +32,7 @@ public class TowTruck : MonoBehaviour {
 
     public void Tow() {
         if(!bm.CanPay(towPrice)) {
-            NotificationManager.current.NewNotif("NOT ENOUGH DEPOSIT!", "There is not enough money in your deposit to tow!");
+            NotificationManager.current.NewNotifColor("NOT ENOUGH DEPOSIT!", "There is not enough money in your deposit to tow!", 2);
             return;
         }
 
@@ -56,7 +56,7 @@ public class TowTruck : MonoBehaviour {
 
     public void TowToOffice() {
         if(!bm.CanPay(towToOfficePrice)) {
-            NotificationManager.current.NewNotif("NOT ENOUGH DEPOSIT!", "There is not enough money in your deposit to tow!");
+            NotificationManager.current.NewNotifColor("NOT ENOUGH DEPOSIT!", "There is not enough money in your deposit to tow!", 2);
             return;
         }
 
@@ -90,7 +90,7 @@ public class TowTruck : MonoBehaviour {
 
         
         if(!bm.CanPay(towToNearestGasStationPrice)) {
-            NotificationManager.current.NewNotif("NOT ENOUGH DEPOSIT!", "There is not enough money in your deposit to tow!");
+            NotificationManager.current.NewNotifColor("NOT ENOUGH DEPOSIT!", "There is not enough money in your deposit to tow!", 2);
             return;
         }
 

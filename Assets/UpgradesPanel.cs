@@ -48,7 +48,7 @@ public class UpgradesPanel : MonoBehaviour {
                     AudioManager.current.PlayUI(15);
                     Toggle(upgrade.upgName, true); //must be string for JeepneySLS
                 } else {
-                    NotificationManager.current.NewNotif("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.");
+                    NotificationManager.current.NewNotifColor("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.", 2);
                 }
             }
         }

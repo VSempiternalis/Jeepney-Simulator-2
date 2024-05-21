@@ -16,7 +16,7 @@ public class HousePanel : MonoBehaviour {
     [SerializeField] private List<string> house3Landmarks;
 
     private BoundaryManager bm;
-    private RouteSelector rs;
+    [SerializeField] private RouteSelector rs;
 
     private void Awake() {
         current = this;
@@ -24,7 +24,7 @@ public class HousePanel : MonoBehaviour {
 
     private void Start() {
         bm = BoundaryManager.current;
-        rs = RouteSelector.current;
+        // rs = RouteSelector.current;
     }
 
     private void Update() {
@@ -51,7 +51,7 @@ public class HousePanel : MonoBehaviour {
         if(bm.CanPay(housePrices[houseNum])) {
             UnlockHouse(houseNum);
         } else {
-            NotificationManager.current.NewNotif("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.");
+            NotificationManager.current.NewNotifColor("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.", 2);
         }
     }
 

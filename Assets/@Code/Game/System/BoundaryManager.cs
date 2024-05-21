@@ -199,6 +199,7 @@ public class BoundaryManager : MonoBehaviour {
             Fader.current.FadeToBlack(1f, text, () => {
                 //Reset
                 TimeManager.current.NewShift();
+                TimeManager.current.AddHours(8);
                 LotteryManager.current.NewNums(); //MUST BE AFTER TIME RESET
                 SaveLoadSystem.current.SaveGame();
                 PlayerDriveInput.current.carCon.GetComponent<JeepneySLS>().Save();

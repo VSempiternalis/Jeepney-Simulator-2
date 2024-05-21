@@ -103,7 +103,7 @@ public class SkinCustomizer : MonoBehaviour {
             SetSkinToCurrent();
             SetDisplay(skins.IndexOf(currentSkin));
         } else {
-            NotificationManager.current.NewNotif("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.");
+            NotificationManager.current.NewNotifColor("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.", 2);
         }
     }
 
@@ -117,7 +117,7 @@ public class SkinCustomizer : MonoBehaviour {
             SetSWSkinToCurrent();
             SetSWDisplay(swSkins.IndexOf(currentSWSkin));
         } else {
-            NotificationManager.current.NewNotif("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.");
+            NotificationManager.current.NewNotifColor("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.", 2);
         }
     }
 
@@ -131,7 +131,7 @@ public class SkinCustomizer : MonoBehaviour {
             SetSeatSkinToCurrent();
             SetSeatDisplay(seatsSkins.IndexOf(currentSeatsSkin));
         } else {
-            NotificationManager.current.NewNotif("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.");
+            NotificationManager.current.NewNotifColor("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.", 2);
         }
     }
 

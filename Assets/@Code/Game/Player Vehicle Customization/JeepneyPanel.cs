@@ -262,7 +262,7 @@ public class JeepneyPanel : MonoBehaviour {
     }
 
     private void Fail() {
-        NotificationManager.current.NewNotif("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.");
+        NotificationManager.current.NewNotifColor("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.", 2);
     }
 
     #endregion

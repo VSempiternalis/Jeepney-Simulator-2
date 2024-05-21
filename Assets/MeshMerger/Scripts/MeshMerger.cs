@@ -234,6 +234,9 @@ public class MeshMerger : MonoBehaviour
         //auto place in parent position
         house.transform.position = transform.position;
         house.transform.SetParent(transform);
+        house.transform.SetSiblingIndex(0);
+        house.AddComponent<BoxCollider>();
+        house.isStatic = true;
 
         return house;
     }

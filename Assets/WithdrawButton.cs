@@ -19,7 +19,7 @@ public class WithdrawButton : MonoBehaviour {
         int value = objectToWithdrawPF.GetComponent<Value>().value;
 
         if(BoundaryManager.current.deposit < value) {
-            NotificationManager.current.NewNotif("INSUFFICIENT FUNDS!", "I don't have enough money deposited to withdraw P" + value);
+            NotificationManager.current.NewNotifColor("INSUFFICIENT FUNDS!", "I don't have enough money deposited to withdraw P" + value, 2);
             return;
         }
         

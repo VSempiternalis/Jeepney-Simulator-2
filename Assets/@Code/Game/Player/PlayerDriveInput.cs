@@ -159,7 +159,7 @@ public class PlayerDriveInput : MonoBehaviour {
 
         isPickups = newVal;
 
-        if(!isPickups) NotificationManager.current.NewNotif("PICKUPS STOPPED", "You can no longer pick up passengers. Finish shift in Billy's Office (Terminal) to reset!");
+        if(!isPickups) NotificationManager.current.NewNotif("PICKUPS STOPPED", "You can no longer pick up passengers. Finish shift to reset!");
 
         pickupsOffSign.SetActive(!isPickups);
         // print(pickupsOffSign.activeSelf? "true":"false");

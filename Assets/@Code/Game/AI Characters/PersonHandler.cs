@@ -390,7 +390,7 @@ public class PersonHandler : MonoBehaviour {
         if(state == "Waiting for change") {
             if(!hasSentChangeNotif) {
                 voiceHandler.Say("Change");
-                NotificationManager.current.NewNotif("PASSENGER NEEDS CHANGE!", "You've taken a passenger to their destination but they are still waiting for their change.");
+                NotificationManager.current.NewNotifColor("PASSENGER NEEDS CHANGE!", "You've taken a passenger to their destination but they are still waiting for their change.", 2);
                 hasSentChangeNotif = true;
             }
             return;

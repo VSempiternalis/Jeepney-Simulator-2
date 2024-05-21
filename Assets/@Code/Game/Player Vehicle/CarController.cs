@@ -211,8 +211,9 @@ public class CarController : MonoBehaviour {
         Brake();
         FuelDrain();
 
-        if(fuelAmount < 5000 && fuelAmount > 4990) NotificationManager.current.NewNotif("LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refill!");
-        else if(fuelAmount < 10 && fuelAmount > 7 ) NotificationManager.current.NewNotif("NO FUEL!", "You have run out of fuel! Call a tow truck.");
+        if(fuelAmount < 5000 && fuelAmount > 4900) NotificationManager.current.NewNotifColor("LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refill!", 2);
+        else if(fuelAmount < 2500 && fuelAmount > 2400) NotificationManager.current.NewNotifColor("VERY LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refill!", 2);
+        else if(fuelAmount < 10 && fuelAmount >= 0 ) NotificationManager.current.NewNotifColor("NO FUEL!", "You have run out of fuel! Call a tow truck.", 3);
     }
 
     // CHECKS ======================================================================
@@ -589,12 +590,9 @@ public class CarController : MonoBehaviour {
         //FUEL
         fuelNeedle.localRotation = Quaternion.Euler(Mathf.Lerp(minFuelNeedleRotation, maxFuelNeedleRotation, (float)fuelAmount/(float)fuelCapacity), 0, 0);
         Color fuelColor = white;
-        if(fuelAmount < 5000 && fuelAmount > 4997) {
-            // NotificationManager.current.NewNotif("LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refill!");
-            rpmColor = red;
-        } else if(fuelAmount < 10 && fuelAmount > 7 ) {
-            // NotificationManager.current.NewNotif("NO FUEL!", "You have run out of fuel! Call a tow truck [T].");
-        }
+        // if(fuelAmount < 5000 && fuelAmount > 4997) {
+        //     rpmColor = red;
+        // }
         fuelText.text = Mathf.Round((float)fuelAmount/1000f) + "L";
         if(fuelText.color != fuelColor) fuelText.color = fuelColor;
 
@@ -695,7 +693,7 @@ public class CarController : MonoBehaviour {
             if(relativeVelocity > 7) { //tolerance
                 // damage vehicle
                 AddHealth(-(int)(relativeVelocity/2));
-                NotificationManager.current.NewNotif("VEHICLE DAMAGED!", "Jeepney health: " + health);
+                NotificationManager.current.NewNotifColor("VEHICLE DAMAGED!", "Jeepney health: " + health, 3);
 
                 //damage other
                 if(other.gameObject.GetComponent<IHealth>() != null) other.gameObject.GetComponent<IHealth>().AddHealth(-(int)(damage + relativeVelocity));

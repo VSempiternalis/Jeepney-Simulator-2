@@ -125,7 +125,7 @@ public class TimeManager : MonoBehaviour {
             am.PlayUI(9);
 
             //notif
-            NotificationManager.current.NewNotif("SHIFT TIMER ON", "Your shift has begun! Get inside your jeepney, pick up passengers, and earn money before your time runs out!");
+            NotificationManager.current.NewNotifColor("SHIFT TIMER ON", "Your shift has begun! Get inside your jeepney, pick up passengers, and earn money before your time runs out!", 1);
             if(BoundaryManager.current.doBoundary) NotificationManager.current.NewNotif("BOUNDARY", "Your BOUNDARY for this shift is P" + BoundaryManager.current.boundary);
         } else isShiftOn = false;
     }
@@ -140,7 +140,7 @@ public class TimeManager : MonoBehaviour {
 
         // if(shiftTimeLeft <= 0) 
         //notif
-        NotificationManager.current.NewNotif("SHIFT TIMER OFF", "Your shift timer has been paused."); // Grab as much money as you can, go to Billy, and pay your boundary.
+        NotificationManager.current.NewNotifColor("SHIFT TIMER OFF", "Your shift timer has been paused.", 1); // Grab as much money as you can, go to Billy, and pay your boundary.
     }
 
     private void UpdateShiftTime() {
@@ -152,7 +152,7 @@ public class TimeManager : MonoBehaviour {
             am.PlayUI(11);
 
             //notif
-            NotificationManager.current.NewNotif("OVERTIME!", "You're late for your payment! You cannot pick up passengers anymore. For every second you're not in Billy's Office, your boundary is increased by P1");
+            NotificationManager.current.NewNotifColor("OVERTIME!", "You're late for your payment! You cannot pick up passengers anymore. For every second you're not in Billy's Office, your boundary is increased by P1", 3);
         }
         if(shiftTimeLeft <= 0) {
             //alarm audio
@@ -198,12 +198,12 @@ public class TimeManager : MonoBehaviour {
         if(shiftTimeLeft == 300) {
             am.PlayUI(10);
             //notif
-            NotificationManager.current.NewNotif("FIVE MINUTES LEFT!", "There's only five minutes left in your shift.");
+            NotificationManager.current.NewNotifColor("FIVE MINUTES LEFT!", "There's only five minutes left in your shift.", 2);
             if(billyTarget) billyTarget.enabled = true;
         } else if(shiftTimeLeft == 180) {
             am.PlayUI(10);
             //notif
-            NotificationManager.current.NewNotif("THREE MINUTES LEFT!", "Return to Billy's Office before your shift ends!");
+            NotificationManager.current.NewNotifColor("THREE MINUTES LEFT!", "Return to Billy's Office before your shift ends!", 2);
         }
         
         if(shiftHoursLeft < 3) {
@@ -239,14 +239,18 @@ public class TimeManager : MonoBehaviour {
     }
 
     public void AddHours(int hoursToAdd) {
-        //round off
-        if(minutes >= 30) hours ++;
-        minutes = 0;
+        SetTimeTo(time + (hoursToAdd*60));
+        // time += hoursToAdd*60;
+        // minutes += hoursToAdd*60;
 
-        //add hours
-        hours += hoursToAdd;
+        // //round off
+        // if(minutes >= 30) hours ++;
+        // minutes = 0;
 
-        UpdateClocks();
+        // //add hours
+        // hours += hoursToAdd;
+
+        // UpdateClocks();
     }
 
     private void UpdateDayTexts() {
@@ -264,7 +268,7 @@ public class TimeManager : MonoBehaviour {
         minutes ++; //one minute per real second (1 hour = 1 min)
 
         // Reset time to 4 if less than zero
-        if(hours < 0) hours = 4;
+        // if(hours < 0) hours = 4;
 
         // [PER HOUR UPDATE]
         if(minutes >= 60) {

@@ -59,7 +59,7 @@ public class LotteryPrinter : MonoBehaviour {
             NotificationManager.current.NewNotif("TICKET BOUGHT", "Ticket cost: P10\n\nRemaining deposit: " + BoundaryManager.current.deposit);
             AudioManager.current.PlayUI(2);
         } else {
-            NotificationManager.current.NewNotif("INSUFFICIENT FUNDS", "You do not have enough money in the deposit to afford a ticket!");
+            NotificationManager.current.NewNotifColor("INSUFFICIENT FUNDS", "You do not have enough money in the deposit to afford a ticket!", 2);
             AudioManager.current.PlayUI(7);
         }
     }
