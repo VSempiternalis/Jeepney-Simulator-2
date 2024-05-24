@@ -43,6 +43,7 @@ public class DoorHandler : MonoBehaviour, IInteractable, ITooltipable {
     public void Interact(GameObject interactor) {
         if(isLocked) {
             //Play jiggle audio
+            NotificationManager.current.NewNotifColor("DOOR LOCKED", "You don't have the keys for this door! You can buy this house in Billy's Office.", 2);
             AudioManager.current.PlayUI(7);
             return;
         }
