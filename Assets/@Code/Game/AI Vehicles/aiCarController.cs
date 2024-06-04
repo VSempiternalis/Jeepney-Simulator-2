@@ -16,7 +16,7 @@ public class aiCarController : MonoBehaviour, IHealth {
 
     private Vector2 moveInput;
     public int gear = 1;
-    public float gearFactor;
+    // public float gearFactor;
 
     [Space(10)]
     [Header("HEALTH")]

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.Net.Security;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
-using UnityEngine.XR;
 
 public class HousePanel : MonoBehaviour {
     public static HousePanel current;
@@ -29,6 +28,12 @@ public class HousePanel : MonoBehaviour {
 
     private void Update() {
         
+    }
+
+    public void Reset() {
+        LockHouse(0);
+        LockHouse(1);
+        LockHouse(2);
     }
 
     public void Load() {
@@ -76,6 +81,30 @@ public class HousePanel : MonoBehaviour {
             print("unlocking landmark: " + landmark);
             rs.allDestinations.Add(landmark);
         }
+    }
+    
+    private void LockHouse(int houseNum) {
+        //own house
+        housesOwned[houseNum] = 0;
 
+        if(houseDoors[houseNum] == null) return;
+
+        //unlock door
+        houseDoors[houseNum].isLocked = true;
+
+        //remove button
+        houseButtons[houseNum].SetActive(true);
+
+        //add landmarks
+        List<string> landmarks = new List<string>();
+
+        if(houseNum == 0) landmarks = house1Landmarks;
+        else if(houseNum == 1) landmarks = house2Landmarks;
+        else landmarks = house3Landmarks;
+
+        foreach(string landmark in landmarks) {
+            print("locking landmark: " + landmark);
+            rs.allDestinations.Remove(landmark);
+        }
     }
 }

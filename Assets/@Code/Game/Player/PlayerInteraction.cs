@@ -186,7 +186,8 @@ public class PlayerInteraction : MonoBehaviour {
         if(lMouseDown) {
             //INTERACTABLE
             if(itemOver.layer == layerInteractable) {
-                if(itemOver.GetComponent<IInteractable>() != null && !GetComponent<Crouch>().IsCrouched) itemOver.GetComponent<IInteractable>().Interact(gameObject);
+                if(itemOver.GetComponent<IKnob>() != null && !GetComponent<Crouch>().IsCrouched) itemOver.GetComponent<IKnob>().LeftClick();
+                else if(itemOver.GetComponent<IInteractable>() != null && !GetComponent<Crouch>().IsCrouched) itemOver.GetComponent<IInteractable>().Interact(gameObject);
             } 
             //ITEM
             else if(itemOver.layer == layerItem) {
@@ -195,6 +196,12 @@ public class PlayerInteraction : MonoBehaviour {
         }
         //RIGHT CLICK
         else if(rMouseDown) {
+            //INTERACTABLE
+            if(itemOver.layer == layerInteractable) {
+                if(itemOver.GetComponent<IKnob>() != null && !GetComponent<Crouch>().IsCrouched) itemOver.GetComponent<IKnob>().RightClick();
+            } 
+
+            //STORAGE
             if(itemOver.layer == layerStorage && rightHand.childCount > 0) {
                 PlaceItem();
             } else if(itemOver.GetComponent<IPayable>() != null && rightHand.childCount > 0) {

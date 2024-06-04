@@ -132,6 +132,8 @@ public class JeepneySLS : MonoBehaviour {
         //max gear
         int maxGear = PlayerPrefs.GetInt(gameMode + "_Jeepney_MaxGear", 8);
         if(SaveLoadSystem.current.gameMode == "Freeride") maxGear = 8;
+        //music player
+        bool isMusicPlayerActive = false;
 
         print("maxHealth: " + maxHealth);
         print("health: " + health);
@@ -144,7 +146,9 @@ public class JeepneySLS : MonoBehaviour {
         #region UPGRADES ================================================================================
 
         up.Toggle(upgBells.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgBells", 0) == 1? true:false));
-        up.Toggle(upgAntennas.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgAntennas", 0) == 1? true:false));
+        bool isAntennaOn = (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgAntennas", 0) == 1? true:false);
+        up.Toggle(upgAntennas.name, isAntennaOn);
+        isMusicPlayerActive = isAntennaOn;
         up.Toggle(upgCircleLights.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgCircleLights", 0) == 1? true:false));
         up.Toggle(upgBumperLights.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgBumperLights", 0) == 1? true:false));
         up.Toggle(upgFrontGrills.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgFrontGrills", 0) == 1? true:false));
@@ -175,7 +179,7 @@ public class JeepneySLS : MonoBehaviour {
         string jeepName = PlayerPrefs.GetString(gameMode + "_Jeepney_Name", "Jeepney Name");
 
         #endregion
-        #region APPLICAITON ================================================================================
+        #region APPLICATION ================================================================================
 
         carcon.maxHealth = maxHealth;
         carcon.SetHealth(health);
@@ -185,6 +189,7 @@ public class JeepneySLS : MonoBehaviour {
         // carcon.maxGear = maxGear;
         carcon.SetMaxGear(maxGear);
         carcon.Rename(jeepName);
+        carcon.mp.SetActive(isMusicPlayerActive);
 
         #endregion
 
@@ -212,6 +217,8 @@ public class JeepneySLS : MonoBehaviour {
         //max gear
         int maxGear = 4;
         if(SaveLoadSystem.current.gameMode == "Freeride") maxGear = 8;
+        //music player
+        bool isMusicPlayerActive = false;
 
         print("maxHealth: " + maxHealth);
         print("health: " + health);
@@ -248,6 +255,7 @@ public class JeepneySLS : MonoBehaviour {
         // carcon.maxGear = maxGear;
         carcon.SetMaxGear(maxGear);
         carcon.Rename(jeepName);
+        carcon.mp.SetActive(isMusicPlayerActive);
 
         #endregion
 

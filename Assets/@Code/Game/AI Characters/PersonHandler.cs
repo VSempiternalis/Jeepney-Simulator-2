@@ -84,6 +84,7 @@ public class PersonHandler : MonoBehaviour {
     [SerializeField] private LayerMask vehicleLayer;
     private bool isRagdoll;
     [SerializeField] private float velocityThresh;
+    [SerializeField] private float impactForceMultiplier;
 
     [Space(10)]
     private float nextSecUpdate;
@@ -619,22 +620,26 @@ public class PersonHandler : MonoBehaviour {
     #region TRIGGERS ======================================================================================================
   
     private void OnCollisionEnter(Collision other) {
-        // print("COLLISION: " + other.gameObject.name);
         if(isRagdoll) return;
-        // print("layer: " + other.gameObject.layer + " vehicle layer: " + vehicleLayer.value);
         
-        // if(other.gameObject.layer == vehicleLayer.value) {
         if((vehicleLayer.value & (1 << other.gameObject.layer)) != 0) {
-            // print("vehicle layer");
             // Calculate the relative velocity between the two colliding objects
             float relativeVelocity = other.relativeVelocity.magnitude;
-            // print("relvel: " + relativeVelocity);
 
-            if(relativeVelocity > velocityThresh) StartRagdoll();
+            if(relativeVelocity > velocityThresh) {
+                StartRagdoll();
 
-            // Apply the velocity to the object's Rigidbody
-            Vector3 impactVelocity = other.relativeVelocity;
-            GetComponent<Rigidbody>().velocity = impactVelocity * 3;
+                Vector3 direction = (transform.position - other.gameObject.transform.position).normalized;
+
+                float forceMagnitude = relativeVelocity * impactForceMultiplier;
+
+                GetComponent<Rigidbody>().AddForce(direction * forceMagnitude, ForceMode.Impulse);
+
+                // Apply the velocity to the object's Rigidbody
+                // Vector3 impactVelocity = other.relativeVelocity;
+                // GetComponent<Rigidbody>().velocity = impactVelocity * impactForceMultiplier;
+            }
+
             transform.LookAt(other.gameObject.transform);
         }
     }

@@ -162,6 +162,7 @@ public class CarController : MonoBehaviour {
     [Header("OTHERS")]
     [SerializeField] private ParticleSystem smokeParticles;
     [SerializeField] private Tablet tablet;
+    public MusicPlayer mp;
 
     [Space(10)]
     [Header("WHEEL AND AXLES")]
@@ -593,7 +594,7 @@ public class CarController : MonoBehaviour {
         // if(fuelAmount < 5000 && fuelAmount > 4997) {
         //     rpmColor = red;
         // }
-        fuelText.text = Mathf.Round((float)fuelAmount/1000f) + "L";
+        fuelText.text = Mathf.Round((float)fuelAmount/1000f) + "/" + Mathf.Round((float)fuelCapacity/1000f);
         if(fuelText.color != fuelColor) fuelText.color = fuelColor;
 
         //TUTORIAL UI

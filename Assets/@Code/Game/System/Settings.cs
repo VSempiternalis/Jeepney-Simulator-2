@@ -11,6 +11,7 @@ public class Settings : MonoBehaviour {
 
     public AudioMixer audioMixer;
     public AudioMixer bgmMixer;
+    public AudioMixer musicPlayerMixer;
 
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject playerCam;
@@ -23,6 +24,8 @@ public class Settings : MonoBehaviour {
     [SerializeField] private TMP_Text masterVolumeText;
     [SerializeField] private Slider bgmVolSlider;
     [SerializeField] private TMP_Text bgmVolumeText;
+    [SerializeField] private Slider musicPlayerVolSlider;
+    [SerializeField] private TMP_Text musicPlayerVolumeText;
 
     [Space(10)]
     [Header("VIDEO")]
@@ -116,7 +119,7 @@ public class Settings : MonoBehaviour {
         print("[SETTINGS] Loading default settings");
         SetMasterVolume(0); //0 is full
         SetBGMVolume(0);
-        // SetMusic
+        SetMusicPlayerVolume(-12);
         
         SetGraphicsPreset(2);
         SetResolution(resolutions.Length - 1);
@@ -142,6 +145,8 @@ public class Settings : MonoBehaviour {
         SetMasterVolume(volume);
         float bgmVolume = PlayerPrefs.GetFloat("Settings_BGMVolume", 0);
         SetBGMVolume(bgmVolume);
+        float musicPlayerVolume = PlayerPrefs.GetFloat("Settings_MusicPlayerVolume", 0);
+        SetMusicPlayerVolume(musicPlayerVolume);
 
         int qualityIndex = PlayerPrefs.GetInt("Settings_GraphicsPreset");
         SetGraphicsPreset(qualityIndex);
@@ -214,7 +219,8 @@ public class Settings : MonoBehaviour {
     public void SetMasterVolume(float newVol) {
         audioMixer.SetFloat("MasterVolume", newVol);
         // masterVolumeText.text = ((newVol + 80)) + "";
-        masterVolumeText.text = ((newVol + 25) * 4) + "";
+        masterVolumeText.text = (newVol + 100) + "";
+        // masterVolumeText.text = ((newVol + 25) * 4) + "";
         masterVolSlider.value = newVol;
 
         PlayerPrefs.SetFloat("Settings_MasterVolume", newVol);
@@ -223,10 +229,19 @@ public class Settings : MonoBehaviour {
     public void SetBGMVolume(float newVol) {
         bgmMixer.SetFloat("BGMVolume", newVol);
         // bgmVolumeText.text = ((newVol + 80)) + "";
-        bgmVolumeText.text = ((newVol + 25) * 4) + "";
+        bgmVolumeText.text = (newVol + 100) + "";
         bgmVolSlider.value = newVol;
 
         PlayerPrefs.SetFloat("Settings_BGMVolume", newVol);
+    }
+
+    public void SetMusicPlayerVolume(float newVol) {
+        musicPlayerMixer.SetFloat("MusicPlayerVolume", newVol);
+        // musicPlayerVolumeText.text = ((newVol + 80)) + "";
+        musicPlayerVolumeText.text = (newVol + 100) + "";
+        musicPlayerVolSlider.value = newVol;
+
+        PlayerPrefs.SetFloat("Settings_MusicPlayerVolume", newVol);
     }
 
     #endregion

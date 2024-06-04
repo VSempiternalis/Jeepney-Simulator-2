@@ -15,7 +15,7 @@ public class Carousel : MonoBehaviour {
     }
 
     public void Next() {
-        print("Next " + index + " child:" + transform.GetChild(index).name + " childCount: " + childCount);
+        // print("Next " + index + " child:" + transform.GetChild(index).name + " childCount: " + childCount);
         transform.GetChild(index).gameObject.SetActive(false);
 
         if(index == (childCount - 1)) {
@@ -26,7 +26,7 @@ public class Carousel : MonoBehaviour {
     }
 
     public void Back() {
-        print("Back " + index + " " + transform.GetChild(index).name);
+        // print("Back " + index + " " + transform.GetChild(index).name);
         transform.GetChild(index).gameObject.SetActive(false);
 
         if(index == 0) {

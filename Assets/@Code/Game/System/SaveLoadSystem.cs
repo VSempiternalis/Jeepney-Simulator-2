@@ -77,13 +77,14 @@ public class SaveLoadSystem : MonoBehaviour {
         JeepneyPanel.current.Setup();
         SpawnArea.current.isRoadEvents = isEvents;
 
-        //load houses
-        HousePanel.current.Load();
+        // //load houses
+        // HousePanel.current.Load();
 
-        //load gamemanager player house num
-        int playerHouse = 0;
-        if(!isNewGame) playerHouse = PlayerPrefs.GetInt(gameMode + "_PlayerHouse", 0);
-        GameManager.current.SetPlayerHouse(playerHouse);
+        // //load gamemanager player house num
+        // int playerHouse = 0;
+        // if(!isNewGame) playerHouse = PlayerPrefs.GetInt(gameMode + "_PlayerHouse", 0);
+        // GameManager.current.SetPlayerHouse(playerHouse);
+
         Setup();
     }
 
@@ -269,6 +270,18 @@ public class SaveLoadSystem : MonoBehaviour {
         //TIME AND DAY
         TimeManager.current.days = 1;
         TimeManager.current.SetTimeTo(480);
+
+        //load houses
+        HousePanel.current.Reset();
+
+        PlayerPrefs.SetInt(gameMode + "_PlayerHouse", 0);
+        GameManager.current.SetPlayerHouse(0);
+
+        //load gamemanager player house num
+        // int playerHouse = 0;
+        // if(!isNewGame) playerHouse = PlayerPrefs.GetInt(gameMode + "_PlayerHouse", 0);
+        // GameManager.current.SetPlayerHouse(playerHouse);
+        // Setup();
     }
 
     private void LoadCareer() {
@@ -284,6 +297,15 @@ public class SaveLoadSystem : MonoBehaviour {
         time = PlayerPrefs.GetInt("Career_Time", 0);
         TimeManager.current.days = PlayerPrefs.GetInt("Career_Day", 1);
         TimeManager.current.SetTimeTo(time); //THIS GOES LAST! Days is required to be set for SetTimeTo to work!
+
+        //load houses
+        HousePanel.current.Load();
+
+        //load gamemanager player house num
+        int playerHouse = 0;
+        playerHouse = PlayerPrefs.GetInt(gameMode + "_PlayerHouse", 0);
+        GameManager.current.SetPlayerHouse(playerHouse);
+        // Setup();
     }
 
     public void SaveGame() {

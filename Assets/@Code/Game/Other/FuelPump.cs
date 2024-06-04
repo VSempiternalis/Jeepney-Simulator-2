@@ -53,7 +53,7 @@ public class FuelPump : MonoBehaviour, IPayable, ITooltipable {
                 yield break;
             }
 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f); //1
         }
     }
 

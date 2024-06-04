@@ -11,7 +11,6 @@ public class UpgradesPanel : MonoBehaviour {
     // [SerializeField] private Dictionary<string, int> upgradesDict = new Dictionary<string, int>();
 
     public List<Upgrade> upgrades;
-    // public List<string> upgradesBought;
     [SerializeField] private bool allFree; //DEBUG ONLY
 
     [Serializable] public struct Upgrade {
@@ -68,7 +67,8 @@ public class UpgradesPanel : MonoBehaviour {
                     carcon.GetComponent<Rigidbody>().mass -= upgrade.massAdd;
                     carcon.damage += upgrade.damageAdd;
 
-                    // upgradesBought.Add(upgrade.upgName);
+                    //music player
+                    if(upgrade.enablesMusic) carcon.mp.SetActive(true);
 
                     //button
                     upgrade.button.SetActive(false);
@@ -78,7 +78,8 @@ public class UpgradesPanel : MonoBehaviour {
                     carcon.GetComponent<Rigidbody>().mass += upgrade.massAdd;
                     carcon.damage -= upgrade.damageAdd;
 
-                    // upgradesBought.Remove(upgrade.upgName);
+                    //music player
+                    // carcon.mp.SetActive(false);
 
                     //button
                     upgrade.button.SetActive(true);
@@ -91,14 +92,14 @@ public class UpgradesPanel : MonoBehaviour {
     }
 
     public void SetAsDefault() {
-        // upgradesBought.Clear();
-
         foreach(Upgrade upgrade in upgrades) {
             if(upgrade.go.transform.GetChild(0).GetComponent<StorageHandler>()) upgrade.go.transform.GetChild(0).GetComponent<StorageHandler>().Clear();
 
             upgrade.go.SetActive(false);
             upgrade.button.SetActive(true);
         }
+                    
+        carcon.mp.SetActive(false);
     }
 
     public void UpdateScreen() {

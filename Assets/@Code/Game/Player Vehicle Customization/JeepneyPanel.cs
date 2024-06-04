@@ -95,68 +95,68 @@ public class JeepneyPanel : MonoBehaviour {
             // noJeepneyDetected.SetActive(false);
             // main.SetActive(true);
 
-            //Health
-            health = Mathf.RoundToInt(carcon.health);
-            maxHealth = Mathf.RoundToInt(carcon.maxHealth);
-            missingHealth = maxHealth - health;
-            repairCost = Mathf.RoundToInt(missingHealth * pesoPerHealth);
-            // repairButtonText.text = "REPAIR - P" + repairCost;
-            // healthText.text = health + "/" + maxHealth;
-            // UpdateBar(healthBar, health, maxHealth);
-            foreach(TMP_Text text in repairButtonTexts) {
-                text.text = "REPAIR - P" + repairCost;
-            }
-            foreach(TMP_Text text in healthTexts) {
-                text.text = health + "/" + maxHealth;
-            }
-            foreach(Transform bar in healthBars) {
-                UpdateBar(bar, health, maxHealth);
-            }
+        //Health
+        health = Mathf.RoundToInt(carcon.health);
+        maxHealth = Mathf.RoundToInt(carcon.maxHealth);
+        missingHealth = maxHealth - health;
+        repairCost = Mathf.RoundToInt(missingHealth * pesoPerHealth);
+        // repairButtonText.text = "REPAIR - P" + repairCost;
+        // healthText.text = health + "/" + maxHealth;
+        // UpdateBar(healthBar, health, maxHealth);
+        foreach(TMP_Text text in repairButtonTexts) {
+            text.text = "REPAIR - P" + repairCost;
+        }
+        foreach(TMP_Text text in healthTexts) {
+            text.text = health + "/" + maxHealth;
+        }
+        foreach(Transform bar in healthBars) {
+            UpdateBar(bar, health, maxHealth);
+        }
 
-            //Fuel
-            fuel = Mathf.RoundToInt(carcon.fuelAmount);
-            fuelCap = Mathf.RoundToInt(carcon.fuelCapacity);
-            missingFuel = fuelCap - fuel;
-            refuelCost = Mathf.RoundToInt((missingFuel/1000) * GameManager.current.pricePerLiter);
-            // refuelButtonText.text = "REFUEL - P" + refuelCost;
-            // fuelText.text = (fuel/1000) + "L/" + (fuelCap/1000) + "L";
-            // UpdateBar(fuelBar, fuel, fuelCap);
-            foreach(TMP_Text text in refuelButtonTexts) {
-                text.text = "REFUEL - P" + refuelCost;
-            }
-            foreach(TMP_Text text in fuelTexts) {
-                text.text = (fuel/1000) + "L/" + (fuelCap/1000) + "L";
-            }
-            foreach(Transform bar in fuelBars) {
-                UpdateBar(bar, fuel, fuelCap);
-            }
+        //Fuel
+        fuel = Mathf.RoundToInt(carcon.fuelAmount);
+        fuelCap = Mathf.RoundToInt(carcon.fuelCapacity);
+        missingFuel = fuelCap - fuel;
+        refuelCost = Mathf.RoundToInt((missingFuel/1000) * GameManager.current.pricePerLiter);
+        // refuelButtonText.text = "REFUEL - P" + refuelCost;
+        // fuelText.text = (fuel/1000) + "L/" + (fuelCap/1000) + "L";
+        // UpdateBar(fuelBar, fuel, fuelCap);
+        foreach(TMP_Text text in refuelButtonTexts) {
+            text.text = "REFUEL - P" + refuelCost;
+        }
+        foreach(TMP_Text text in fuelTexts) {
+            text.text = (fuel/1000) + "L/" + (fuelCap/1000) + "L";
+        }
+        foreach(Transform bar in fuelBars) {
+            UpdateBar(bar, fuel, fuelCap);
+        }
 
-            //Fuel capacity
-            // fuelCapUpgButtonText.text = "UPGRADE - P" + fuelCapUpgCost;
-            foreach(TMP_Text text in fuelCapUpgButtonTexts) {
-                text.text = "UPGRADE - P" + fuelCapUpgCost;
-            }
+        //Fuel capacity
+        // fuelCapUpgButtonText.text = "UPGRADE - P" + fuelCapUpgCost;
+        foreach(TMP_Text text in fuelCapUpgButtonTexts) {
+            text.text = "UPGRADE - P" + fuelCapUpgCost;
+        }
 
-            //Efficiency
-            eff = carcon.fuelLoss;
-            effButtonText.text = "UPGRADE - P" + effCost;
-            effText.text = (eff * 10) + "% Fuel Loss";
-            UpdateBar(effBar, eff, maxEff);
+        //Efficiency
+        eff = carcon.fuelLoss;
+        effButtonText.text = "UPGRADE - P" + effCost;
+        effText.text = (eff * 10) + "% Fuel Loss";
+        UpdateBar(effBar, eff, maxEff);
 
-            //Gear
-            int carMaxGear = carcon.maxGear;
-            // maxGearButtonText.text = "UPGRADE - P" + gearUpgCost;
-            // gearText.text = (carMaxGear-1) + "/" + (maxGear-1);
-            // UpdateBar(maxGearBar, carMaxGear-2, maxGear-2);
-            foreach(TMP_Text text in maxGearButtonTexts) {
-                text.text = "UPGRADE - P" + gearUpgCost;
-            }
-            foreach(TMP_Text text in gearTexts) {
-                text.text = (carMaxGear-1) + "/" + (maxGear-1);
-            }
-            foreach(Transform bar in maxGearBars) {
-                UpdateBar(bar, carMaxGear-2, maxGear-2);
-            }
+        //Gear
+        int carMaxGear = carcon.maxGear;
+        // maxGearButtonText.text = "UPGRADE - P" + gearUpgCost;
+        // gearText.text = (carMaxGear-1) + "/" + (maxGear-1);
+        // UpdateBar(maxGearBar, carMaxGear-2, maxGear-2);
+        foreach(TMP_Text text in maxGearButtonTexts) {
+            text.text = "UPGRADE - P" + gearUpgCost;
+        }
+        foreach(TMP_Text text in gearTexts) {
+            text.text = (carMaxGear-1) + "/" + (maxGear-1);
+        }
+        foreach(Transform bar in maxGearBars) {
+            UpdateBar(bar, carMaxGear-2, maxGear-2);
+        }
         // }
     }
 

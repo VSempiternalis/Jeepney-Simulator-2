@@ -231,6 +231,7 @@ public class BoundaryManager : MonoBehaviour {
                 TimeManager.current.ResetShiftTime();
                 LotteryManager.current.NewNums(); //MUST BE AFTER TIME RESET
                 PlayerDriveInput.current.carCon.GetComponent<JeepneySLS>().LoadPrevious();
+                HousePanel.current.Load();
 
                 am.PlayUI(5);
                 
