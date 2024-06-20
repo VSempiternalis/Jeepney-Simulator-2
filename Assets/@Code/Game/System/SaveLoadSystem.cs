@@ -169,9 +169,6 @@ public class SaveLoadSystem : MonoBehaviour {
 
     private void Setup() {
         GameManager.current.Setup();
-        // player.position = spawnPoint.position;
-        // mainJeep.position = mainJeepSpawnPoint.position;
-        // mainJeep.rotation = mainJeepSpawnPoint.rotation;
     }
 
     private void LoadFreerideSettings() {

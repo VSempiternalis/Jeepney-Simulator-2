@@ -12,9 +12,11 @@ public class LotteryPrinter : MonoBehaviour {
     [SerializeField] private int printCost;
 
     private LotteryManager lm;
+    private TimeManager tm;
 
     private void Start() {
         lm = LotteryManager.current;
+        tm = TimeManager.current;
     }
 
     private void Update() {
@@ -46,6 +48,12 @@ public class LotteryPrinter : MonoBehaviour {
     }
 
     public void PrintTicket() {
+        //if too late
+        if(tm.shiftTimeLeft < 540) {
+            NotificationManager.current.NewNotifColor("NO CHEATING!", "You cannot print a ticket until the next shift!", 2);
+            return;
+        }
+
         if(BoundaryManager.current.CanPay(printCost)) {
             GameObject newTicket = Instantiate(ticketPF, transform.position, Quaternion.identity);
 

@@ -79,7 +79,7 @@ public class LotteryManager : MonoBehaviour {
                 // "\n\nGOLD:" + goldNums[0] + 
                 // "\n\nCONGRATULATIONS To the winners! You may now proceed to the GCSO building in BBC to claim your P400 prize!");
                 
-                ticketPrinter.SetActive(false);
+                // ticketPrinter.SetActive(false);
                 ticketStorage.gameObject.SetActive(true);
                 bronzeAnnounced = true;
             } else if(tm.shiftTimeLeft < 530 && !silverAnnounced) {
