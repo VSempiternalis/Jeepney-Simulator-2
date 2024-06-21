@@ -32,7 +32,14 @@ public class DebugManager : MonoBehaviour {
             if(Input.GetKeyDown(KeyCode.Alpha3)) {
                 player.position = poi3.position;
             }
-            //[2] Teleport to POI
+            //[9] Switch player run speed to 9 or 60
+            else if(Input.GetKeyDown(KeyCode.Alpha9)) {
+                FirstPersonMovement fpm = player.GetComponent<FirstPersonMovement>();
+
+                if(fpm.runSpeed == 9) fpm.runSpeed = 60;
+                else  fpm.runSpeed = 9;
+            }
+            //[0] Add 10k money to deposit
             else if(Input.GetKeyDown(KeyCode.Alpha0)) {
                 BoundaryManager.current.AddToDeposit(10000);
             }
