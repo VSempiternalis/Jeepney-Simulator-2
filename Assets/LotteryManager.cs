@@ -74,7 +74,7 @@ public class LotteryManager : MonoBehaviour {
                 // silverAnnounced = true;
 
                 NotificationManager.current.NewNotifColor("BRONZE PRIZE WINNERS!", "The Luto BRONZE PRIZE numbers are in! They are: " +
-                bronzeNums[0] + ", " + bronzeNums[1] + ", and " + bronzeNums[2] + "!\n\nPRIZE: P400", 1);
+                bronzeNums[0] + ", " + bronzeNums[1] + ", and " + bronzeNums[2] + "!\n\nPRIZE: P40,000", 1);
                 // "\n\nSILVER:" + silverNums[0] + " and " + silverNums[1] +
                 // "\n\nGOLD:" + goldNums[0] + 
                 // "\n\nCONGRATULATIONS To the winners! You may now proceed to the GCSO building in BBC to claim your P400 prize!");
@@ -84,7 +84,7 @@ public class LotteryManager : MonoBehaviour {
                 bronzeAnnounced = true;
             } else if(tm.shiftTimeLeft < 530 && !silverAnnounced) {
                 NotificationManager.current.NewNotifColor("SILVER PRIZE WINNERS!", "The Luto SILVER PRIZE numbers are in! They are: " +
-                silverNums[0] + " and " + silverNums[1] + "!\n\nPRIZE: P750", 1);
+                silverNums[0] + " and " + silverNums[1] + "!\n\nPRIZE: P75,000", 1);
                 // "\n\nSILVER:" + silverNums[0] + " and " + silverNums[1] +
                 // "\n\nGOLD:" + goldNums[0] + 
                 // "\n\nCONGRATULATIONS To the winners! You may now proceed to the GCSO building in BBC to claim your P750 prize!");
@@ -92,7 +92,7 @@ public class LotteryManager : MonoBehaviour {
                 silverAnnounced = true;
             } else if(tm.shiftTimeLeft < 520 && !goldAnnounced) {
                 NotificationManager.current.NewNotifColor("GOLD PRIZE WINNERS!", "And finally, the Luto GOLD JACKPOT numbers is...\n\n" +
-                goldNums[0] + "!\n\nPRIZE: P2000" +
+                goldNums[0] + "!\n\nPRIZE: P200,000" +
                 // "\n\nSILVER:" + silverNums[0] + " and " + silverNums[1] +
                 // "\n\nGOLD:" + goldNums[0] + 
                 "\n\nCONGRATULATIONS To the winners! You may now proceed to the GCSO building in BBC to claim your rewards!", 1);
@@ -129,19 +129,19 @@ public class LotteryManager : MonoBehaviour {
                             print("BRONZE");
                             // removeList.Add(item);
                             BoundaryManager.current.AddToDeposit(bronzePrize);
-                            NotificationManager.current.NewNotifColor("BRONZE PRIZE!", "CONGRATULATIONS! You have won the BRONZE PRIZE. P400 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
+                            NotificationManager.current.NewNotifColor("BRONZE PRIZE!", "CONGRATULATIONS! You have won the BRONZE PRIZE of P40,000 and after the 99% tax rate, P400 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
                         }
                         else if(silverNums.Contains(num)) {
                             print("SILVER");
                             // removeList.Add(item);
                             BoundaryManager.current.AddToDeposit(silverPrize);
-                            NotificationManager.current.NewNotifColor("SILVER PRIZE!", "CONGRATULATIONS! You have won the SILVER PRIZE. P750 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
+                            NotificationManager.current.NewNotifColor("SILVER PRIZE!", "CONGRATULATIONS! You have won the SILVER PRIZE of P75,000 and after the 99% tax rate, P750 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
                         }
                         else if(goldNums.Contains(num)) {
                             print("GOLD");
                             // removeList.Add(item);
                             BoundaryManager.current.AddToDeposit(goldPrize);
-                            NotificationManager.current.NewNotifColor("GOLD PRIZE!", "CONGRATULATIONS! You have won the GOLD PRIZE. P2000 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
+                            NotificationManager.current.NewNotifColor("GOLD PRIZE!", "CONGRATULATIONS! You have won the GOLD PRIZE of P200,000 and after the 99% tax rate, P2,000 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
                         }
                         else print("ERROR!");
                     }

@@ -155,6 +155,7 @@ public class PlayerDriveInput : MonoBehaviour {
     // }
 
     public void SetPickups(bool newVal) {
+        print("SET PICKUPS: " + newVal);
         if(isPickups == newVal) return;
 
         isPickups = newVal;
