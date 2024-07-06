@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEngine.Rendering;
 using System.Collections.Generic;
-using SojaExiles;
 
 public class Settings : MonoBehaviour {
     public static Settings current;
@@ -33,6 +32,7 @@ public class Settings : MonoBehaviour {
     private int currentResolutionIndex;
     private List<string> resolutionOptions;
 
+    [SerializeField] private TMP_Text specsText;
     [SerializeField] private RenderPipelineAsset[] qualityLevels;
     [SerializeField] private TMP_Dropdown graphicsDropdown;
     [SerializeField] private TMP_Dropdown resolutionDropdown;
@@ -73,6 +73,9 @@ public class Settings : MonoBehaviour {
     }
 
     private void Start() {
+        //Set quality button text
+        if(specsText) specsText.text = "CPU: " + SystemInfo.processorType + "\nRAM: " + SystemInfo.systemMemorySize + "MB\nGPU: " + SystemInfo.graphicsDeviceName + "\nVRAM: " + SystemInfo.graphicsMemorySize + " MB";
+
         resolutions = Screen.resolutions;
 
         // Add Resolutions
@@ -104,8 +107,21 @@ public class Settings : MonoBehaviour {
         // If old player, load saved settings
         else {
             // print("OLD PLAYER");
-            LoadSavedSettings();
+            bool gameCrashed = PlayerPrefs.GetInt("GameCrashed", 0) == 1? true : false;
+            if(gameCrashed) {
+                // print("CRASHED");
+                currentResolutionIndex = 0;
+                currentResolutionIndex = resolutionOptions.Count - 1;
+
+                LoadDefaultSettings();
+            } else {
+                // print("NO CRASH");
+                LoadSavedSettings();
+            }
         }
+        
+        //Reset GameCrash save
+        PlayerPrefs.SetInt("GameCrashed", 0);
     }
 
     private void Update() {
@@ -117,11 +133,11 @@ public class Settings : MonoBehaviour {
 
     public void LoadDefaultSettings() {
         print("[SETTINGS] Loading default settings");
-        SetMasterVolume(0); //0 is full
-        SetBGMVolume(0);
-        SetMusicPlayerVolume(-12);
+        SetMasterVolume(-10); //0 is full
+        SetBGMVolume(-10);
+        SetMusicPlayerVolume(-50);
         
-        SetGraphicsPreset(2);
+        SetGraphicsPresetFromSpecs();
         SetResolution(resolutions.Length - 1);
         SetFullscreen(true);
         SetFog(false);
@@ -135,7 +151,7 @@ public class Settings : MonoBehaviour {
         SetZoomSens(3);
         SetTutorialPanels(true);
         SetAutoTrans(true);
-        SetRenderDist(3);
+        SetRenderDist(2);
         SetSpawnDistance(100);
     }
 
@@ -247,6 +263,13 @@ public class Settings : MonoBehaviour {
     #endregion
 
     #region VIDEO
+
+    public void SetGraphicsPresetFromSpecs() {
+        if(SystemInfo.graphicsMemorySize <= 1024) SetGraphicsPreset(0);
+        else if(SystemInfo.graphicsMemorySize <= 2048) SetGraphicsPreset(1);
+        else if(SystemInfo.graphicsMemorySize <= 4096) SetGraphicsPreset(2);        else if(SystemInfo.graphicsMemorySize < 2048) SetGraphicsPreset(1);
+        else SetGraphicsPreset(3);
+    }
 
     public void SetGraphicsPreset(int qualityIndex) {
         QualitySettings.SetQualityLevel(qualityIndex);
@@ -427,4 +450,12 @@ public class Settings : MonoBehaviour {
     }
 
     #endregion
+
+    private void OnApplicationQuit() {
+        // Set the crash flag if the application is quitting unexpectedly
+        if (Application.platform != RuntimePlatform.WindowsEditor && !Application.isEditor) {
+            PlayerPrefs.SetInt("GameCrashed", 1);
+            PlayerPrefs.Save();
+        }
+    }
 }

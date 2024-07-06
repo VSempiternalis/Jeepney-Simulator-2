@@ -103,7 +103,7 @@ public class HousePanel : MonoBehaviour {
         else landmarks = house3Landmarks;
 
         foreach(string landmark in landmarks) {
-            print("locking landmark: " + landmark);
+            // print("locking landmark: " + landmark);
             rs.allDestinations.Remove(landmark);
         }
     }

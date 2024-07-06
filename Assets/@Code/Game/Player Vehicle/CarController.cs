@@ -601,7 +601,7 @@ public class CarController : MonoBehaviour {
         rpmTextUI.text = RPM.ToString("0 000");
         if(rpmTextUI.color != rpmColor) rpmTextUI.color = rpmColor;
         speedTextUI.text = speedKpH.ToString("000");
-        fuelTextUI.text = Mathf.Round((float)fuelAmount/1000f) + "L";
+        fuelTextUI.text = Mathf.Round((float)fuelAmount/1000f) + "/" + Mathf.Round((float)fuelCapacity/1000f) + "L";
         if(fuelTextUI.color != fuelColor) fuelTextUI.color = fuelColor;
     }
 

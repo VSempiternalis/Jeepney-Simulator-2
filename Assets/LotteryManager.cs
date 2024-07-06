@@ -33,6 +33,12 @@ public class LotteryManager : MonoBehaviour {
     [SerializeField] private TMP_Text silver1Text;
     [SerializeField] private TMP_Text silver2Text;
     [SerializeField] private TMP_Text gold1Text;
+    [SerializeField] private TMP_Text bronze1TextLot;
+    [SerializeField] private TMP_Text bronze2TextLot;
+    [SerializeField] private TMP_Text bronze3TextLot;
+    [SerializeField] private TMP_Text silver1TextLot;
+    [SerializeField] private TMP_Text silver2TextLot;
+    [SerializeField] private TMP_Text gold1TextLot;
 
     private void Awake() {
         current = this;
@@ -69,11 +75,17 @@ public class LotteryManager : MonoBehaviour {
                 silver1Text.text = silverNums[0].ToString();
                 silver2Text.text = silverNums[1].ToString();
                 gold1Text.text = goldNums[0].ToString();
+                bronze1TextLot.text = bronzeNums[0].ToString();
+                bronze2TextLot.text = bronzeNums[1].ToString();
+                bronze3TextLot.text = bronzeNums[2].ToString();
+                silver1TextLot.text = silverNums[0].ToString();
+                silver2TextLot.text = silverNums[1].ToString();
+                gold1TextLot.text = goldNums[0].ToString();
 
                 // NotificationManager.current.NewNotif("SILVER WINNERS!", "The Luto SILVER PRIZE numbers are the following: " + silverNums[0] + " and " + silverNums[1] + "\n\nIf you have winning numbers, please proceed to the GCSO building in BBC to claim your P750 reward.\n\nCONGRATULATIONS!");
                 // silverAnnounced = true;
 
-                NotificationManager.current.NewNotifColor("BRONZE PRIZE WINNERS!", "The Luto BRONZE PRIZE numbers are in! They are: " +
+                NotificationManager.current.NewNotifColor("BRONZE PRIZE WINNERS!", "The Lottery BRONZE PRIZE numbers are in! They are: " +
                 bronzeNums[0] + ", " + bronzeNums[1] + ", and " + bronzeNums[2] + "!\n\nPRIZE: P40,000", 1);
                 // "\n\nSILVER:" + silverNums[0] + " and " + silverNums[1] +
                 // "\n\nGOLD:" + goldNums[0] + 
@@ -83,7 +95,7 @@ public class LotteryManager : MonoBehaviour {
                 ticketStorage.gameObject.SetActive(true);
                 bronzeAnnounced = true;
             } else if(tm.shiftTimeLeft < 530 && !silverAnnounced) {
-                NotificationManager.current.NewNotifColor("SILVER PRIZE WINNERS!", "The Luto SILVER PRIZE numbers are in! They are: " +
+                NotificationManager.current.NewNotifColor("SILVER PRIZE WINNERS!", "The Lottery SILVER PRIZE numbers are in! They are: " +
                 silverNums[0] + " and " + silverNums[1] + "!\n\nPRIZE: P75,000", 1);
                 // "\n\nSILVER:" + silverNums[0] + " and " + silverNums[1] +
                 // "\n\nGOLD:" + goldNums[0] + 
@@ -91,7 +103,7 @@ public class LotteryManager : MonoBehaviour {
                 
                 silverAnnounced = true;
             } else if(tm.shiftTimeLeft < 520 && !goldAnnounced) {
-                NotificationManager.current.NewNotifColor("GOLD PRIZE WINNERS!", "And finally, the Luto GOLD JACKPOT numbers is...\n\n" +
+                NotificationManager.current.NewNotifColor("GOLD PRIZE WINNERS!", "And finally, the Lottery GOLD JACKPOT numbers is...\n\n" +
                 goldNums[0] + "!\n\nPRIZE: P200,000" +
                 // "\n\nSILVER:" + silverNums[0] + " and " + silverNums[1] +
                 // "\n\nGOLD:" + goldNums[0] + 
@@ -177,6 +189,13 @@ public class LotteryManager : MonoBehaviour {
         silver1Text.text = "?";
         silver2Text.text = "?";
         gold1Text.text = "?";
+        //RESET TEXTS IN TABLET SERVICES
+        bronze1TextLot.text = "?";
+        bronze2TextLot.text = "?";
+        bronze3TextLot.text = "?";
+        silver1TextLot.text = "?";
+        silver2TextLot.text = "?";
+        gold1TextLot.text = "?";
 
         //remove all previous tickets
         foreach(GameObject ticket in tickets) {

@@ -44,7 +44,7 @@ public class MainMenuManager : MonoBehaviour {
     [SerializeField] private TMP_Text tipText;
 
     private void Start() {
-        
+        SteamAchievements.current.UnlockAchievement("ACH_STARTUP");
     }
 
     private void Update() {

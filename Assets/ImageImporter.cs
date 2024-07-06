@@ -1,13 +1,20 @@
 using UnityEngine;
 using System.IO;
+using System.Collections.Generic;
 using TMPro;
 
 public class ImageImporter : MonoBehaviour {
     string decalsDirectory;
 
-    [SerializeField] private Transform image1;
-    [SerializeField] private Transform image2;
-    [SerializeField] private Transform image3;
+    // [SerializeField] private Transform image1;
+    // [SerializeField] private Transform image2;
+    // [SerializeField] private Transform image3;
+
+    [SerializeField] private MeshRenderer image1;
+    [SerializeField] private MeshRenderer image2;
+    [SerializeField] private MeshRenderer image3;
+
+    [SerializeField] private List<MeshRenderer> images;
 
     [SerializeField] private TMP_Text directoryText;
     [SerializeField] private Link openDirectoryButton;
@@ -23,42 +30,57 @@ public class ImageImporter : MonoBehaviour {
         directoryText.text = decalsDirectory;
         openDirectoryButton.url = decalsDirectory;
 
+        //main menu check
+        if(images == null) return;
+
         // Load all images in the folder
         string[] imagePaths = Directory.GetFiles(decalsDirectory); // Adjust file extension as needed
 
         int index = 0;
-        foreach(string imagePath in imagePaths) {
-            byte[] fileData = File.ReadAllBytes(imagePath);
-            Texture2D texture = new Texture2D(1, 1); // Create a new Texture2D
-            texture.LoadImage(fileData); // Load the image data into the texture
+        foreach(MeshRenderer image in images) {
+            // print("Cycling image: " + index);
+            if(index >= imagePaths.Length) {
+                image.gameObject.SetActive(false);
+            } else {
+                image.gameObject.SetActive(true);
+                string imagePath = imagePaths[index];
 
-            // Create a GameObject to display the texture (example)
-            GameObject imageObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            Destroy(imageObject.GetComponent<MeshCollider>());
-            imageObject.GetComponent<Renderer>().material.mainTexture = texture; // Apply the texture to the GameObject's material
+                byte[] fileData = File.ReadAllBytes(imagePath);
+                Texture2D texture = new Texture2D(1, 1); // Create a new Texture2D
+                texture.LoadImage(fileData); // Load the image data into the texture
 
-            Debug.Log("Imported image: " + imagePath);
+                // print("Imported image: " + imagePath);
 
-            //place image
-            if(index == 0) {
-                imageObject.transform.SetParent(image1);
-                imageObject.transform.localScale = new Vector3(1.25f, 1.5f, 1f);
-                imageObject.transform.localPosition = new Vector3(0, 0, 0);
-                imageObject.transform.localRotation = Quaternion.identity;
-            } else if(index == 1) {
-                imageObject.transform.SetParent(image2);
-                imageObject.transform.localScale = new Vector3(3.2f, 0.9f, 1f);
-                imageObject.transform.localPosition = new Vector3(0, 0, 0);
-                imageObject.transform.localRotation = Quaternion.identity;
-            } else if(index == 2) {
-                imageObject.transform.SetParent(image3);
-                imageObject.transform.localScale = new Vector3(3.2f, 0.9f, 1f);
-                imageObject.transform.localPosition = new Vector3(0, 0, 0);
-                imageObject.transform.localRotation = Quaternion.identity;
+                image.GetComponent<MeshRenderer>().material.mainTexture = texture;
             }
 
             index ++;
         }
+
+        // int index = 0;
+        // foreach(string imagePath in imagePaths) {
+        //     byte[] fileData = File.ReadAllBytes(imagePath);
+        //     Texture2D texture = new Texture2D(1, 1); // Create a new Texture2D
+        //     texture.LoadImage(fileData); // Load the image data into the texture
+
+        //     // Create a GameObject to display the texture (example)
+        //     // GameObject imageObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        //     // Destroy(imageObject.GetComponent<MeshCollider>());
+        //     // imageObject.GetComponent<MeshRenderer>().material.mainTexture = texture; // Apply the texture to the GameObject's material
+
+        //     Debug.Log("Imported image: " + imagePath);
+
+        //     //place image
+        //     if(index == 0) {
+        //         image1.GetComponent<MeshRenderer>().material.mainTexture = texture;
+        //     } else if(index == 1) {
+        //         image2.GetComponent<MeshRenderer>().material.mainTexture = texture;
+        //     } else if(index == 2) {
+        //         image3.GetComponent<MeshRenderer>().material.mainTexture = texture;
+        //     }
+
+        //     index ++;
+        // }
     }
 
     private void Update() {

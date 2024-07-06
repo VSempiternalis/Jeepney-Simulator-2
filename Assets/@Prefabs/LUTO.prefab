@@ -1124,10 +1124,10 @@ MonoBehaviour:
       m_Calls: []
   m_text: '1 - Pick your number from 00 to 99
 
-    2 - Print ticket and pay P10 from
-    deposit
+    2 - Print ticket (Costs P10 each)
 
-    3 - Bring ticket with you
+    3
+    - Bring ticket with you
 
     4 - Wait for winning number announcement
 

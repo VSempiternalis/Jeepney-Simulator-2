@@ -4,7 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 
 public class MusicPlayer : MonoBehaviour {
-    private bool isOn;
+    public bool isOn;
 
     public bool isPlaying;
     public string audioName;
@@ -29,17 +29,17 @@ public class MusicPlayer : MonoBehaviour {
 
     private void Start() {
         audioSource = GetComponent<AudioSource>();
-        print("Songs folder: " + Application.persistentDataPath);
+        // print("Songs folder: " + Application.persistentDataPath);
         // directoryText.text = Application.persistentDataPath;
 
         // Create the folder if it doesn't exist
         songDirectory = Path.Combine(Application.persistentDataPath, "Songs");
         if (!Directory.Exists(songDirectory)) {
             Directory.CreateDirectory(songDirectory);
-            Debug.Log("Songs folder created: " + songDirectory);
+            // Debug.Log("Songs folder created: " + songDirectory);
             if(directoryText) directoryText.text = songDirectory;
         } else {
-            Debug.Log("Songs folder found: " + songDirectory);
+            // Debug.Log("Songs folder found: " + songDirectory);
             if(directoryText) directoryText.text = songDirectory;
             // C:\ Users\PC\AppData\LocalLow\Spacezero Interactive\Jeepney Simulator 2\Songs
         }
@@ -160,6 +160,7 @@ public class MusicPlayer : MonoBehaviour {
     }
 
     private AudioClip LoadAudioClip(string filePath) {
+        // print("LOADING AUDIO CLIP: " + filePath);
         WWW www = new WWW("file://" + filePath);
         // UnityWebRequest www = new UnityWebRequest("file://" + filePath);
         while (!www.isDone) { }

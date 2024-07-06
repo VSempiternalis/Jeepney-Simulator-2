@@ -44,10 +44,10 @@ public class JeepneySLS : MonoBehaviour {
     }
 
     public void Save() {
-        print("Saving jeepney stats");
+        // print("Saving jeepney stats");
 
         if(carcon == null) {
-            print("No CARCON!");
+            // print("No CARCON!");
             return;
         }
 
@@ -68,12 +68,12 @@ public class JeepneySLS : MonoBehaviour {
         //max gear
         PlayerPrefs.SetInt(gameMode + "_Jeepney_MaxGear", carcon.maxGear);
 
-        print("maxHealth: " + carcon.maxHealth);
-        print("health: " + carcon.health);
-        print("fuelCap: " + carcon.fuelCapacity);
-        print("fuel: " + carcon.fuelAmount);
-        print("fuelLoss: " + carcon.fuelLoss);
-        print("maxGear: " + carcon.maxGear);
+        // print("maxHealth: " + carcon.maxHealth);
+        // print("health: " + carcon.health);
+        // print("fuelCap: " + carcon.fuelCapacity);
+        // print("fuel: " + carcon.fuelAmount);
+        // print("fuelLoss: " + carcon.fuelLoss);
+        // print("maxGear: " + carcon.maxGear);
 
         #endregion
         #region UPGRADES ================================================================================
@@ -113,7 +113,7 @@ public class JeepneySLS : MonoBehaviour {
     }
 
     public void LoadSaved() { //DEFAULT VALUES MUST BE SET
-        print("Loading jeepney settings. carcon: " + carcon.name);
+        // print("Loading jeepney settings. carcon: " + carcon.name);
 
         #region STATS ================================================================================
 
@@ -131,24 +131,26 @@ public class JeepneySLS : MonoBehaviour {
         int fuelLoss = PlayerPrefs.GetInt(gameMode + "_Jeepney_FuelLoss", 1); //Realizing late (right now), that 'eff' is the worst possible name for this variable
         //max gear
         int maxGear = PlayerPrefs.GetInt(gameMode + "_Jeepney_MaxGear", 8);
-        if(SaveLoadSystem.current.gameMode == "Freeride") maxGear = 8;
+        // if(SaveLoadSystem.current.gameMode == "Freeride") maxGear = 8;
         //music player
         bool isMusicPlayerActive = false;
 
-        print("maxHealth: " + maxHealth);
-        print("health: " + health);
-        print("fuelCap: " + fuelCap);
-        print("fuel: " + fuel);
-        print("fuelLoss: " + fuelLoss);
-        print("maxGear: " + maxGear);
+        // print("maxHealth: " + maxHealth);
+        // print("health: " + health);
+        // print("fuelCap: " + fuelCap);
+        // print("fuel: " + fuel);
+        // print("fuelLoss: " + fuelLoss);
+        // print("maxGear: " + maxGear);
 
         #endregion
         #region UPGRADES ================================================================================
 
         up.Toggle(upgBells.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgBells", 0) == 1? true:false));
         bool isAntennaOn = (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgAntennas", 0) == 1? true:false);
+        
         up.Toggle(upgAntennas.name, isAntennaOn);
         isMusicPlayerActive = isAntennaOn;
+
         up.Toggle(upgCircleLights.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgCircleLights", 0) == 1? true:false));
         up.Toggle(upgBumperLights.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgBumperLights", 0) == 1? true:false));
         up.Toggle(upgFrontGrills.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgFrontGrills", 0) == 1? true:false));
@@ -190,6 +192,8 @@ public class JeepneySLS : MonoBehaviour {
         carcon.SetMaxGear(maxGear);
         carcon.Rename(jeepName);
         carcon.mp.SetActive(isMusicPlayerActive);
+        if(isMusicPlayerActive) print("Music player is active");
+        else print("Music player is not active");
 
         #endregion
 
@@ -198,7 +202,7 @@ public class JeepneySLS : MonoBehaviour {
 
     private void LoadDefault() {
         
-        print("Loading default jeepney settings. carcon: " + carcon.name);
+        // print("Loading default jeepney settings. carcon: " + carcon.name);
 
         #region STATS ================================================================================
 
@@ -216,16 +220,16 @@ public class JeepneySLS : MonoBehaviour {
         int fuelLoss = 1; //Realizing late (right now), that 'eff' is the worst possible name for this variable
         //max gear
         int maxGear = 4;
-        if(SaveLoadSystem.current.gameMode == "Freeride") maxGear = 8;
+        // if(SaveLoadSystem.current.gameMode == "Freeride") maxGear = 8;
         //music player
         bool isMusicPlayerActive = false;
 
-        print("maxHealth: " + maxHealth);
-        print("health: " + health);
-        print("fuelCap: " + fuelCap);
-        print("fuel: " + fuel);
-        print("fuelLoss: " + fuelLoss);
-        print("maxGear: " + maxGear);
+        // print("maxHealth: " + maxHealth);
+        // print("health: " + health);
+        // print("fuelCap: " + fuelCap);
+        // print("fuel: " + fuel);
+        // print("fuelLoss: " + fuelLoss);
+        // print("maxGear: " + maxGear);
 
         #endregion
         #region UPGRADES ================================================================================
@@ -262,8 +266,57 @@ public class JeepneySLS : MonoBehaviour {
         JeepneyPanel.current.UpdateReqs();
     }
 
+    private void LoadFreeride() {
+        up.Toggle(upgAntennas.name, true);
+        carcon.mp.SetActive(true);
+        carcon.SetMaxGear(8);
+
+        #region STATS ================================================================================
+
+        //STANDARD: Playerprefs key names should have the same name as the variables
+
+        //max health
+        // int maxHealth = PlayerPrefs.GetInt(gameMode + "_Jeepney_MaxHealth", 100);
+        // //health
+        // int health = PlayerPrefs.GetInt(gameMode + "_Jeepney_Health", 100);
+        // //fuel cap
+        // int fuelCap = PlayerPrefs.GetInt(gameMode + "_Jeepney_FuelCap", 50000);
+        // //fuel
+        // int fuel = PlayerPrefs.GetInt(gameMode + "_Jeepney_Fuel", 50000);
+        // //fuel eff
+        // int fuelLoss = PlayerPrefs.GetInt(gameMode + "_Jeepney_FuelLoss", 1); //Realizing late (right now), that 'eff' is the worst possible name for this variable
+        // //max gear
+        // int maxGear = PlayerPrefs.GetInt(gameMode + "_Jeepney_MaxGear", 8);
+
+        #endregion
+
+        #region OTHERS ================================================================================
+
+        string jeepName = PlayerPrefs.GetString(gameMode + "_Jeepney_Name", "Jeepney Name");
+
+        #endregion
+        #region APPLICATION ================================================================================
+
+        carcon.maxHealth = 100;
+        carcon.SetHealth(100);
+        carcon.fuelCapacity = 100000;
+        carcon.fuelAmount = 100000;
+        carcon.fuelLoss = 1;
+        carcon.AddFuel(0);
+        // carcon.maxGear = maxGear;
+        // carcon.SetMaxGear(maxGear);
+        carcon.Rename(jeepName);
+        JeepneyPanel.current.UpdateReqs();
+
+        #endregion
+    }
+
     public void LoadPrevious() { //load previous save or default
-        if(gameMode == "Freeride") return;
+        // if(gameMode == "Freeride") return;
+        if(gameMode == "Freeride") {
+            LoadFreeride();
+            return;
+        }
         
         bool isNewGame = TimeManager.current.days == 1? true:false;
 

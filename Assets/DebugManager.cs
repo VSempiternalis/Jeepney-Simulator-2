@@ -32,6 +32,28 @@ public class DebugManager : MonoBehaviour {
             if(Input.GetKeyDown(KeyCode.Alpha3)) {
                 player.position = poi3.position;
             }
+            //[4] Check achievement state
+            if(Input.GetKeyDown(KeyCode.Alpha4)) {
+                SteamAchievements.current.CheckAchievementState("ACH_STARTUP");
+            }
+            //[5] Trigger achievement
+            if(Input.GetKeyDown(KeyCode.Alpha5)) {
+                SteamAchievements.current.UnlockAchievement("ACH_STARTUP");
+            }
+            //[6] Clear achievement
+            if(Input.GetKeyDown(KeyCode.Alpha6)) {
+                SteamAchievements.current.ClearAchievement("ACH_STARTUP");
+            }
+            //[7] Subtract one hour to time
+            else if(Input.GetKeyDown(KeyCode.Alpha7)) {
+                // TimeManager.current.SetTimeTo(540);
+                TimeManager.current.AddHours(-1);
+            }
+            //[8] Add one hour to time
+            else if(Input.GetKeyDown(KeyCode.Alpha8)) {
+                // TimeManager.current.SetTimeTo(540);
+                TimeManager.current.AddHours(1);
+            }
             //[9] Switch player run speed to 9 or 60
             else if(Input.GetKeyDown(KeyCode.Alpha9)) {
                 FirstPersonMovement fpm = player.GetComponent<FirstPersonMovement>();

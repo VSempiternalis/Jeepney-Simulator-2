@@ -209,7 +209,8 @@ public class JeepneyPanel : MonoBehaviour {
     }
 
     public void UpgradeFuelCap() {
-        if(fuelCap == maxFuelCap) {
+        print("UPGRADING FUEL CAP: " + fuelCap + " / " + maxFuelCap);
+        if(fuelCap >= maxFuelCap) {
             NotificationManager.current.NewNotif("MAX FUEL CAPACITY REACHED", "The fuel capacity cannot be upgraded any further");
             return;
         }
@@ -238,13 +239,15 @@ public class JeepneyPanel : MonoBehaviour {
     #region OTHERS ==================================================
 
     public void UpgradeMaxGear() {
+        print("UPGRADING MAX GEAR");
         if(carcon.maxGear == maxGear) {
             NotificationManager.current.NewNotif("MAXIMUM GEAR REACHED", "Your vehicle's gear cannot be upgraded any further");
             return;
         }
 
         if(bm.deposit >= gearUpgCost) {
-            carcon.maxGear ++;
+            // carcon.maxGear ++;
+            carcon.SetMaxGear(carcon.maxGear + 1);
             Purchase(gearUpgCost, 18);
         } else Fail();
     }

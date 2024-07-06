@@ -73,6 +73,7 @@ public class SaveLoadSystem : MonoBehaviour {
         "Tip 667: "
     };
     [SerializeField] private TMP_Text tipText;
+    [SerializeField] private MusicPlayer mp;
 
     [Space(10)]
     [Header("SETUP")]
@@ -179,7 +180,7 @@ public class SaveLoadSystem : MonoBehaviour {
         isPayments = PlayerPrefs.GetInt("Freeride_IsPayments", 1) == 1? true:false;
         isEvents = PlayerPrefs.GetInt("Freeride_IsEvents", 1) == 1? true:false;
         isShifts = PlayerPrefs.GetInt("Freeride_IsShifts", 1) == 1? true:false;
-        print("isEvents: " + (isEvents? 1:0));
+        // print("isEvents: " + (isEvents? 1:0));
         //MAX POP
         populationCount = PlayerPrefs.GetInt("Freeride_PopulationCount", 50);
         SpawnArea.current.maxPersonCount = populationCount;
@@ -289,7 +290,7 @@ public class SaveLoadSystem : MonoBehaviour {
     }
 
     private void NewCareer() {
-        print("NEW CAREER!");
+        // print("NEW CAREER!");
 
         //DEPOSIT
         // deposit = PlayerPrefs.GetInt("Freeride_Deposit", 0);
@@ -394,6 +395,9 @@ public class SaveLoadSystem : MonoBehaviour {
     IEnumerator ExitToMainMenu() {
         loadingScreen.In();
         loadingScreen.GetComponent<CanvasGroup>().blocksRaycasts = true;
+
+        //Turn of music
+        if(mp.isOn) mp.TogglePlay();
 
         //Tip
         int randInt = Random.Range(0, tips.Count);

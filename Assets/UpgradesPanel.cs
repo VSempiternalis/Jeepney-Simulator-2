@@ -37,10 +37,10 @@ public class UpgradesPanel : MonoBehaviour {
     }
 
     public void TryBuy(string newUpgName) {
-        print("BUYING " + newUpgName);
+        // print("BUYING " + newUpgName);
         foreach(Upgrade upgrade in upgrades) {
             if(upgrade.upgName == newUpgName) {
-                print("FOUND " + newUpgName);
+                // print("FOUND " + newUpgName);
                 // check if can afford
                 if(allFree || bm.deposit >= upgrade.price) {
                     bm.AddToDeposit(-upgrade.price);

@@ -11,6 +11,9 @@ public class MapCamera : MonoBehaviour {
 
     private void Start() {
         initialRotation = transform.rotation;
+
+        //Turn rotation on by default
+        ToggleRotation();
     }
 
     private void Update() {
