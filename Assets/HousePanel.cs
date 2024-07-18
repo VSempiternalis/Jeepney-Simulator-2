@@ -81,6 +81,17 @@ public class HousePanel : MonoBehaviour {
             print("unlocking landmark: " + landmark);
             rs.allDestinations.Add(landmark);
         }
+
+        //STEAM ACH
+        if(houseNum == 0) SteamAchievements.current.UnlockAchievement("ACH_HOUSE1");
+        else if(houseNum == 1) SteamAchievements.current.UnlockAchievement("ACH_HOUSE2");
+        else if(houseNum == 2) SteamAchievements.current.UnlockAchievement("ACH_HOUSE3");
+
+        bool isMaster = true;
+        foreach(int house in housesOwned) {
+            if(house == 0) isMaster = false;
+        }
+        if(isMaster) SteamAchievements.current.UnlockAchievement("ACH_MASTER");
     }
     
     private void LockHouse(int houseNum) {

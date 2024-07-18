@@ -661,6 +661,8 @@ public class PersonHandler : MonoBehaviour {
 
         //death audio
         voiceHandler.Say("Death");
+
+        SteamAchievements.current.AddKill();
     }
 
     private void OnTriggerEnter(Collider other) {

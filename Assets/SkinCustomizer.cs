@@ -102,6 +102,18 @@ public class SkinCustomizer : MonoBehaviour {
             skinsOwned[skins.IndexOf(currentSkin)] = true;
             SetSkinToCurrent();
             SetDisplay(skins.IndexOf(currentSkin));
+
+            //STEAM ACH
+            SteamAchievements.current.UnlockAchievement("ACH_SHOPPING");
+            if(skins.IndexOf(currentSkin) == 16) SteamAchievements.current.UnlockAchievement("ACH_BLING_BLING");
+            else if(skins.IndexOf(currentSkin) == 17) SteamAchievements.current.UnlockAchievement("ACH_GHOST_RIDER");
+            
+            bool isSkinCollector = true;
+            foreach(bool skin in skinsOwned) {
+                if(!skin) isSkinCollector = false;
+            }
+            if(isSkinCollector) SteamAchievements.current.UnlockAchievement("ACH_SKIN_COLLECTOR");
+
         } else {
             NotificationManager.current.NewNotifColor("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.", 2);
         }

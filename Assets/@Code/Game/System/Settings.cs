@@ -456,6 +456,9 @@ public class Settings : MonoBehaviour {
         if (Application.platform != RuntimePlatform.WindowsEditor && !Application.isEditor) {
             PlayerPrefs.SetInt("GameCrashed", 1);
             PlayerPrefs.Save();
+
+            //STEAM ACH
+            SteamAchievements.current.UnlockAchievement("ACH_HOUSTON");
         }
     }
 }

@@ -46,6 +46,9 @@ public class UpgradesPanel : MonoBehaviour {
                     bm.AddToDeposit(-upgrade.price);
                     AudioManager.current.PlayUI(15);
                     Toggle(upgrade.upgName, true); //must be string for JeepneySLS
+
+                    //STEAM ACH
+                    SteamAchievements.current.UnlockAchievement("ACH_STARTING_TO_SHINE");
                 } else {
                     NotificationManager.current.NewNotifColor("INSUFFICIENT FUNDS!", "You do not have enough money in your deposit to afford this.", 2);
                 }
@@ -55,6 +58,8 @@ public class UpgradesPanel : MonoBehaviour {
 
     public void Toggle(string newUpgName, bool toggleOn) { //must be string for JeepneySLS
         // print("TOGGLING " + newUpgName);
+        //STEAM ACH
+        bool isPatokJeepney = true;
         foreach(Upgrade upgrade in upgrades) {
             if(upgrade.upgName == newUpgName) {
                 //go
@@ -68,7 +73,12 @@ public class UpgradesPanel : MonoBehaviour {
                     carcon.damage += upgrade.damageAdd;
 
                     //music player
-                    if(upgrade.enablesMusic) carcon.mp.SetActive(true);
+                    if(upgrade.enablesMusic) {
+                        carcon.mp.SetActive(true);
+
+                        //STEAM ACH
+                        SteamAchievements.current.UnlockAchievement("ACH_TURN_UP_THE_MUSIC");
+                    }
 
                     //button
                     upgrade.button.SetActive(false);
@@ -88,7 +98,10 @@ public class UpgradesPanel : MonoBehaviour {
                 JeepneyPanel.current.UpdateReqs();
 
             }
+            if(!upgrade.go.activeSelf) isPatokJeepney = false;
         }
+
+        if(isPatokJeepney) SteamAchievements.current.UnlockAchievement("ACH_PATOK_JEEPNEY");
     }
 
     public void SetAsDefault() {

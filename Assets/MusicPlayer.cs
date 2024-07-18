@@ -56,7 +56,8 @@ public class MusicPlayer : MonoBehaviour {
             audioClips.Add(LoadAudioClip(song));
         }
 
-
+        //STEAM ACH
+        if(songs.Length > 10) SteamAchievements.current.UnlockAchievement("ACH_MUSIC_LOVER");
     }
 
     private void Update() {

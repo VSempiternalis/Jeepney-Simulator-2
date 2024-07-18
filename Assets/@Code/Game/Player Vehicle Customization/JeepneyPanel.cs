@@ -178,6 +178,9 @@ public class JeepneyPanel : MonoBehaviour {
         if(bm.deposit >= repairCost) {
             carcon.AddHealth(missingHealth);
             Purchase(repairCost, 16);
+
+            //STEAM ACH
+            SteamAchievements.current.UnlockAchievement("ACH_THAT_IS_PRISTINE");
         } else Fail();
     }
 
@@ -220,6 +223,9 @@ public class JeepneyPanel : MonoBehaviour {
             carcon.AddFuel(fuelCapUpgAdd);
 
             Purchase(fuelCapUpgCost, 18);
+
+            //STEAM ACH
+            if(carcon.fuelCapacity >= maxFuelCap) SteamAchievements.current.UnlockAchievement("ACH_FULL_TANK");
         } else Fail();
     }
 
@@ -249,6 +255,9 @@ public class JeepneyPanel : MonoBehaviour {
             // carcon.maxGear ++;
             carcon.SetMaxGear(carcon.maxGear + 1);
             Purchase(gearUpgCost, 18);
+            
+            //STEAM ACH
+            if(carcon.maxGear == maxGear) SteamAchievements.current.UnlockAchievement("ACH_BYAHENG_LANGIT");
         } else Fail();
     }
 

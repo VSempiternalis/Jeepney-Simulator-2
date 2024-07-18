@@ -165,6 +165,12 @@ public class CarController : MonoBehaviour {
     public MusicPlayer mp;
 
     [Space(10)]
+    [Header("ACHIEVEMENTS")]
+    private bool isSmoothRide;
+    private bool isPerfectionist;
+    private bool isFullyLoaded;
+
+    [Space(10)]
     [Header("WHEEL AND AXLES")]
     public List<Wheel> wheels;
 
@@ -237,11 +243,23 @@ public class CarController : MonoBehaviour {
                 passenger.GetComponent<PersonHandler>().ExitVehicle();
                 passenger.GetComponent<PersonHandler>().state = "Idle";
                 passenger.GetComponent<Despawner>().Despawn();
+
+                isPerfectionist = false;
             }
         }
 
         //reset fuel to full
         // fuelAmount = fuelCapacity;
+
+        //STEAM ACH
+        if(isSmoothRide) SteamAchievements.current.UnlockAchievement("ACH_SMOOTH_RIDE");
+        if(isPerfectionist) SteamAchievements.current.UnlockAchievement("ACH_PERFECTIONIST");
+        // if(isFullyLoaded) SteamAchievements.current.UnlockAchievement("ACH_FULLY_LOADED");
+
+        //RESET ACH
+        isSmoothRide = true;
+        isPerfectionist = true;
+        // isFullyLoaded = false;
     }
 
     #region INPUTS ======================================================================
@@ -345,6 +363,7 @@ public class CarController : MonoBehaviour {
 
         //NO SEATS
         if(freeSeats.Count == 0) return;
+        else if(freeSeats.Count == 1) SteamAchievements.current.UnlockAchievement("ACH_FULLY_LOADED");
 
         //Pick random from free seats
         int randInt = UnityEngine.Random.Range(0, freeSeats.Count);
@@ -700,6 +719,9 @@ public class CarController : MonoBehaviour {
                 if(other.gameObject.GetComponent<IHealth>() != null) other.gameObject.GetComponent<IHealth>().AddHealth(-(int)(damage + relativeVelocity));
 
                 AudioManager.current.PlayUI(14);
+
+                //STEAM ACH
+                isSmoothRide = false;
             }
         }
     }

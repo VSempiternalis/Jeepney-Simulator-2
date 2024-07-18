@@ -57,30 +57,8 @@ public class ImageImporter : MonoBehaviour {
             index ++;
         }
 
-        // int index = 0;
-        // foreach(string imagePath in imagePaths) {
-        //     byte[] fileData = File.ReadAllBytes(imagePath);
-        //     Texture2D texture = new Texture2D(1, 1); // Create a new Texture2D
-        //     texture.LoadImage(fileData); // Load the image data into the texture
-
-        //     // Create a GameObject to display the texture (example)
-        //     // GameObject imageObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
-        //     // Destroy(imageObject.GetComponent<MeshCollider>());
-        //     // imageObject.GetComponent<MeshRenderer>().material.mainTexture = texture; // Apply the texture to the GameObject's material
-
-        //     Debug.Log("Imported image: " + imagePath);
-
-        //     //place image
-        //     if(index == 0) {
-        //         image1.GetComponent<MeshRenderer>().material.mainTexture = texture;
-        //     } else if(index == 1) {
-        //         image2.GetComponent<MeshRenderer>().material.mainTexture = texture;
-        //     } else if(index == 2) {
-        //         image3.GetComponent<MeshRenderer>().material.mainTexture = texture;
-        //     }
-
-        //     index ++;
-        // }
+        //STEAM ACH
+        if(imagePaths.Length > 10) SteamAchievements.current.UnlockAchievement("ACH_ARTIST");
     }
 
     private void Update() {

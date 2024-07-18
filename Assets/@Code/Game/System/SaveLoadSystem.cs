@@ -374,6 +374,27 @@ public class SaveLoadSystem : MonoBehaviour {
         PlayerPrefs.SetInt(gameMode + "_PlayerHouse", GameManager.current.playerSpawnLocation);
 
         Setup();
+
+        //STEAM ACHIEVEMENTS
+        if(gameMode == "Freeride") {
+            if(days == 2) SteamAchievements.current.UnlockAchievement("ACH_FREERIDE_DAY_2");
+            else if(days == 5) SteamAchievements.current.UnlockAchievement("ACH_FREERIDE_DAY_5");
+            if(days == 10) SteamAchievements.current.UnlockAchievement("ACH_FREERIDE_DAY_10");
+            else if(days == 25) SteamAchievements.current.UnlockAchievement("ACH_FREERIDE_DAY_25");
+            if(days == 50) SteamAchievements.current.UnlockAchievement("ACH_FREERIDE_DAY_50");
+            else if(days == 100) SteamAchievements.current.UnlockAchievement("ACH_FREERIDE_DAY_100");
+        } else { //CAREER
+            if(days == 2) SteamAchievements.current.UnlockAchievement("ACH_CAREER_DAY_2");
+            else if(days == 5) SteamAchievements.current.UnlockAchievement("ACH_CAREER_DAY_5");
+            if(days == 10) SteamAchievements.current.UnlockAchievement("ACH_CAREER_DAY_10");
+            else if(days == 25) SteamAchievements.current.UnlockAchievement("ACH_CAREER_DAY_25");
+            if(days == 50) SteamAchievements.current.UnlockAchievement("ACH_CAREER_DAY_50");
+            else if(days == 100) SteamAchievements.current.UnlockAchievement("ACH_CAREER_DAY_100");
+        }
+
+        if(shiftLength == 30) SteamAchievements.current.UnlockAchievement("ACH_OVERTIME_30");
+        else if(shiftLength == 45) SteamAchievements.current.UnlockAchievement("ACH_OVERTIME_45");
+        else if(shiftLength == 60) SteamAchievements.current.UnlockAchievement("ACH_OVERTIME_60");
     }
 
     public void OnLose() {
@@ -382,6 +403,9 @@ public class SaveLoadSystem : MonoBehaviour {
         GameStart(isNewGame);
         
         Setup();
+
+        //STEAM ACH
+        SteamAchievements.current.UnlockAchievement("ACH_BREADLOSER");
     }
 
     #endregion
