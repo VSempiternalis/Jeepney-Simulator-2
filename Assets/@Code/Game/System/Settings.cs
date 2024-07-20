@@ -134,8 +134,8 @@ public class Settings : MonoBehaviour {
     public void LoadDefaultSettings() {
         print("[SETTINGS] Loading default settings");
         SetMasterVolume(-10); //0 is full
-        SetBGMVolume(-10);
-        SetMusicPlayerVolume(-50);
+        SetBGMVolume(-15);
+        SetMusicPlayerVolume(-10);
         
         SetGraphicsPresetFromSpecs();
         SetResolution(resolutions.Length - 1);

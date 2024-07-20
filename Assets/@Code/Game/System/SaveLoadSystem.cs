@@ -420,8 +420,8 @@ public class SaveLoadSystem : MonoBehaviour {
         loadingScreen.In();
         loadingScreen.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
-        //Turn of music
-        if(mp.isOn) mp.TogglePlay();
+        //Turn off music
+        if(mp.isPlaying) mp.TogglePlay();
 
         //Tip
         int randInt = Random.Range(0, tips.Count);
