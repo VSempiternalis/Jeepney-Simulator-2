@@ -715,13 +715,15 @@ public class CarController : MonoBehaviour {
                 AddHealth(-(int)(relativeVelocity/2));
                 NotificationManager.current.NewNotifColor("VEHICLE DAMAGED!", "Jeepney health: " + health, 3);
 
-                //damage other
+                //damage other health
                 if(other.gameObject.GetComponent<IHealth>() != null) other.gameObject.GetComponent<IHealth>().AddHealth(-(int)(damage + relativeVelocity));
 
                 AudioManager.current.PlayUI(14);
 
                 //STEAM ACH
                 isSmoothRide = false;
+
+                if(other.gameObject.layer == 18) SteamAchievements.current.AddKill();
             }
         }
     }

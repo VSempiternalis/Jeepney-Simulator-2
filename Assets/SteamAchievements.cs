@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SteamAchievements : MonoBehaviour {
+    public bool isSteamActive;
     public static SteamAchievements current;
     [SerializeField] private int achievementsCount;
     [SerializeField] private int totalAchievementsCount;
@@ -51,11 +52,15 @@ public class SteamAchievements : MonoBehaviour {
     }
 
     public void CheckAchievementState(string id) {
+        if(!isSteamActive) return;
+        
         var ach = new Steamworks.Data.Achievement(id);
         print($"Achievement {id} status: {ach.State}");
     }
 
     public void UnlockAchievement(string id) {
+        if(!isSteamActive) return;
+
         var ach = new Steamworks.Data.Achievement(id);
         ach.Trigger();
         print($"Achievement {id} unlocked");
@@ -66,6 +71,8 @@ public class SteamAchievements : MonoBehaviour {
     }
 
     public void ClearAchievement(string id) {
+        if(!isSteamActive) return;
+
         var ach = new Steamworks.Data.Achievement(id);
         ach.Clear();
         print($"Achievement {id} status cleared");

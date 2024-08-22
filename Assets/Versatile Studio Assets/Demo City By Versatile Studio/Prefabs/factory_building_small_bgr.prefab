@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5485682775060013994}
   - component: {fileID: 8903287701346806799}
   - component: {fileID: 6659174271294740677}
+  - component: {fileID: 5573171274116497040}
   m_Layer: 0
   m_Name: factory_building_small_bgr
   m_TagString: Untagged
@@ -84,3 +85,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &5573171274116497040
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5146171574300064016}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 39.500076, y: 20.700077, z: 22.800076}
+  m_Center: {x: -0.049999237, y: 10.15, z: 0}

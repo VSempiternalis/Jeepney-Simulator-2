@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 782099722015888197}
   - component: {fileID: 4428525080460352736}
   - component: {fileID: 1914521671250716714}
+  - component: {fileID: 8886239914887543824}
   m_Layer: 0
   m_Name: office_building_4_bgr
   m_TagString: Untagged
@@ -84,3 +85,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8886239914887543824
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 112945275596704255}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 36.000134, y: 50.50016, z: 36.000134}
+  m_Center: {x: -0.0000007810183, y: 25.250002, z: -0.000061035156}
