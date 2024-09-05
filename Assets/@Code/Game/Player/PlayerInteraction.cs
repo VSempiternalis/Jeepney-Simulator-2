@@ -25,7 +25,7 @@ public class PlayerInteraction : MonoBehaviour {
 
     [Space(10)]
     [Header("ITEMS")]
-    [SerializeField] private int maxItemsOnHand;
+    public int maxItemsOnHand;
     [SerializeField] private Transform rightHand;
     private RaycastHit hit;
 

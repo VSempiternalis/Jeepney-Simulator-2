@@ -34,15 +34,15 @@ public class DebugManager : MonoBehaviour {
             }
             //[4] Check achievement state
             if(Input.GetKeyDown(KeyCode.Alpha4)) {
-                SteamAchievements.current.CheckAchievementState("ACH_STARTUP");
+                // SteamAchievements.current.CheckAchievementState("ACH_STARTUP");
             }
             //[5] Trigger achievement
             if(Input.GetKeyDown(KeyCode.Alpha5)) {
-                SteamAchievements.current.UnlockAchievement("ACH_STARTUP");
+                // SteamAchievements.current.UnlockAchievement("ACH_STARTUP");
             }
             //[6] Clear achievement
             if(Input.GetKeyDown(KeyCode.Alpha6)) {
-                SteamAchievements.current.ClearAchievement("ACH_STARTUP");
+                // SteamAchievements.current.ClearAchievement("ACH_STARTUP");
             }
             //[7] Subtract one hour to time
             else if(Input.GetKeyDown(KeyCode.Alpha7)) {

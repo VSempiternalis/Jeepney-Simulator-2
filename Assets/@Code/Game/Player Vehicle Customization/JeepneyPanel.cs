@@ -34,9 +34,9 @@ public class JeepneyPanel : MonoBehaviour {
     private int fuelCap;
     private int missingFuel;
     private int refuelCost;
-    [SerializeField] private TMP_Text refuelButtonText;
-    [SerializeField] private TMP_Text fuelText;
-    [SerializeField] private Transform fuelBar;
+    // [SerializeField] private TMP_Text refuelButtonText;
+    // [SerializeField] private TMP_Text fuelText;
+    // [SerializeField] private Transform fuelBar;
     [SerializeField] private List<TMP_Text> refuelButtonTexts;
     [SerializeField] private List<TMP_Text> fuelTexts;
     [SerializeField] private List<Transform> fuelBars;
@@ -45,7 +45,7 @@ public class JeepneyPanel : MonoBehaviour {
     [SerializeField] private int fuelCapUpgAdd;
     [SerializeField] private int maxFuelCap;
     [SerializeField] private int fuelCapUpgCost;
-    [SerializeField] private TMP_Text fuelCapUpgButtonText;
+    // [SerializeField] private TMP_Text fuelCapUpgButtonText;
     [SerializeField] private List<TMP_Text> fuelCapUpgButtonTexts;
 
     [Header("FUEL EFFICIENCY")]
@@ -60,12 +60,23 @@ public class JeepneyPanel : MonoBehaviour {
     [Header("GEAR")]
     [SerializeField] private int maxGear;
     [SerializeField] private int gearUpgCost;
-    [SerializeField] private TMP_Text maxGearButtonText;
-    [SerializeField] private TMP_Text gearText;
-    [SerializeField] private Transform maxGearBar;
+    // [SerializeField] private TMP_Text maxGearButtonText;
+    // [SerializeField] private TMP_Text gearText;
+    // [SerializeField] private Transform maxGearBar;
     [SerializeField] private List<TMP_Text> maxGearButtonTexts;
     [SerializeField] private List<TMP_Text> gearTexts;
     [SerializeField] private List<Transform> maxGearBars;
+
+    [Header("WALLET")]
+    private PlayerInteraction player;
+    private int wallet = 10; //wallet capacity
+    [SerializeField] private int walletUpgAdd;
+    [SerializeField] private int maxWallet;
+    [SerializeField] private int walletUpgCost;
+    [SerializeField] private List<TMP_Text> walletUpgButtonTexts;
+    [SerializeField] private List<TMP_Text> walletTexts;
+    [SerializeField] private List<Transform> walletBars;
+
 
     private void Awake() {
         current = this;
@@ -73,6 +84,7 @@ public class JeepneyPanel : MonoBehaviour {
 
     private void Start() {
         bm = BoundaryManager.current;
+        player = PlayerDriveInput.current.GetComponent<PlayerInteraction>();
     }
 
     public void Setup() {
@@ -158,6 +170,18 @@ public class JeepneyPanel : MonoBehaviour {
             UpdateBar(bar, carMaxGear-2, maxGear-2);
         }
         // }
+
+        //Wallet
+        wallet = player.maxItemsOnHand;
+        foreach(TMP_Text text in walletUpgButtonTexts) {
+            text.text = "UPGRADE - P" + walletUpgCost;
+        }
+        foreach(TMP_Text text in walletTexts) {
+            text.text = wallet + "/" + maxWallet;
+        }
+        foreach(Transform bar in walletBars) {
+            UpdateBar(bar, wallet, maxWallet);
+        }
     }
 
     private void UpdateBar(Transform bar, float value, float maxValue) {
@@ -194,6 +218,19 @@ public class JeepneyPanel : MonoBehaviour {
             carcon.maxHealth += maxHealthUpgAdd;
             carcon.AddHealth(maxHealthUpgAdd);
             Purchase(maxHealthUpgCost, 18);
+        } else Fail();
+    }
+
+    public void UpgradeWallet() {
+        if(wallet == maxWallet) {
+            NotificationManager.current.NewNotif("MAX WALLET REACHED", "Your wallet cannot be upgraded any further");
+            return;
+        }
+
+        if(bm.deposit >= walletUpgCost) {
+            wallet += walletUpgAdd;
+            player.maxItemsOnHand = wallet;
+            Purchase(walletUpgCost, 2);
         } else Fail();
     }
 

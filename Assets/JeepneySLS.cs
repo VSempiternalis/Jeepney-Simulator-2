@@ -67,6 +67,8 @@ public class JeepneySLS : MonoBehaviour {
         PlayerPrefs.SetInt(gameMode + "_Jeepney_FuelLoss", carcon.fuelLoss); //Realizing late (right now), that 'eff' is the worst possible name for this variable
         //max gear
         PlayerPrefs.SetInt(gameMode + "_Jeepney_MaxGear", carcon.maxGear);
+        //wallet
+        PlayerPrefs.SetInt(gameMode + "_Player_Wallet", PlayerDriveInput.current.GetComponent<PlayerInteraction>().maxItemsOnHand);
 
         // print("maxHealth: " + carcon.maxHealth);
         // print("health: " + carcon.health);
@@ -131,6 +133,8 @@ public class JeepneySLS : MonoBehaviour {
         int fuelLoss = PlayerPrefs.GetInt(gameMode + "_Jeepney_FuelLoss", 1); //Realizing late (right now), that 'eff' is the worst possible name for this variable
         //max gear
         int maxGear = PlayerPrefs.GetInt(gameMode + "_Jeepney_MaxGear", 8);
+        //wallet
+        int wallet = PlayerPrefs.GetInt(gameMode + "_Player_Wallet", 10);
         // if(SaveLoadSystem.current.gameMode == "Freeride") maxGear = 8;
         //music player
         bool isMusicPlayerActive = false;
@@ -190,6 +194,8 @@ public class JeepneySLS : MonoBehaviour {
         carcon.fuelLoss = fuelLoss;
         // carcon.maxGear = maxGear;
         carcon.SetMaxGear(maxGear);
+        //wallet
+        PlayerDriveInput.current.GetComponent<PlayerInteraction>().maxItemsOnHand = wallet;
         carcon.Rename(jeepName);
         carcon.mp.SetActive(isMusicPlayerActive);
         if(isMusicPlayerActive) print("Music player is active");
@@ -270,6 +276,7 @@ public class JeepneySLS : MonoBehaviour {
         up.Toggle(upgAntennas.name, true);
         carcon.mp.SetActive(true);
         carcon.SetMaxGear(8);
+        PlayerDriveInput.current.GetComponent<PlayerInteraction>().maxItemsOnHand = 30;
 
         #region STATS ================================================================================
 

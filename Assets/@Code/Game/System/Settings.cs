@@ -265,10 +265,17 @@ public class Settings : MonoBehaviour {
     #region VIDEO
 
     public void SetGraphicsPresetFromSpecs() {
+        //Graphics preset
         if(SystemInfo.graphicsMemorySize <= 1024) SetGraphicsPreset(0);
         else if(SystemInfo.graphicsMemorySize <= 2048) SetGraphicsPreset(1);
-        else if(SystemInfo.graphicsMemorySize <= 4096) SetGraphicsPreset(2);        else if(SystemInfo.graphicsMemorySize < 2048) SetGraphicsPreset(1);
+        else if(SystemInfo.graphicsMemorySize <= 4096) SetGraphicsPreset(2);
         else SetGraphicsPreset(3);
+        
+        //Render Dist
+        if(SystemInfo.graphicsMemorySize <= 1024) SetRenderDist(1);
+        else if(SystemInfo.graphicsMemorySize <= 2048) SetRenderDist(2);
+        else if(SystemInfo.graphicsMemorySize <= 4096) SetRenderDist(3);
+        else SetRenderDist(4);
     }
 
     public void SetGraphicsPreset(int qualityIndex) {
@@ -423,6 +430,8 @@ public class Settings : MonoBehaviour {
     }
 
     public void SetRenderDist(float newRenderDist) {
+        //float newRenderDist 1 = 100, 2 = 200, etc
+
         if(!playerCam) return;
         float renderDist = newRenderDist*100f;
         renderDistSlider.value = newRenderDist;

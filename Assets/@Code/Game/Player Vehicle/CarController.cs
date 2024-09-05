@@ -218,9 +218,9 @@ public class CarController : MonoBehaviour {
         Brake();
         FuelDrain();
 
-        if(fuelAmount < 5000 && fuelAmount > 4900) NotificationManager.current.NewNotifColor("LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refill!", 2);
-        else if(fuelAmount < 2500 && fuelAmount > 2400) NotificationManager.current.NewNotifColor("VERY LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refill!", 2);
-        else if(fuelAmount < 10 && fuelAmount >= 0 ) NotificationManager.current.NewNotifColor("NO FUEL!", "You have run out of fuel! Call a tow truck.", 3);
+        if(fuelAmount < 5000 && fuelAmount > 4900) NotificationManager.current.NewNotifColor("LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refuel!", 2);
+        else if(fuelAmount < 2500 && fuelAmount > 2400) NotificationManager.current.NewNotifColor("VERY LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refuel!", 2);
+        else if(fuelAmount < 10 && fuelAmount >= 0 ) NotificationManager.current.NewNotifColor("NO FUEL!", "You have run out of fuel! Call a tow truck using the tablet and refuel in the nearest gas station.", 3);
     }
 
     // CHECKS ======================================================================
@@ -285,7 +285,7 @@ public class CarController : MonoBehaviour {
         brakeInput = false;
 
         //movement
-        if(Input.GetKey(Key_DriveForward) && !isEngineOn && !carEngineButton.isOn) {
+        if(Input.GetKey(Key_DriveForward) && !isEngineOn) {
             carEngineButton.Interact(gameObject);
         }
         
@@ -431,22 +431,22 @@ public class CarController : MonoBehaviour {
             // steerInput = 0;
             // brakeInput = false;
 
+            // if(isEngineOn) carEngineButton.Interact(gameObject);
             if(isEngineOn) carEngineButton.Interact(gameObject);
         } else if(fuelAmount > fuelCapacity) {
             fuelAmount = fuelCapacity;
         }
+        
     }
 
     public void PumpingFuel(bool newVal) {
         if(isPumpingFuel == newVal) return;
+
+        if(isEngineOn) carEngineButton.Interact(gameObject);
         
         isPumpingFuel = newVal;
 
         AudioManager.current.PlayFuelPump(newVal);
-
-        // if(isPumpingFuel && isEngineOn) {
-        //     carEngineButton.Interact(gameObject);
-        // }
     }
 
     #endregion
@@ -463,6 +463,11 @@ public class CarController : MonoBehaviour {
     }
 
     public void SetEngine(bool newIsOn) {
+        if(newIsOn && fuelAmount == 0) {
+            print("FUEL: " + fuelAmount);
+            isEngineOn = false;
+            return; 
+        }
         // print("Sett Engine. newIsOn: " + newIsOn + " isPumpingFuel: " + isPumpingFuel);
         // if(isPumpingFuel && !isEngineOn) return;
 
@@ -622,6 +627,9 @@ public class CarController : MonoBehaviour {
         speedTextUI.text = speedKpH.ToString("000");
         fuelTextUI.text = Mathf.Round((float)fuelAmount/1000f) + "/" + Mathf.Round((float)fuelCapacity/1000f) + "L";
         if(fuelTextUI.color != fuelColor) fuelTextUI.color = fuelColor;
+
+        //engine button off when no fuel
+        // if(fuelAmount <= 0 && carEngineButton.isOn) carEngineButton.Interact(gameObject);
     }
 
     private void AnimateWheels() {
