@@ -128,7 +128,7 @@ public class Tutorial : MonoBehaviour {
 
         //NOTIFICATIONS
         if(step == 1) {
-            nm.NewNotif("GRABBING ITEMS", "That's the spirit! Go over to the chess board and grab a piece. You can also read their descriptions by hovering over them.\n\n(Press [LEFT CLICK] to grab an item)");
+            nm.NewNotif("GRABBING ITEMS", "That's the spirit! Go over to the chess board and grab a piece. You can also read item descriptions by hovering over them.\n\n(Press [LEFT CLICK] to grab an item)");
             chessTarget.enabled = true;
         }
         else if(step == 2) {
@@ -140,26 +140,26 @@ public class Tutorial : MonoBehaviour {
             nm.NewNotif("GRABBING MULTIPLE ITEMS", "Next up, grab ten pieces.\n\n(Hold [LEFT CLICK] to grab multiple items)");
         }
         else if(step == 4) nm.NewNotif("DROPPING ITEMS", "Now, place all the pieces back on the chess board. It works the same way as grabbing.\n\n(Press/Hold [RIGHT CLICK] to drop items)");
-        else if(step == 5) nm.NewNotif("GRABBING ALL ITEMS", "You can also try to grab all the items in one click.\n\n(Press [MIDDLE CLICK] on the CHESS BOARD to grab all items)");
+        else if(step == 5) nm.NewNotif("GRABBING ALL ITEMS", "You can also try to grab all the items in one click. Note that you can only carry ten items at a time.\n\n(Press [MIDDLE CLICK] on the CHESS BOARD to grab all items)");
         else if(step == 6) nm.NewNotif("DROP ALL ITEMS", "Before we continue, you should drop all the pieces again.\n\n(Press/Hold [RIGHT CLICK] to drop items)");
         else if(step == 7) {
-            nm.NewNotif("ZOOMIES", "Try zooming in and out.\n\n(Use [MOUSE SCROLL] to zoom in and out)");
+            nm.NewNotif("ZOOMIES", "Try zooming in and out. This is useful for interacting with screens.\n\n(Use [MOUSE SCROLL] to zoom in and out)");
             jeepneyManagementTarget.enabled = false;
             chessTarget.enabled = false;
         }
         else if(step == 8) {
             nm.Clear();
-            nm.NewNotif("SETTINGS SCREEN", "The SETTINGS SCREEN is where you can see details about your current game such as your shift time, passenger count, traffic count, and more.\n\nPress [SPACE] to continue");
+            nm.NewNotif("SETTINGS SCREEN", "This is the SETTINGS SCREEN. It is where you can see details about your current game such as your shift time, max NPC count, max traffic count, and more.\n\nPress [SPACE] to continue");
             // Target.enabled = false;            
             settingsScreenTarget.enabled = true;
         }
         else if(step == 9) {
-            nm.NewNotif("BOUNDARY SCREEN", "The BOUNDARY SCREEN is where you'll find your deposit and boundary/quota. Don't press the 'PAY BOUNDARY' button yet.\n\nPress [SPACE] to continue");
+            nm.NewNotif("BOUNDARY SCREEN", "This is the BOUNDARY SCREEN. It is where you'll find your deposit and boundary/quota.\n\nDon't press the 'PAY BOUNDARY' button yet.\n\nPress [SPACE] to continue");
             settingsScreenTarget.enabled = false;            
             boundaryScreenTarget.enabled = true;
         }
         else if(step == 10) {
-            nm.NewNotif("JEEPNEY MANAGEMENT", "Finally, you'll be able to repair, refuel, upgrade, and customize your jeepney to your heart's content on this screen.\n\nPress [SPACE] to continue");
+            nm.NewNotif("JEEPNEY MANAGEMENT", "Finally, you'll be able to repair, refuel, upgrade, and customize your jeepney to your heart's content on the computer screen.\n\nIt's off right now because electricity in this city is expensive\n\nPress [SPACE] to continue");
             boundaryScreenTarget.enabled = false;            
             jeepneyManagementTarget.enabled = true;
         }
@@ -171,7 +171,7 @@ public class Tutorial : MonoBehaviour {
         }
         else if(step == 12) nm.NewNotif("NO TIME TO WASTE", "Alright, that's enough! Before you can exit the office and do your job, you need to set your route first!\n\n([LEFT CLICK] on CHAIR to stand)");
         else if(step == 13) {
-            nm.NewNotif("ROUTE SYSTEM", "Go the Route System screen. This is a very important part of your work, so I need you to show me you're excited again!\n\n(Press [SPACE] to continue)");
+            nm.NewNotif("ROUTE SYSTEM", "Go to the Route System screen. This is a very important part of your work, so I need you to show me you're excited again!\n\n(Press [SPACE] to continue)");
             chairTarget.enabled = false;
             routeSystemTarget.enabled = true;
         } 
@@ -179,8 +179,8 @@ public class Tutorial : MonoBehaviour {
             nm.Clear();
             nm.NewNotif("MANELLA CITY LANDMARKS", "This screen is a map of Manella City and its various landmarks. These are the places you'll take your passengers to.\n\n(Press [SPACE] to continue)");
         }
-        else if(step == 15) nm.NewNotif("LANDMARK TOGGLING", "Since there are a lot of landmarks, you can turn them ON or OFF by clicking on them. Passengers will not enter your jeep if their destination if OFF (Red)\n\n(Press [SPACE] to continue)");
-        else if(step == 16) nm.NewNotif("LOCKED LANDMARKS", "For every shift, you will be given a number of LOCKED landmarks (green). These cannot be turned off.\n\n(Press [SPACE] to continue)");
+        else if(step == 15) nm.NewNotif("LANDMARK TOGGLING", "Since there are a lot of landmarks, you can change which ones you have to go to by clicking their names on the screen. Passengers will not enter your jeep if their destination if RED\n\n(Press [SPACE] to continue)");
+        else if(step == 16) nm.NewNotif("LOCKED LANDMARKS", "For every shift, you will be given a number of LOCKED/GREEN landmarks. These cannot be turned off and you have to deliver passengers there.\n\n(Press [SPACE] to continue)");
         else if(step == 17) nm.NewNotif("TONDOO", "For this tutorial, you'll only have FACTORY as the LOCKED landmark. And since TONDOO is on the way there, turn it on so you can unload passengers along the way.\n\n([LEFT CLICK] 'TONDOO' to turn ON)");
         else if(step == 18) nm.NewNotif("TERMINAL", "At the end of your shift, you need to go back to the TERMINAL to pay your boundary. So you may as well turn it on so you can unload here too.\n\n([LEFT CLICK] 'TERMINAL' to turn ON)");
         else if(step == 19) {

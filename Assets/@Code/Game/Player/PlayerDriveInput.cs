@@ -95,13 +95,14 @@ public class PlayerDriveInput : MonoBehaviour {
             playerModel.SetParent(seat);
             Vector3 modelRot = new Vector3(0, seat.GetComponent<SeatHandler>().modelYRot, 0);
             playerModel.localEulerAngles = modelRot;
-            // playerModel.localEulerAngles = Vector3.zero;
+            // head.transform.localEulerAngles = Vector3.zero;
             if(isDriving) playerModel.localPosition = localDrivePos;
             else playerModel.localPosition = seat.GetComponent<SeatHandler>().localPosModel;
         } else {
             playerModel.SetParent(player);
-            // playerModel.localEulerAngles = Vector3.zero;
+            playerModel.localEulerAngles = Vector3.zero; //
             playerModel.localPosition = Vector3.zero;
+            // head.transform.localEulerAngles = Vector3.zero;
         }
 
         if(isDriversSeat) {

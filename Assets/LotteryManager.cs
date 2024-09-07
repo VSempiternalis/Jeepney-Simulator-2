@@ -141,19 +141,19 @@ public class LotteryManager : MonoBehaviour {
                             print("BRONZE");
                             // removeList.Add(item);
                             BoundaryManager.current.AddToDeposit(bronzePrize);
-                            NotificationManager.current.NewNotifColor("BRONZE PRIZE!", "CONGRATULATIONS! You have won the BRONZE PRIZE of P40,000 and after the 99% tax rate, P400 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
+                            NotificationManager.current.NewNotifColor("BRONZE PRIZE!", "You have won the BRONZE PRIZE of P40,000! After the 99% tax deduction, a total of P400 has been added to your deposit! CONGRATULATIONS!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
                         }
                         else if(silverNums.Contains(num)) {
                             print("SILVER");
                             // removeList.Add(item);
                             BoundaryManager.current.AddToDeposit(silverPrize);
-                            NotificationManager.current.NewNotifColor("SILVER PRIZE!", "CONGRATULATIONS! You have won the SILVER PRIZE of P75,000 and after the 99% tax rate, P750 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
+                            NotificationManager.current.NewNotifColor("SILVER PRIZE!", "You have won the SILVER PRIZE of P75,000! After the 99% tax deduction, a total of P750 has been added to your deposit! CONGRATULATIONS!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
                         }
                         else if(goldNums.Contains(num)) {
                             print("GOLD");
                             // removeList.Add(item);
                             BoundaryManager.current.AddToDeposit(goldPrize);
-                            NotificationManager.current.NewNotifColor("GOLD PRIZE!", "CONGRATULATIONS! You have won the GOLD PRIZE of P200,000 and after the 99% tax rate, P2,000 has been added to your deposit!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
+                            NotificationManager.current.NewNotifColor("GOLD PRIZE!", "You have won the GOLD PRIZE of P200,000! After the 99% tax deduction, a total of P2,000 has been added to your deposit! CONGRATULATIONS!\n\nDEPOSIT: " + BoundaryManager.current.deposit, 1);
                         }
                         else print("ERROR!");
                     }
