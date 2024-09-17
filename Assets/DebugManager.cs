@@ -8,6 +8,7 @@ public class DebugManager : MonoBehaviour {
     [SerializeField] private Transform poi1; //position of interest
     [SerializeField] private Transform poi2;
     [SerializeField] private Transform poi3;
+    [SerializeField] private Transform poi4;
 
     private void Start() {
         player = PlayerDriveInput.current.transform;
@@ -32,9 +33,9 @@ public class DebugManager : MonoBehaviour {
             if(Input.GetKeyDown(KeyCode.Alpha3)) {
                 player.position = poi3.position;
             }
-            //[4] Check achievement state
+            //[4] Teleport to POI
             if(Input.GetKeyDown(KeyCode.Alpha4)) {
-                // SteamAchievements.current.CheckAchievementState("ACH_STARTUP");
+                player.position = poi4.position;
             }
             //[5] Trigger achievement
             if(Input.GetKeyDown(KeyCode.Alpha5)) {
