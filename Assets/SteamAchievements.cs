@@ -4,8 +4,8 @@ using UnityEngine;
 public class SteamAchievements : MonoBehaviour {
     public bool isSteamActive;
     public static SteamAchievements current;
-    [SerializeField] private int achievementsCount;
-    [SerializeField] private int totalAchievementsCount;
+    // [SerializeField] private int achievementsCount;
+    // [SerializeField] private int totalAchievementsCount;
 
     private List<int> followerInts = new List<int>{0, 0, 0, 0};
     private int totalKills;
@@ -16,14 +16,14 @@ public class SteamAchievements : MonoBehaviour {
     }
 
     private void Start() {
-        achievementsCount = PlayerPrefs.GetInt("AchievementsCount", 0);
+        // achievementsCount = PlayerPrefs.GetInt("AchievementsCount", 0);
         totalKills = PlayerPrefs.GetInt("TotalKills", 0);
     }
 
     private void Update() {
         if(!isDone) {
-            ClearAchievement("ACH_PATOK_JEEPNEY");
-            ClearAchievement("ACH_SKIN_COLLECTOR");
+            // ClearAchievement("ACH_PATOK_JEEPNEY");
+            // ClearAchievement("ACH_SKIN_COLLECTOR");
             isDone = true;
         }
     }
@@ -65,9 +65,9 @@ public class SteamAchievements : MonoBehaviour {
         ach.Trigger();
         print($"Achievement {id} unlocked");
 
-        achievementsCount ++;
-        if(achievementsCount == totalAchievementsCount - 1) UnlockAchievement("ACH_KING_OF_THE_ROAD");
-        PlayerPrefs.SetInt("AchievementsCount", achievementsCount);
+        // achievementsCount ++;
+        // if(achievementsCount == totalAchievementsCount - 1) UnlockAchievement("ACH_KING_OF_THE_ROAD");
+        // PlayerPrefs.SetInt("AchievementsCount", achievementsCount);
     }
 
     public void ClearAchievement(string id) {

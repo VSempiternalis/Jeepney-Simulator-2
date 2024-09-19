@@ -4,6 +4,8 @@ public class SteamIntegration : MonoBehaviour {
     [SerializeField] private SteamAchievements steamAchievements;
 
     private void Start() {
+        steamAchievements = SteamAchievements.current;
+
         try {
             Steamworks.SteamClient.Init(2819970);
             PrintSteamName();
@@ -12,6 +14,7 @@ public class SteamIntegration : MonoBehaviour {
             steamAchievements.isSteamActive = true;
         } catch(System.Exception e) {
             print("[STEAM INTEGRATION] Went wrong:" + e);
+            steamAchievements.isSteamActive = false;
         }
     }
 
