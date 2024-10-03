@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 
 public class CarController : MonoBehaviour {
     [SerializeField] private GameObject headlights;
@@ -126,10 +127,14 @@ public class CarController : MonoBehaviour {
 
     [Space(10)]
     [Header("LIGHTS")]
+    private int indicatorDirection; //-1 left, 0 off, 1 right
     [SerializeField] private GameObject indicatorArrowLeft;
     [SerializeField] private GameObject indicatorArrowRight;
     private bool hazardLightsActive;
     [SerializeField] private float blinkTime;
+    [SerializeField] private GameObject leftCA;
+    [SerializeField] private GameObject rightCA;
+    [SerializeField] private GameObject rearCA;
 
     [Space(10)]
     [Header("KEYBINDS")]
@@ -305,6 +310,7 @@ public class CarController : MonoBehaviour {
                     SetGear(0);
                 }
                 moveInput = -1;
+                indicatorDirection = 0;
             }
         }
 
@@ -314,6 +320,17 @@ public class CarController : MonoBehaviour {
         //Map
         if(Input.GetKeyDown(Key_Map)) {
             tablet.Toggle();
+        }
+
+        //Indicator lights
+        if(gear != 0 && Input.GetKeyDown(KeyCode.LeftArrow)) {
+            if(indicatorDirection == -1 || indicatorDirection == 1) indicatorDirection = 0;
+            else indicatorDirection = -1;
+            hazardLightsActive = false;
+        } else if(gear != 0 && Input.GetKeyDown(KeyCode.RightArrow)) {
+            if(indicatorDirection == 1 || indicatorDirection == -1) indicatorDirection = 0;
+            else indicatorDirection = 1;
+            hazardLightsActive = false;
         }
         
         //Lights
@@ -553,36 +570,41 @@ public class CarController : MonoBehaviour {
         stickShift.MoveToGear(gear);
 
         audioSource.PlayOneShot(audioGearChange);
-
-        //Check for reverse
-        if(gear == 0 && isEngineOn) { 
-            //lights
-            if(!hazardLightsActive) StartCoroutine(BlinkHazardLights());
-
-            //audio
-            audioHazard.Play();
-        } else {
-            //lights
-            if(indicatorArrowLeft.activeSelf) indicatorArrowLeft.SetActive(false);
-            if(indicatorArrowRight.activeSelf) indicatorArrowRight.SetActive(false);
-            hazardLightsActive = false;
-
-            //audio
-            if (audioHazard.isPlaying) audioHazard.Stop();
-        }
     }
 
     private IEnumerator BlinkHazardLights() {
         hazardLightsActive = true;
 
-        while(gear == 0 && isEngineOn) { 
+        //Clear CA boxes
+        rearCA.SetActive(false);
+        leftCA.SetActive(false);
+        rightCA.SetActive(false);
+
+        if(!audioHazard.isPlaying) audioHazard.Play();
+
+        while(indicatorDirection == 0 && gear == 0) {
             // Toggle the visibility of both arrows
             indicatorArrowLeft.SetActive(!indicatorArrowLeft.activeSelf);
             indicatorArrowRight.SetActive(!indicatorArrowRight.activeSelf);
 
             // Wait for a short duration
             yield return new WaitForSeconds(blinkTime);
+        } while(indicatorDirection == -1) {
+            indicatorArrowLeft.SetActive(!indicatorArrowLeft.activeSelf);
+            yield return new WaitForSeconds(blinkTime);
+        } while(indicatorDirection == 1) {
+            indicatorArrowRight.SetActive(!indicatorArrowRight.activeSelf);
+            yield return new WaitForSeconds(blinkTime);
         }
+
+        // while(gear == 0 && isEngineOn) { 
+        //     // Toggle the visibility of both arrows
+        //     indicatorArrowLeft.SetActive(!indicatorArrowLeft.activeSelf);
+        //     indicatorArrowRight.SetActive(!indicatorArrowRight.activeSelf);
+
+        //     // Wait for a short duration
+        //     yield return new WaitForSeconds(blinkTime);
+        // }
     }
 
     private void UpdateGearText() {
@@ -630,6 +652,33 @@ public class CarController : MonoBehaviour {
 
         //engine button off when no fuel
         // if(fuelAmount <= 0 && carEngineButton.isOn) carEngineButton.Interact(gameObject);
+
+        //INDICATORS
+        if(gear == 0 && isEngineOn) { 
+            if(!hazardLightsActive) StartCoroutine(BlinkHazardLights());
+        } else if(indicatorDirection == -1 && isEngineOn) { //LEFT BLINKER
+            if(!hazardLightsActive) StartCoroutine(BlinkHazardLights());
+        } else if(indicatorDirection == 1 && isEngineOn) { //RIGHT BLINKER
+            if(!hazardLightsActive) StartCoroutine(BlinkHazardLights());
+        } else { //BLINKERS OFF
+            if(indicatorArrowLeft.activeSelf) indicatorArrowLeft.SetActive(false);
+            if(indicatorArrowRight.activeSelf) indicatorArrowRight.SetActive(false);
+            hazardLightsActive = false;
+
+            if(audioHazard.isPlaying) audioHazard.Stop();
+
+            //Clear CA boxes
+            rearCA.SetActive(false);
+            leftCA.SetActive(false);
+            rightCA.SetActive(false);
+        }
+
+        //INDICATOR COLLISION AVOIDANCE BOXES
+        if(hazardLightsActive) {
+            if(indicatorDirection == 0) rearCA.SetActive(true);
+            else if(indicatorDirection == -1) leftCA.SetActive(true);
+            else if(indicatorDirection == 1) rightCA.SetActive(true);
+        }
     }
 
     private void AnimateWheels() {
