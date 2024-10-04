@@ -83,7 +83,7 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
 
         newItem.transform.SetParent(transform);
         // LeanTween.moveLocal(newItem, new Vector3(goober.localPosition.x, transform.localPosition.y, goober.localPosition.z), 0.25f).setEaseInOutExpo();
-        LeanTween.moveLocal(newItem, new Vector3(spawnX, transform.localPosition.y, spawnZ), 0.25f).setEaseInOutExpo();
+        LeanTween.moveLocal(newItem, new Vector3(spawnX, transform.localPosition.y, spawnZ), 0.35f).setEaseInOutExpo();
         // newItem.transform.localPosition = new Vector3(spawnX, transform.localPosition.y, spawnZ);
         newItem.transform.eulerAngles = new Vector3(0, rotY, 0);
 

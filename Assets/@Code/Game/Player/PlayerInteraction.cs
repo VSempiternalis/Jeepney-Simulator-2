@@ -6,6 +6,7 @@ using TMPro;
 public class PlayerInteraction : MonoBehaviour {
     [SerializeField] private Camera playerCam;
     [SerializeField] private VicCamManager vcm;
+    private PlayerDriveInput pdi;
     
     private GameObject itemOver;
     [SerializeField] private float reachDist = 1.5f;
@@ -75,6 +76,7 @@ public class PlayerInteraction : MonoBehaviour {
 
         tm = TooltipMask.current;
         am = AudioManager.current;
+        pdi = GetComponent<PlayerDriveInput>();
     }
 
     private void Update() {
@@ -171,7 +173,6 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     private void Interaction() {
-
         //HIDE UI
         if(hudToggleDown) {
             // gameHUD.SetActive(!gameHUD.activeSelf);
@@ -186,6 +187,7 @@ public class PlayerInteraction : MonoBehaviour {
         if(lMouseDown) {
             //INTERACTABLE
             if(itemOver.layer == layerInteractable) {
+                // pdi.TryGrabIK(itemOver.transform);
                 if(itemOver.GetComponent<IKnob>() != null && !GetComponent<Crouch>().IsCrouched) itemOver.GetComponent<IKnob>().LeftClick();
                 else if(itemOver.GetComponent<IInteractable>() != null && !GetComponent<Crouch>().IsCrouched) itemOver.GetComponent<IInteractable>().Interact(gameObject);
             } 
@@ -198,6 +200,7 @@ public class PlayerInteraction : MonoBehaviour {
         else if(rMouseDown) {
             //INTERACTABLE
             if(itemOver.layer == layerInteractable) {
+                pdi.TryGrabIK(itemOver.transform);
                 if(itemOver.GetComponent<IKnob>() != null && !GetComponent<Crouch>().IsCrouched) itemOver.GetComponent<IKnob>().RightClick();
             } 
 
@@ -253,6 +256,7 @@ public class PlayerInteraction : MonoBehaviour {
             // print("i: " + i + " items: " + items.Count + " right hand items: " + rightHand.childCount);
             if(items.Count == 0 || rightHand.childCount == maxItemsOnHand) break;
 
+            if(items[0]) pdi.TryGrabIK(items[0].transform);
             rightHand.GetComponent<StorageHandler>().AddItemRandom(items[0]);
         }
         UpdateOnhandUI();
@@ -266,6 +270,7 @@ public class PlayerInteraction : MonoBehaviour {
 
         foreach(Transform item in rightHand) {
             // print("[1] Putting in storage: " + item.name + " items total: " + rightHand.childCount);
+            if(item) pdi.TryGrabIK(item.transform);
             toStore.Add(item.gameObject);
             // storage.AddItemRandom(item.gameObject);
             // UpdateOnhandUI();
@@ -285,10 +290,10 @@ public class PlayerInteraction : MonoBehaviour {
         if(rightHand.childCount >= maxItemsOnHand) {
             NotificationManager.current.NewNotif("HANDS FULL", "You are holding too many items! ");
             // AudioManager.current.PlayUI(7);
-            // Fader.current.YawnGray(0.5f, "My hands are full", 0.5f);
             return;
         }
         rightHand.GetComponent<StorageHandler>().AddItemRandom(itemOver);
+        pdi.TryGrabIK(itemOver.transform);
 
         UpdateOnhandUI();
 
@@ -304,6 +309,7 @@ public class PlayerInteraction : MonoBehaviour {
         if(itemOver.GetComponent<StorageHandler>()) {
             StorageHandler storage = itemOver.GetComponent<StorageHandler>();
             storage.AddItem(dropItem, hit.point);
+            pdi.TryGrabIK(itemOver.transform);
         }
 
         UpdateOnhandUI();

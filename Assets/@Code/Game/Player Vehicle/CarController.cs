@@ -3,11 +3,11 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 
 public class CarController : MonoBehaviour {
     [SerializeField] private GameObject headlights;
     private TimeManager tm;
+    private PlayerDriveInput pdi;
 
     [Space(10)]
     [Header("FUEL")]
@@ -194,6 +194,8 @@ public class CarController : MonoBehaviour {
         ah = GetComponent<AudioHandler>();
         carRb = GetComponent<Rigidbody>();
         tm = TimeManager.current;
+        pdi = PlayerDriveInput.current;
+
         carRb.centerOfMass = centerOfMass;
         // swStandardRot = steeringWheel.transform.rotation.eulerAngles;
         swStandardRot.x = -34.624f;
@@ -471,8 +473,7 @@ public class CarController : MonoBehaviour {
     #region DRIVING ======================================================================
 
     private void Horn() {
-        audioHazard.PlayOneShot(hornAudio);
-        // ah.PlayOneShot(0);
+        metalAudioSource.PlayOneShot(hornAudio);
     }
 
     public void DriverExit() {
@@ -568,6 +569,7 @@ public class CarController : MonoBehaviour {
     private void GearAnimAudio() {
         UpdateGearText();
         stickShift.MoveToGear(gear);
+        pdi.IKShifter();
 
         audioSource.PlayOneShot(audioGearChange);
     }

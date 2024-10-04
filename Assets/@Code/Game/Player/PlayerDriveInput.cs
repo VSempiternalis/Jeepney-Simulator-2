@@ -5,6 +5,8 @@ using TMPro;
 public class PlayerDriveInput : MonoBehaviour {
     public static PlayerDriveInput current;
     public CarController carCon;
+    private NotificationManager nm;
+
     [SerializeField] private Head head;
     [SerializeField] private FirstPersonMovement fpm;
     [SerializeField] private Jump jump;
@@ -24,10 +26,21 @@ public class PlayerDriveInput : MonoBehaviour {
     [SerializeField] private Transform player;
     [SerializeField] private PlayerInteraction pi;
     [SerializeField] private Transform playerModel;
-    [SerializeField] private TwoBoneIKConstraint leftHandIK;
-    [SerializeField] private TwoBoneIKConstraint rightHandIK;
     [SerializeField] private Vector3 localDrivePos;
     [SerializeField] private Vector3 localSitPos;
+
+    [Space(10)]
+    [Header("IK")]
+    private bool isShifting;
+    private bool isGrabbing;
+    [SerializeField] private TwoBoneIKConstraint leftHandIK;
+    [SerializeField] private TwoBoneIKConstraint rightHandIK;
+    [SerializeField] private TwoBoneIKConstraint rightInteractionIK;
+    [SerializeField] private GameObject rightInteractionTarget;
+    [SerializeField] private GameObject rightHandTarget;
+    [SerializeField] private Transform rightHandTargetWheel;
+    [SerializeField] private Transform rightHandTargetStick;
+    // [SerializeField] private Transform rightHandTargetWheel;
 
     [Space(10)]
     [Header("Keybinds")]
@@ -47,6 +60,7 @@ public class PlayerDriveInput : MonoBehaviour {
 
     private void Start() {
         pi = GetComponent<PlayerInteraction>();
+        nm = NotificationManager.current;
 
         Keybinds.current.onKeyChangeEvent += OnKeyChangeEvent;
         OnKeyChangeEvent();
@@ -65,9 +79,98 @@ public class PlayerDriveInput : MonoBehaviour {
             //Scroll down
             else if(Input.GetKeyDown(Key_ChangerScrollDown)) carCon.changePoint.GetComponent<ChangeHandler>().Scroll(-1);
         }
+    }
 
-        leftHandIK.weight = isDriving? 1.0f:0f;
-        rightHandIK.weight = isDriving? 1.0f:0f;
+    public void TryGrabIK(Transform item) {
+        if(isShifting || isGrabbing || item == null || item.transform == null) return;
+
+        
+        isGrabbing = true;
+        
+        // DRIVE IK
+        LeanTween.value(gameObject, rightHandIK.weight, 0f, 0.1f)
+            .setEase(LeanTweenType.easeOutBack)
+            .setOnUpdate((float val) => {
+                rightHandIK.weight = val;
+            })
+            .setOnComplete(() => {
+                rightHandIK.weight = 0f;
+            });
+        
+        // STICK IK
+        LeanTween.value(gameObject, rightInteractionIK.weight, 1f, 0.35f)
+            .setEase(LeanTweenType.easeOutBack)
+            .setOnUpdate((float val) => {
+                rightInteractionIK.weight = val;
+                rightInteractionTarget.transform.position = item.transform.position;
+            })
+            .setOnComplete(() => {
+                rightInteractionIK.weight = 1f;
+                
+                if(isDriving) {
+                    LeanTween.value(gameObject, rightHandIK.weight, 1f, 0.1f)
+                        .setEase(LeanTweenType.easeOutBack)
+                        .setOnUpdate((float val) => {
+                            rightHandIK.weight = val;
+                            rightInteractionIK.weight = 1 - val;
+                        })
+                        .setOnComplete(() => {
+                            rightHandIK.weight = 1f;
+                            rightInteractionIK.weight = 0;
+                            isGrabbing = false;
+                        });
+                } else {
+                    LeanTween.value(gameObject, rightHandIK.weight, 0f, 0.1f)
+                        .setEase(LeanTweenType.easeOutBack)
+                        .setOnUpdate((float val) => {
+                            rightHandIK.weight = val;
+                            rightInteractionIK.weight = val;
+                        })
+                        .setOnComplete(() => {
+                            rightHandIK.weight = 0;
+                            rightInteractionIK.weight = 0;
+                            isGrabbing = false;
+                        });
+                }
+            });
+    }
+
+    public void IKShifter() {
+        isShifting = true;
+        
+        // DRIVE IK
+        LeanTween.value(gameObject, rightHandIK.weight, 0f, 0.25f)
+            .setEase(LeanTweenType.easeOutBack)
+            .setOnUpdate((float val) => {
+                rightHandIK.weight = val;
+            })
+            .setOnComplete(() => {
+                rightHandIK.weight = 0f;
+            });
+        
+        // STICK IK
+        LeanTween.value(gameObject, rightInteractionIK.weight, 1f, 0.666f)
+            .setEase(LeanTweenType.easeOutBack)
+            .setOnUpdate((float val) => {
+                rightInteractionIK.weight = val;
+                rightInteractionTarget.transform.position = rightHandTargetStick.position;
+            })
+            .setOnComplete(() => {
+                rightInteractionIK.weight = 1f;
+                isShifting = false;
+
+                
+                LeanTween.value(gameObject, rightHandIK.weight, 1f, 0.25f)
+                    .setEase(LeanTweenType.easeOutBack)
+                    .setOnUpdate((float val) => {
+                        rightHandIK.weight = val;
+                        rightInteractionIK.weight = 1 - val;
+                    })
+                    .setOnComplete(() => {
+                        rightHandIK.weight = 1f;
+                        rightInteractionIK.weight = 0;
+                    });
+            });
     }
 
     public void SetIsSitting(bool newIsSitting, bool isDriversSeat, Transform seat) {
@@ -119,7 +222,6 @@ public class PlayerDriveInput : MonoBehaviour {
     }
 
     public void SetIsDriving(bool newIsDriving, CarController newCarCon, Transform seat) {
-        // print("set is driving: " + newCarCon.name);
         isDriving = newIsDriving;
         carCon = newCarCon;
         JeepneyPanel.current.SetCarcon(carCon);
@@ -135,10 +237,49 @@ public class PlayerDriveInput : MonoBehaviour {
             //UI
             nameNoJeepneyDetected.SetActive(true);
             nameInput.interactable = false;
+
+            //IK
+            // LeanTween.value(gameObject, leftHandIK.weight, 0f, 0.25f)
+            //     .setOnUpdate((float val) => {
+            //         leftHandIK.weight = val;
+            //     })
+            //     .setOnComplete(() => {
+            //         leftHandIK.weight = 0f;
+            //     });
+            // LeanTween.value(gameObject, rightHandIK.weight, 0f, 0.25f)
+            //     .setOnUpdate((float val) => {
+            //         rightHandIK.weight = val;
+            //     })
+            //     .setOnComplete(() => {
+            //         rightHandIK.weight = 0f;
+            //     });
+            leftHandIK.weight = isDriving? 1.0f:0f;
+            rightHandIK.weight = isDriving? 1.0f:0f;
         } else {
             nameNoJeepneyDetected.SetActive(false);
             nameInput.name = carCon.jeepName;
             nameInput.interactable = true;
+
+            //IK
+            LeanTween.value(gameObject, leftHandIK.weight, 1f, 0.25f)
+                .setOnUpdate((float val) => {
+                    leftHandIK.weight = val;
+                })
+                .setOnComplete(() => {
+                    leftHandIK.weight = 1f;
+                });
+                
+            // rightHandTarget.transform.position = rightHandTargetWheel.position;
+            // rightInteractionIK.weight = 0;
+            LeanTween.value(gameObject, rightHandIK.weight, 1f, 0.25f)
+                .setOnUpdate((float val) => {
+                    rightHandIK.weight = val;
+                })
+                .setOnComplete(() => {
+                    rightHandIK.weight = 1f;
+                });
+            // leftHandIK.weight = isDriving? 1.0f:0f;
+            // rightHandIK.weight = isDriving? 1.0f:0f;
         }
     }
 
