@@ -38,9 +38,7 @@ public class PlayerDriveInput : MonoBehaviour {
     [SerializeField] private TwoBoneIKConstraint rightInteractionIK;
     [SerializeField] private GameObject rightInteractionTarget;
     [SerializeField] private GameObject rightHandTarget;
-    [SerializeField] private Transform rightHandTargetWheel;
     [SerializeField] private Transform rightHandTargetStick;
-    // [SerializeField] private Transform rightHandTargetWheel;
 
     [Space(10)]
     [Header("Keybinds")]
@@ -84,10 +82,9 @@ public class PlayerDriveInput : MonoBehaviour {
     public void TryGrabIK(Transform item) {
         if(isShifting || isGrabbing || item == null || item.transform == null) return;
 
-        
         isGrabbing = true;
         
-        // DRIVE IK
+        // DRIVE IK OFF
         LeanTween.value(gameObject, rightHandIK.weight, 0f, 0.1f)
             .setEase(LeanTweenType.easeOutBack)
             .setOnUpdate((float val) => {
@@ -97,17 +94,17 @@ public class PlayerDriveInput : MonoBehaviour {
                 rightHandIK.weight = 0f;
             });
         
-        // STICK IK
+        // STICK IK ON
         LeanTween.value(gameObject, rightInteractionIK.weight, 1f, 0.35f)
             .setEase(LeanTweenType.easeOutBack)
             .setOnUpdate((float val) => {
                 rightInteractionIK.weight = val;
-                rightInteractionTarget.transform.position = item.transform.position;
+                if(item && item.transform) rightInteractionTarget.transform.position = item.transform.position;
             })
             .setOnComplete(() => {
                 rightInteractionIK.weight = 1f;
                 
-                if(isDriving) {
+                if(isDriving) { //DRIVE IK ON
                     LeanTween.value(gameObject, rightHandIK.weight, 1f, 0.1f)
                         .setEase(LeanTweenType.easeOutBack)
                         .setOnUpdate((float val) => {
@@ -119,7 +116,7 @@ public class PlayerDriveInput : MonoBehaviour {
                             rightInteractionIK.weight = 0;
                             isGrabbing = false;
                         });
-                } else {
+                } else { //DRIVE IK OFF
                     LeanTween.value(gameObject, rightHandIK.weight, 0f, 0.1f)
                         .setEase(LeanTweenType.easeOutBack)
                         .setOnUpdate((float val) => {
@@ -137,8 +134,8 @@ public class PlayerDriveInput : MonoBehaviour {
 
     public void IKShifter() {
         isShifting = true;
-        
-        // DRIVE IK
+
+        // DRIVE IK OFF
         LeanTween.value(gameObject, rightHandIK.weight, 0f, 0.25f)
             .setEase(LeanTweenType.easeOutBack)
             .setOnUpdate((float val) => {
@@ -148,7 +145,7 @@ public class PlayerDriveInput : MonoBehaviour {
                 rightHandIK.weight = 0f;
             });
         
-        // STICK IK
+        // STICK IK ON
         LeanTween.value(gameObject, rightInteractionIK.weight, 1f, 0.666f)
             .setEase(LeanTweenType.easeOutBack)
             .setOnUpdate((float val) => {
@@ -239,20 +236,6 @@ public class PlayerDriveInput : MonoBehaviour {
             nameInput.interactable = false;
 
             //IK
-            // LeanTween.value(gameObject, leftHandIK.weight, 0f, 0.25f)
-            //     .setOnUpdate((float val) => {
-            //         leftHandIK.weight = val;
-            //     })
-            //     .setOnComplete(() => {
-            //         leftHandIK.weight = 0f;
-            //     });
-            // LeanTween.value(gameObject, rightHandIK.weight, 0f, 0.25f)
-            //     .setOnUpdate((float val) => {
-            //         rightHandIK.weight = val;
-            //     })
-            //     .setOnComplete(() => {
-            //         rightHandIK.weight = 0f;
-            //     });
             leftHandIK.weight = isDriving? 1.0f:0f;
             rightHandIK.weight = isDriving? 1.0f:0f;
         } else {
@@ -269,8 +252,6 @@ public class PlayerDriveInput : MonoBehaviour {
                     leftHandIK.weight = 1f;
                 });
                 
-            // rightHandTarget.transform.position = rightHandTargetWheel.position;
-            // rightInteractionIK.weight = 0;
             LeanTween.value(gameObject, rightHandIK.weight, 1f, 0.25f)
                 .setOnUpdate((float val) => {
                     rightHandIK.weight = val;
@@ -278,8 +259,6 @@ public class PlayerDriveInput : MonoBehaviour {
                 .setOnComplete(() => {
                     rightHandIK.weight = 1f;
                 });
-            // leftHandIK.weight = isDriving? 1.0f:0f;
-            // rightHandIK.weight = isDriving? 1.0f:0f;
         }
     }
 

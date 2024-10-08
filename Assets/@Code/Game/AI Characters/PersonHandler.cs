@@ -151,7 +151,7 @@ public class PersonHandler : MonoBehaviour {
             nextSecUpdate ++;
             // PatienceCheck();
             
-            if(state == "Waiting") {
+            if(state == "Waiting" || state == "Hailing" || state == "Declining") {
                 Wait();
             } 
             else if(state == "Waiting to pay") {
@@ -225,29 +225,53 @@ public class PersonHandler : MonoBehaviour {
             //[!+Call jeep when close]
             distToPlayer = Vector3.Distance(transform.position, pdit.transform.position);
             if(distToPlayer <= callDist && pdit.isDriving && pdit.isPickups && pdit.carCon.HasFreeSeats()) {
+                //Face jeepney when close?
                 FacePos(pdit.transform.position);
                 //[HAIL]
-                //GetComponent<Test_script>().Hail();
+                // GetComponent<Test_script>().Hail();
                 carCon = pdit.carCon;
 
                 if(carCon.GetComponent<Rigidbody>().velocity.magnitude <= magnitudeThresh) {
                     MakeMoveToVehicle();
                 }
-            } else {
-                //face player
-                //hail anim
             }
         } else { //NOT TUTORIAL
             if(!player.isPickups || !isPassenger || (player.carCon && !player.carCon.HasFreeSeats())) return;
-            // else if(!player.isPickups && ) return;
-            else if(!RouteSelector.current.destinations.Contains(landmarkDest)) return;
 
             //[!+Call jeep when close]
             distToPlayer = Vector3.Distance(transform.position, player.transform.position);
-            if(distToPlayer <= callDist && player.isDriving && player.isPickups && player.carCon.HasFreeSeats()) {
-                // popup.Say(sayHandler.GetSay("Call"), false);
-                // transform.LookAt(player.transform, Vector3.up);
-                FacePos(player.transform.position);
+            if(distToPlayer > callDist) return;
+
+            if(!RouteSelector.current.destinations.Contains(landmarkDest)) {
+                int randInt = Random.Range(0, 101);
+                if(randInt > 50) {
+                    //LOOK AT PLAYER
+                    Vector3 dir = player.transform.position - transform.position;
+                    dir.y = 0;
+                    Quaternion rot = Quaternion.LookRotation(dir);
+                    transform.rotation = rot;
+
+                    //DECLINE ANIM
+                    if(state != "Declining") SetState("Declining");
+                }
+
+                return;
+            }
+
+            if(player.isDriving && player.isPickups && player.carCon.HasFreeSeats()) {
+                //LOOK AT PLAYER
+                Vector3 dir = player.transform.position - transform.position;
+                dir.y = 0;
+                Quaternion rot = Quaternion.LookRotation(dir);
+                transform.rotation = rot;
+
+                //HAIL ANIM
+                int randInt = Random.Range(0, 101);
+                if(randInt > 10 && state != "Hailing") SetState("Hailing");
+
+                //Face jeepney when close?
+                // FacePos(player.transform.position);
+
                 //[HAIL]
                 //GetComponent<Test_script>().Hail();
                 carCon = player.carCon;
@@ -257,9 +281,6 @@ public class PersonHandler : MonoBehaviour {
                     // print("Past magnitude thresh");
                     MakeMoveToVehicle();
                 }
-            } else {
-                //face player
-                //hail anim
             }
         }
     }
@@ -609,6 +630,10 @@ public class PersonHandler : MonoBehaviour {
         else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering" || state == "Dropping" || state == "Moving to pos" || state == "Crossing") anim = Random.Range(14, 20);
         //Sit
         else if(state == "Waiting to pay" || state == "Waiting to arrive") anim = Random.Range(20, 28);
+        //Yes
+        else if(state == "Hailing") anim = Random.Range(30, 37);
+        //No
+        else if(state == "Declining") anim = Random.Range(40, 43);
         //Death
         else if(state == "Death") anim = Random.Range(80, 86);
 

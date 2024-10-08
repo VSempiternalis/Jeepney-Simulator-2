@@ -187,7 +187,7 @@ public class PlayerInteraction : MonoBehaviour {
         if(lMouseDown) {
             //INTERACTABLE
             if(itemOver.layer == layerInteractable) {
-                // pdi.TryGrabIK(itemOver.transform);
+                // pdi.TryGrabIK(itemOver.transform); //MAKES HAND INTERACT WITH INTERACTABLES
                 if(itemOver.GetComponent<IKnob>() != null && !GetComponent<Crouch>().IsCrouched) itemOver.GetComponent<IKnob>().LeftClick();
                 else if(itemOver.GetComponent<IInteractable>() != null && !GetComponent<Crouch>().IsCrouched) itemOver.GetComponent<IInteractable>().Interact(gameObject);
             } 
@@ -200,7 +200,7 @@ public class PlayerInteraction : MonoBehaviour {
         else if(rMouseDown) {
             //INTERACTABLE
             if(itemOver.layer == layerInteractable) {
-                pdi.TryGrabIK(itemOver.transform);
+                // pdi.TryGrabIK(itemOver.transform); //MAKES HAND INTERACT WITH INTERACTABLES
                 if(itemOver.GetComponent<IKnob>() != null && !GetComponent<Crouch>().IsCrouched) itemOver.GetComponent<IKnob>().RightClick();
             } 
 
@@ -238,6 +238,7 @@ public class PlayerInteraction : MonoBehaviour {
     private void PayItem() {
         //Place item on itemover(storage)
         GameObject giveItem = rightHand.GetChild(0).gameObject;
+        if(giveItem) pdi.TryGrabIK(giveItem.transform);
         IPayable payable = itemOver.GetComponent<IPayable>();
         payable.Pay(giveItem.GetComponent<Value>().value);
 
@@ -269,15 +270,11 @@ public class PlayerInteraction : MonoBehaviour {
         List<GameObject> toStore = new List<GameObject>();
 
         foreach(Transform item in rightHand) {
-            // print("[1] Putting in storage: " + item.name + " items total: " + rightHand.childCount);
             if(item) pdi.TryGrabIK(item.transform);
             toStore.Add(item.gameObject);
-            // storage.AddItemRandom(item.gameObject);
-            // UpdateOnhandUI();
         }
 
         foreach(GameObject item in toStore) {
-            // print("[2] Putting in storage: " + item.name + " items total: " + rightHand.childCount);
             storage.AddItemRandom(item.gameObject);
         }
         UpdateOnhandUI();
@@ -292,8 +289,10 @@ public class PlayerInteraction : MonoBehaviour {
             // AudioManager.current.PlayUI(7);
             return;
         }
+
+        if(itemOver) pdi.TryGrabIK(itemOver.transform);
+
         rightHand.GetComponent<StorageHandler>().AddItemRandom(itemOver);
-        pdi.TryGrabIK(itemOver.transform);
 
         UpdateOnhandUI();
 
@@ -302,14 +301,15 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     private void PlaceItem() {
-        // print("placing item");
         //Place item on itemover(storage)
         GameObject dropItem = rightHand.GetChild(0).gameObject;
 
         if(itemOver.GetComponent<StorageHandler>()) {
             StorageHandler storage = itemOver.GetComponent<StorageHandler>();
-            storage.AddItem(dropItem, hit.point);
+            
             pdi.TryGrabIK(itemOver.transform);
+
+            storage.AddItem(dropItem, hit.point);
         }
 
         UpdateOnhandUI();

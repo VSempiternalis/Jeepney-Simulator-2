@@ -11,7 +11,7 @@ public class StorageHandler : MonoBehaviour, ITooltipable {
     public List<GameObject> items;
     private AudioHandler audioHandler;
     [SerializeField] private Transform goober; //hitpos to localPos
-    [SerializeField] private bool isPayPoint; //updates player UI
+    public bool isPayPoint; //updates player UI
 
     [System.Serializable]
     public class OnAddItem : UnityEvent {}

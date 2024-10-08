@@ -24,8 +24,8 @@ NPCs
 0-9: Idle
 10-19: Walking
 20-29: Sitting
-30-39: Stopping
-40-49: Calling jeep/Hailing
+30-39: Calling jeep/Hailing/Yes
+40-49: Reject jeep/No
 50-59: 
 60-69: Dancing
 70-79: Passive Anims (Phone)
