@@ -244,7 +244,7 @@ public class PersonHandler : MonoBehaviour {
 
             if(!RouteSelector.current.destinations.Contains(landmarkDest)) {
                 int randInt = Random.Range(0, 101);
-                if(randInt > 50) {
+                if(randInt > 75) {
                     //LOOK AT PLAYER
                     Vector3 dir = player.transform.position - transform.position;
                     dir.y = 0;

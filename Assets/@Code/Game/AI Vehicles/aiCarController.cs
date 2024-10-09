@@ -28,8 +28,8 @@ public class aiCarController : MonoBehaviour, IHealth {
 
     [Space(10)]
     [Header("COMPONENTS")]
-    private AudioSource audioSource;
     [SerializeField] private AudioClip audioCrash;
+    private AudioSource audioSource;
     // [SerializeField] 
     private CollisionAvoidance ca;
     [SerializeField] private ParticleSystem smokeParticles;
@@ -47,6 +47,12 @@ public class aiCarController : MonoBehaviour, IHealth {
     [Space(10)]
     [Header("WHEEL AND AXLES")]
     public List<Wheel> wheels;
+
+    [Space(10)]
+    [Header("POLICE")]
+    [SerializeField] private bool isPoliceCar;
+    public bool isChasingTarget;
+    public Transform target;
 
     [Serializable] public struct Wheel {
         public GameObject wheelModel;
@@ -75,8 +81,6 @@ public class aiCarController : MonoBehaviour, IHealth {
     private void FixedUpdate() {
         if(nextNode == null) {
             return;
-            // Destroy(GetComponent<aiCarInput>());
-            // Destroy(GetComponent<aiCarController>());
         }
         if(!isActive) return;
 
@@ -118,14 +122,25 @@ public class aiCarController : MonoBehaviour, IHealth {
     }
 
     private void TurnToDest() {
-        if(nextNode == null) return;
-        Vector3 thisPos = transform.position;
-        Vector3 direction = nextNode.transform.position - thisPos;
-        float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-        Quaternion q = Quaternion.AngleAxis(angle, Vector3.up);
-        
-        transform.rotation = Quaternion.Slerp(transform.rotation, q, turnSpeed);
-        turning = true;
+        if(isPoliceCar && isChasingTarget) {
+            Vector3 currentPos = transform.position;
+            Vector3 dir = target.position - currentPos;
+            float ang = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+            Quaternion qua = Quaternion.AngleAxis(ang, Vector3.up);
+            
+            transform.rotation = Quaternion.Slerp(transform.rotation, qua, turnSpeed);
+            turning = true;
+        } else {
+            if(nextNode == null) return;
+
+            Vector3 thisPos = transform.position;
+            Vector3 direction = nextNode.transform.position - thisPos;
+            float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            Quaternion q = Quaternion.AngleAxis(angle, Vector3.up);
+            
+            transform.rotation = Quaternion.Slerp(transform.rotation, q, turnSpeed);
+            turning = true;
+        }
     }
 
     public void Brake() {
@@ -187,14 +202,14 @@ public class aiCarController : MonoBehaviour, IHealth {
     //     public bool steering;
     // }
 
-    private void OnCollisionEnter(Collision other) {
-        int layer = other.gameObject.layer;
-        //vehicle, person, playervic
-        if(layer == 6 || layer == 13 || layer == 21) {
-            float relativeVelocity = other.relativeVelocity.magnitude;
+    // private void OnCollisionEnter(Collision other) {
+    //     int layer = other.gameObject.layer;
+    //     //vehicle, person, playervic
+    //     if(layer == 6 || layer == 13 || layer == 21) {
+    //         float relativeVelocity = other.relativeVelocity.magnitude;
             
-            if (relativeVelocity > velocityThresh) 
-                if(audioSource) audioSource.PlayOneShot(audioCrash);
-        }
-    }
+    //         if (relativeVelocity > velocityThresh) 
+    //             if(audioSource) audioSource.PlayOneShot(audioCrash);
+    //     }
+    // }
 }

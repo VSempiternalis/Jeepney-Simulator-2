@@ -81,7 +81,7 @@ public class SpawnArea : MonoBehaviour {
     }
 
     private IEnumerator SpawnLoop() {
-        while(true) {
+        while(isSpawningVehicles) {
             if(isMainMenuSpawn) spawnDist = 130;
             Collider[] spawns = Physics.OverlapSphere(transform.position, spawnDist, spawnsLayerMask);
 

@@ -18,12 +18,21 @@ public class aiCarInput : MonoBehaviour {
     // [SerializeField] private NodeHandler nextNode;
     // [SerializeField] private NodeHandler currentNode;
 
+    [Space(10)]
+    [Header("POLICE")]
+    [SerializeField] private bool isPoliceCar;
+    public bool isChasingTarget;
+
     private void Start() {
         carCon = GetComponent<aiCarController>();
     }
 
     private void Update() {
-        if(CA_frontMed == null) return;
+        if(isPoliceCar && isChasingTarget) {
+            carCon.GetInput(new Vector2(0, 1));
+            return;
+        }
+        else if(CA_frontMed == null) return;
 
         //MoveInput
         Vector2 moveInput = new Vector2(0, 0);

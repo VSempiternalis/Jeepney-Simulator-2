@@ -8,6 +8,7 @@ public class CarController : MonoBehaviour {
     [SerializeField] private GameObject headlights;
     private TimeManager tm;
     private PlayerDriveInput pdi;
+    private CrimeManager cm;
 
     [Space(10)]
     [Header("FUEL")]
@@ -175,6 +176,8 @@ public class CarController : MonoBehaviour {
     private bool isPerfectionist;
     private bool isFullyLoaded;
 
+    private Collider prevStopper = null;
+
     [Space(10)]
     [Header("WHEEL AND AXLES")]
     public List<Wheel> wheels;
@@ -195,6 +198,7 @@ public class CarController : MonoBehaviour {
         carRb = GetComponent<Rigidbody>();
         tm = TimeManager.current;
         pdi = PlayerDriveInput.current;
+        cm = CrimeManager.current;
 
         carRb.centerOfMass = centerOfMass;
         // swStandardRot = steeringWheel.transform.rotation.eulerAngles;
@@ -761,6 +765,31 @@ public class CarController : MonoBehaviour {
 
     #region COLLISIONS ======================================================================
 
+    /*
+    CRIMES
+    1 Star:
+    - Red light violation
+    - Vehicle collision
+    > 1 cop car chasing
+    + P100 reward
+    2 Stars:
+    - Person collision
+    > 2 cop cars chasing
+    + P200
+    3 Stars:
+    > 3 cop cars chasing
+    > checkpoints
+    + P300
+    */
+    
+
+    private void OnTriggerEnter(Collider other) {
+        if(other.gameObject.layer == 19 && other != prevStopper) {
+            prevStopper = other;
+            cm.NewViolation(1);
+        }
+    }
+
     private void OnCollisionEnter(Collision other) {
         // print("car collision");
         if((collisionLayer.value & (1 << other.gameObject.layer)) != 0) {
@@ -779,10 +808,19 @@ public class CarController : MonoBehaviour {
 
                 AudioManager.current.PlayUI(14);
 
-                //STEAM ACH
+                //STEAM ACH, Collide with NPC
                 isSmoothRide = false;
 
-                if(other.gameObject.layer == 18) SteamAchievements.current.AddKill();
+                if(other.gameObject.layer == 18) {
+                    SteamAchievements.current.AddKill();
+
+                    cm.NewViolation(3);
+                }
+
+                //COLLIDE WITH CAR
+                if(other.gameObject.layer == 6) {
+                    cm.NewViolation(2);
+                }
             }
         }
     }
