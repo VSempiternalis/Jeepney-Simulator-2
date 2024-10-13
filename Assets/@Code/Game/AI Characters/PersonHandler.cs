@@ -13,6 +13,7 @@ public class PersonHandler : MonoBehaviour {
     [SerializeField] private Transform voicesFemale;
     [SerializeField] private Transform voicesChild;
     private VoiceHandler voiceHandler;
+    private CrimeManager cm;
 
     [Space(10)]
     [Header("STATS")]
@@ -97,6 +98,7 @@ public class PersonHandler : MonoBehaviour {
         player = GameObject.Find("PLAYER").GetComponent<PlayerDriveInput>();
         pdit = GameObject.Find("PLAYER").GetComponent<PlayerDriveInputTUTORIAL>();
         ani = GetComponent<Animator>();
+        cm = CrimeManager.current;
 
         //Populate money
         money.Add(coin1PF);
@@ -236,7 +238,7 @@ public class PersonHandler : MonoBehaviour {
                 }
             }
         } else { //NOT TUTORIAL
-            if(!player.isPickups || !isPassenger || (player.carCon && !player.carCon.HasFreeSeats())) return;
+            if(!player.isPickups || !isPassenger || (player.carCon && !player.carCon.HasFreeSeats()) || !player.isDriving) return;
 
             //[!+Call jeep when close]
             distToPlayer = Vector3.Distance(transform.position, player.transform.position);
@@ -351,6 +353,9 @@ public class PersonHandler : MonoBehaviour {
     private void WaitToDrop() {
         if(carCon && carCon.GetComponent<Rigidbody>().velocity.magnitude <= magnitudeThresh) {
             ExitVehicle();
+
+            //check illegal unloading
+            cm.CheckIllegalUnloading();
         }
     }
 
@@ -377,16 +382,6 @@ public class PersonHandler : MonoBehaviour {
         carCon = null;
         GetComponent<CapsuleCollider>().isTrigger = false;
         GetComponent<Rigidbody>().isKinematic = false;
-
-        //Rate
-        // float rating;
-        // if(patience <= 0) rating = 1;
-        // else if(patience <= maxPatience/4) rating = 2;
-        // else if(patience <= maxPatience/3) rating = 3;
-        // else if(patience <= maxPatience/2) rating = 4;
-        // else rating = 5;
-
-        // Juber.current.AddReview(rating);
         
         dropStartTime = Time.time;
         voiceHandler.Say("Drop");
@@ -401,10 +396,6 @@ public class PersonHandler : MonoBehaviour {
             // GetComponent<Despawner>().Despawn();
             SetState("Idle");
         } 
-        // else if(Time.time >= dropStartTime + 10f) {
-        //     // GetComponent<Despawner>().Despawn();
-        //     SetState("Idle");
-        // }
     }
 
     private void Arrived() {
@@ -416,13 +407,7 @@ public class PersonHandler : MonoBehaviour {
                 hasSentChangeNotif = true;
             }
             return;
-        }
-        // else if(state == "Waiting to pay") {
-        //     //TESTING
-        //     // PayFare();
-        //     return;
-        // } 
-        else if(state == "Waiting to arrive") state = "Waiting to drop";
+        } else if(state == "Waiting to arrive") state = "Waiting to drop";
     }
 
     private void MakeMoveToVehicle() {
@@ -437,31 +422,12 @@ public class PersonHandler : MonoBehaviour {
         }
 
         if(closest != null) nextNode = closest;
-        //! if(closest != null) destinations.Add(closest);
 
         //Disable collider when moving to vehicle
-        // GetComponent<CapsuleCollider>().isTrigger = false;
-        // GetComponent<Rigidbody>().isKinematic = false;
         SetState("Moving to vehicle");
     }
 
-    // private void Face(Transform target) {
-    //     // print("Facing: " + target.name);
-    //     Vector3 newLook = new Vector3(target.position.x, transform.position.y, target.position.z);
-    //     transform.LookAt(newLook, Vector3.up);
-    // }
-
     private void FacePos(Vector3 targetPos) {
-        // print("Facing: " + target.name);
-        // Vector3 newLook = new Vector3(targetPos.x, transform.position.y, targetPos.z);
-        // transform.LookAt(newLook, Vector3.up);
-
-        // Quaternion targetRotation = Quaternion.LookRotation(newLook - transform.position, Vector3.up);
-        // LeanTween.rotate(transform.gameObject, targetRotation.eulerAngles, rotationTime).setEase(LeanTweenType.easeOutSine);
-
-        // Vector3 direction = (targetPos - transform.position).normalized;
-        // Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-        // transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
     
         // Calculate direction to target ignoring y-axis
         Vector3 direction = (new Vector3(targetPos.x, transform.position.y, targetPos.z) - transform.position).normalized;

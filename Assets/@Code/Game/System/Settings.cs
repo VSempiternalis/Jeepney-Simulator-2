@@ -65,6 +65,7 @@ public class Settings : MonoBehaviour {
     public bool isTutorialPanelsOn;
     [SerializeField] private CanvasGroup tutorialUI; //help/page at game start
     [SerializeField] private uiAnimGroup tutorialPanels;
+    [SerializeField] private uiAnimGroup underArrestPanel;
 
     [SerializeField] private CarController carCon;
 
@@ -126,8 +127,10 @@ public class Settings : MonoBehaviour {
 
     private void Update() {
         //Toggle Settings
-        if(Input.GetKeyDown(KeyCode.Escape) && tutorialUI != null && tutorialUI.alpha < 1) {
-            ToggleSettings();
+        if(Input.GetKeyDown(KeyCode.Escape)) {
+            if(tutorialUI.alpha > 0 && underArrestPanel.isIn && underArrestPanel.GetComponent<CanvasGroup>().alpha > 0) return;
+            else if(tutorialUI != null && tutorialUI.alpha < 1) ToggleSettings();
+            else tutorialUI.GetComponent<uiAnimGroup>().Out();
         }
     }
 

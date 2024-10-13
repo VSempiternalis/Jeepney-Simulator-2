@@ -46,27 +46,10 @@ public class Despawner : MonoBehaviour {
     }
 
     public void Despawn() {
-        // print("DESPAWNING " + name);
-        // if(despawning) return;
-        // if(GetComponent<aiCarController>() != null && GetComponent<Test_script>() != null) return;
-
-        // // bool test = true;
-        // if(GetComponent<aiCarController>() != null) {
-        //     // SpawnArea.current.vicCount --;
-        //     GetComponent<aiCarController>().enabled = false;
-        //     // test = false;
-        // }
-        // if(GetComponent<aiCarInput>() != null) GetComponent<aiCarInput>().enabled = false;
-        // if(GetComponent<Rigidbody>() != null) GetComponent<Rigidbody>().isKinematic = true;
-
-        // // if(GetComponent<Test_script>() != null) {
-        // //     SpawnArea.current.personCount --;
-        // //     // test = false;
-        // // }
-
         if(objectType == "Vehicle") {
             spawnArea.vicCount --;
             GetComponent<aiCarController>().Reset();
+            GetComponent<aiCarController>().ResetHealth();
         }
         else if(objectType == "Person") {
             //Dont despawn when in vehicle

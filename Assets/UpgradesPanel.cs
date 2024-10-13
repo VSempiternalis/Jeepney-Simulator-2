@@ -33,7 +33,7 @@ public class UpgradesPanel : MonoBehaviour {
     }
 
     private void Update() {
-        carcon = PlayerDriveInput.current.carCon;
+        if(carcon == null) carcon = PlayerDriveInput.current.carCon;
     }
 
     public void TryBuy(string newUpgName) {

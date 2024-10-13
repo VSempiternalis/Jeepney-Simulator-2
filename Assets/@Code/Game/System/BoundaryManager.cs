@@ -184,7 +184,11 @@ public class BoundaryManager : MonoBehaviour {
 
     public void CompleteShift() {
         print("COMPLETE SHIFT");
-        if(deposit == 0) {
+        if(CrimeManager.current.isPlayerWanted) {
+            NotificationManager.current.NewNotif("YOU ARE WANTED!", "You cannot pay your boundary while you are wanted.");
+            AudioManager.current.PlayUI(7);
+            return;
+        } else if(deposit == 0) {
             NotificationManager.current.NewNotif("EMPTY DEPOSIT", "You need to deposit your earnings first to pay the boundary.");
             AudioManager.current.PlayUI(7);
             return;
@@ -254,6 +258,52 @@ public class BoundaryManager : MonoBehaviour {
             if(door.state == "Open" || door.state == "Opening") door.NewState("Closing"); //Interact(gameObject);
         }
         // if(officeDoor.state == "Open" || officeDoor.state == "Opening") officeDoor.NewState("Closing"); //Interact(gameObject);
+
+        //Clear jeepney seats
+        carCon.NewDay();
+    }
+
+    public void GetArrested() {
+        //if player in vic, exit vic
+        PlayerDriveInput pdi = PlayerDriveInput.current;
+        if(pdi.transform.parent.GetComponent<SeatHandler>()) {
+            pdi.transform.parent.GetComponent<SeatHandler>().Interact(pdi.gameObject);
+        }
+
+        Fader.current.FadeToBlack(1f, "YOU'RE IN JAIL!\nYou did not have enough money to pay your fines!\n\nLoading previous save...\n", () => {
+            //Reset
+            // if(TimeManager.current.days == 1) SaveLoadSystem.current.NewGame();
+            // else 
+            SaveLoadSystem.current.OnLose();
+            UpdateTexts();
+            ResetVicMoney();
+            pdi.GetComponent<PlayerInteraction>().ClearItems(); //yes, this is stupid
+            TimeManager.current.ResetShiftTime();
+            LotteryManager.current.NewNums(); //MUST BE AFTER TIME RESET
+            pdi.carCon.GetComponent<JeepneySLS>().LoadPrevious();
+            HousePanel.current.Load();
+
+            am.PlayUI(5);
+            
+            LeanTween.delayedCall(1f, () => {
+                Fader.current.SetText("DAY " + TimeManager.current.days);
+            });
+
+            LeanTween.delayedCall(2f, () => {
+                Fader.current.FadeFromBlack(1f, "DAY " + TimeManager.current.days, null);
+            });
+        });
+
+        lateFee = 0;
+        failureCharge = 0;
+        // PlayerDriveInput.current.isPickups = true;
+        pdi.SetPickups(SaveLoadSystem.current.isPassengerPickups);
+        RouteSelector.current.NewShift(3); //3 is dests to lock
+
+        //Door
+        foreach(DoorHandler door in doors) {
+            if(door.state == "Open" || door.state == "Opening") door.NewState("Closing"); //Interact(gameObject);
+        }
 
         //Clear jeepney seats
         carCon.NewDay();

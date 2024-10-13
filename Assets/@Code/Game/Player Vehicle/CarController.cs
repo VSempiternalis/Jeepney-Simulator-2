@@ -50,7 +50,7 @@ public class CarController : MonoBehaviour {
     public float steerInput;
     private bool brakeInput;
 
-    private Rigidbody carRb;
+    public Rigidbody carRb;
     public float freeDrag;
 
     [Space(10)]

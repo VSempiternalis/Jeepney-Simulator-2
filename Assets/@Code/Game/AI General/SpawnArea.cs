@@ -26,6 +26,8 @@ public class SpawnArea : MonoBehaviour {
     public bool isSpawningVehicles;
     [SerializeField] private float vehicleSpawnInterval;
     public int maxVicCount;
+    public int wantedVicCount = 10; //vic count when player is wanted
+    public int currentMaxVicCount; //used for spawning
     public int vicCount;
 
     [SerializeField] private Transform smallVehiclePFs;
@@ -78,6 +80,7 @@ public class SpawnArea : MonoBehaviour {
         }
 
         isSpawningVehicles = true;
+        currentMaxVicCount = maxVicCount;
     }
 
     private IEnumerator SpawnLoop() {
@@ -86,7 +89,7 @@ public class SpawnArea : MonoBehaviour {
             Collider[] spawns = Physics.OverlapSphere(transform.position, spawnDist, spawnsLayerMask);
 
             for(int i = 0; i < spawns.Length; i++) {
-                if(vicCount >= maxVicCount) break;
+                if(vicCount >= currentMaxVicCount) break;
 
                 Collider spawn = spawns[i];
 

@@ -79,9 +79,13 @@ public class aiCarController : MonoBehaviour, IHealth {
     }
 
     private void FixedUpdate() {
-        if(nextNode == null) {
+        if(!isPoliceCar && nextNode == null) {
             return;
-        }
+        } 
+        // [FOR TESTING] keeps police cars stationary when not chasing target
+        // else if(isPoliceCar && target == null) {
+        //     return;
+        // }
         if(!isActive) return;
 
         //IF ENGINE ON
@@ -100,6 +104,7 @@ public class aiCarController : MonoBehaviour, IHealth {
 
     public void Reset() {
         if(ca != null) ca.EmptyCheck();
+        StopBrake();
     }
 
     public void SetActive(bool newIsActive) {
@@ -144,6 +149,7 @@ public class aiCarController : MonoBehaviour, IHealth {
     }
 
     public void Brake() {
+        if(isPoliceCar && isChasingTarget) return;
         isBraking = true;
         moveInput = new Vector2(0, 0);
 
@@ -176,6 +182,10 @@ public class aiCarController : MonoBehaviour, IHealth {
             smokeFX.SetActive(false);
             fireFX.SetActive(false);
         }
+    }
+
+    public void ResetHealth() {
+        AddHealth(maxHealth - health);
     }
 
     // public void SwitchGear(int add) {

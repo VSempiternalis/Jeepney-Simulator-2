@@ -40,8 +40,8 @@ public class PlayerInteraction : MonoBehaviour {
 
     [Space(10)]
     [Header("UI")]
+    public bool isInIllegalUnloadArea;
     [SerializeField] private TMP_Text areaUI;
-    // [SerializeField] private GameObject dropUI;
     [SerializeField] private GameObject onhandItemPF;
     [SerializeField] private Transform onhandUI;
     [SerializeField] private TMP_Text tooltipHeader;
@@ -383,10 +383,12 @@ public class PlayerInteraction : MonoBehaviour {
             inAreaUI.In();
 
             if(go.GetComponent<DropSpot>().isIllegal) {
+                isInIllegalUnloadArea = true;
                 inAreaUI.GetComponent<Image>().color = red;
                 inAreaUI.transform.GetChild(0).GetComponent<TMP_Text>().color = red;
                 inAreaUI.transform.GetChild(0).GetComponent<TMP_Text>().text = "YOU ARE IN AN ILLEGAL UNLOADING AREA";
             } else {
+                isInIllegalUnloadArea = false;
                 inAreaUI.GetComponent<Image>().color = green;
                 inAreaUI.transform.GetChild(0).GetComponent<TMP_Text>().color = green;
                 inAreaUI.transform.GetChild(0).GetComponent<TMP_Text>().text = "YOU ARE IN AN UNLOADING AREA";
@@ -422,6 +424,7 @@ public class PlayerInteraction : MonoBehaviour {
             am.PlayUI(7);
         }
         if(inAreaUI.isIn && go.layer == layerArea) {
+            isInIllegalUnloadArea = true;
             inAreaUI.Out();
         }
     }

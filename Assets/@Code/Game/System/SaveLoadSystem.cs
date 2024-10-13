@@ -6,6 +6,7 @@ using TMPro;
 
 public class SaveLoadSystem : MonoBehaviour {
     public static SaveLoadSystem current;
+    private CrimeManager cm;
 
     public string gameMode;
     public bool isNewGame;
@@ -114,6 +115,7 @@ public class SaveLoadSystem : MonoBehaviour {
         BoundaryManager.current.Setup(gameMode);
         JeepneyPanel.current.Setup();
         SpawnArea.current.isRoadEvents = isEvents;
+        CrimeManager.current.isOn = (gameMode == "Career"? true:false);
 
         // //load houses
         // HousePanel.current.Load();

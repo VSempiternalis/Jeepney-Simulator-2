@@ -5,18 +5,11 @@ public class aiCarInput : MonoBehaviour {
     public aiCarController carCon;
 
     //VARIABLES
-    private bool isBraking;
     [SerializeField] private float distToNodeThresh = 1f;
 
     //COLLISION AVOIDANCE
     public CollisionAvoidance CA_frontMed;
     [SerializeField] private float distToNode;
-    //public CollisionAvoidance CA_frontClose;
-
-    // [Space(10)]
-    // [Header("NODES")]
-    // [SerializeField] private NodeHandler nextNode;
-    // [SerializeField] private NodeHandler currentNode;
 
     [Space(10)]
     [Header("POLICE")]
@@ -29,6 +22,7 @@ public class aiCarInput : MonoBehaviour {
 
     private void Update() {
         if(isPoliceCar && isChasingTarget) {
+            if(carCon.isBraking) carCon.StopBrake();
             carCon.GetInput(new Vector2(0, 1));
             return;
         }
