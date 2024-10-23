@@ -14,8 +14,8 @@ public class CrimeManager : MonoBehaviour {
     private AudioManager am;
     public bool isOn;
 
-    [SerializeField] private List<PoliceCar> policeCars;
-    [SerializeField] private int copCarRange;
+    public List<PoliceCar> policeCars;
+    public int copCarRange;
     private int carsChasing;
 
     public bool isPlayerWanted;
@@ -32,6 +32,7 @@ public class CrimeManager : MonoBehaviour {
     [SerializeField] private GameObject star5;
 
     //Aggro
+    public bool isAggroLoss;
     public float aggroProgress;
     [SerializeField] private float aggroMax;
     [SerializeField] private RectTransform aggroBar;
@@ -100,6 +101,11 @@ public class CrimeManager : MonoBehaviour {
     }
 
     private void Update() {
+        //TEST
+        if(Input.GetKeyDown(KeyCode.Alpha0)) {
+            NewViolation(2);
+        }
+
         if(!isOn) return;
         if(!isPlayerWanted) {
             if(arrestProgress > 0) arrestProgress = 0;
@@ -170,13 +176,17 @@ public class CrimeManager : MonoBehaviour {
     private void FixedUpdate() {
         if(!isOn) return;
 
-        if(isPlayerWanted) {
+        if(isPlayerWanted && isAggroLoss) {
             aggroProgress --;
 
             if(aggroProgress <= 0) {
                 SetIsPlayerWanted(false);
             }
         }
+    }
+
+    private void LateUpdate() {
+        isAggroLoss = true;
     }
 
     private void UnderArrest() {
@@ -196,7 +206,6 @@ public class CrimeManager : MonoBehaviour {
         settings.UpdateCursor();
         settings.SetPlayer(false);
         pdi.carCon.carRb.isKinematic = true;
-        pdi.carCon.carRb.isKinematic = false;
     }
 
     private void UpdateViolationsUI() {
@@ -224,6 +233,7 @@ public class CrimeManager : MonoBehaviour {
 
         finesTotal = 0;
         finesPanel.Out();
+        pdi.carCon.carRb.isKinematic = false;
 
         //Reset counts
         redLightCount = 0;
@@ -243,6 +253,7 @@ public class CrimeManager : MonoBehaviour {
 
         if(bm.CanPay(finesTotal)) {
             ArrestFinish();
+            // TowTruck.current.PoliceTow();
 
             //sfx
             am.PlayUI(2);
@@ -320,7 +331,7 @@ public class CrimeManager : MonoBehaviour {
     private void SetIsPlayerWanted(bool newVal) {
         if(!isOn) return;
 
-        print("SET IS PLAYER WANTED: " + (newVal? "TRUE":"FALSE"));
+        // print("SET IS PLAYER WANTED: " + (newVal? "TRUE":"FALSE"));
         isPlayerWanted = newVal;
 
         //stop spawning vics
@@ -344,6 +355,7 @@ public class CrimeManager : MonoBehaviour {
         if(wantedLevel >= 3) star3.SetActive(isPlayerWanted);
         if(wantedLevel >= 4) star4.SetActive(isPlayerWanted);
         if(wantedLevel >= 5) star5.SetActive(isPlayerWanted);
+        print("setisPlayerWanted. wanted level: " + wantedLevel);
 
         //AGGRO
         aggroProgress = aggroMax;
@@ -371,10 +383,15 @@ public class CrimeManager : MonoBehaviour {
         }
     }
 
-    public void NewViolation(int violation) {
-        if(!isOn || !pdi.isDriving) return;
+    public void NewCopCarChasing(PoliceCar pc, bool newIsChasing) {
+        print("new cop car chasing: " + pc.name + (newIsChasing? " TRUE":" FALSE"));
+        carsChasing += newIsChasing? 1 : -1;
+    }
 
-        print("VIOLATION: " + violation);
+    public void NewViolation(int violation) {
+        print("NEW VIOLATION: " + violation);
+        if(!isOn || !pdi.isDriving || finesPanel.isIn) return;
+
         /*
         VIOLATIONS
         1 - Red light violation
@@ -385,49 +402,84 @@ public class CrimeManager : MonoBehaviour {
 
         bool isPoliceAlert = false; //true if police car sees player commit crime
 
-        //CHECK FOR COP CARS
+        //CHECK VIOLATIONS
         foreach(PoliceCar pc in policeCars) {
+            //DETTECT CRIME
             if(pc.gameObject.activeSelf && Vector3.Distance(pc.transform.position, pdi.transform.position) <= copCarRange) {
-                isPoliceAlert = true;
-
-                //Update wanted level
-                //Disregard red light violation when already wanted
-                if(violation == 1 && wantedLevel > 1) break;
-                else if(violation == 4 && wantedLevel > 1) break;
-                else {
-                    if(violation == 2) wantedLevel += 2;
-                    else wantedLevel ++;
-                    if(wantedLevel > 5) wantedLevel = 5;
-                }
-
-                //update fines
-                if(violation == 1) {
-                    finesTotal += redLightCost;
-                    redLightCount ++;
-                } else if(violation == 2) {
-                    finesTotal += collisionCost;
-                    collisionCount ++;
-                } else if(violation == 3) {
-                    finesTotal += manslaughterCost;
-                    manslaughterCount ++;
-                } else if(violation == 4) {
-                    finesTotal += illegalUnloadCost;
-                    illegalUnloadCount ++;
-                }
-
-                SetIsPlayerWanted(true);
-
-                //set this police car to chase
-                if(carsChasing < wantedLevel) {
-                    pc.SetIsChasing(true);
-                    carsChasing ++;
-                }
+                print("police alert!");
+                if(!isPoliceAlert) isPoliceAlert = true;
 
                 break;
             }
         }
 
-        //NOTIFICATIONS
+        //VIOLATIONS AND WANTED LEVEL
+        if(isPoliceAlert) {
+            //Update wanted level
+            //Disregard red light violation when already wanted
+            if(wantedLevel > 1 && (violation == 1 || violation == 4)) {
+                //nothing
+            } else {
+                if(violation == 3) wantedLevel += 2;
+                else wantedLevel ++;
+                if(wantedLevel > 5) wantedLevel = 5;
+            }
+
+            //update fines
+            if(violation == 1) {
+                finesTotal += redLightCost;
+                redLightCount ++;
+            } else if(violation == 2) {
+                finesTotal += collisionCost;
+                collisionCount ++;
+            } else if(violation == 3) {
+                finesTotal += manslaughterCost;
+                manslaughterCount ++;
+            } else if(violation == 4) {
+                finesTotal += illegalUnloadCost;
+                illegalUnloadCount ++;
+            }
+
+            // if(!isPlayerWanted) 
+            SetIsPlayerWanted(true);
+        }
+
+        //CHASE
+        //Make closest cars chase
+        if(carsChasing < wantedLevel) {
+            foreach(PoliceCar pc in policeCars) {
+                if(!pc.isChasingTarget && pc.gameObject.activeSelf && Vector3.Distance(pc.transform.position, pdi.transform.position) <= copCarRange) {
+                    //set this police car to chase
+                    if(carsChasing < wantedLevel) pc.SetIsChasing(true);
+                }
+
+                else if(!pc.isChasingTarget && pc.gameObject.activeSelf) {
+                    //set this police car to chase
+                    print("distant car");
+                    // if(carsChasing < wantedLevel) pc.SetIsChasing(true);
+                }
+
+            }
+        }
+        //Make distant, active cars chase
+        if(carsChasing < wantedLevel) {
+            foreach(PoliceCar pc in policeCars) {
+                if(!pc.isChasingTarget && pc.gameObject.activeSelf) {
+                    //set this police car to chase
+                    if(carsChasing < wantedLevel) pc.SetIsChasing(true);
+                }
+
+                //Spawn and make reserve cars chase
+            }
+        }
+        //Spawn and make reserve cars chase
+        if(carsChasing < wantedLevel) {
+            foreach(PoliceCar pc in policeCars) {
+                //Spawn and make reserve cars chase
+            }
+        }
+
+        //NOTIFICATION
         if(isPoliceAlert) {
             if(violation == 1) nm.NewNotifColor("RED LIGHT VIOLATION", "A nearby police car just saw you running a red light!", 3);
             else if(violation == 2) nm.NewNotifColor("VEHICLE COLLISION", "A nearby police car just saw you colliding with a car!", 3);

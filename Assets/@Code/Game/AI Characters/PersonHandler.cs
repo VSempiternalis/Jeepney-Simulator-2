@@ -224,13 +224,10 @@ public class PersonHandler : MonoBehaviour {
             if(!pdit.isPickups || !isPassenger || (pdit.carCon && !pdit.carCon.HasFreeSeats())) return;
             else if(!RouteSelector.current.destinations.Contains(landmarkDest)) return;
 
-            //[!+Call jeep when close]
             distToPlayer = Vector3.Distance(transform.position, pdit.transform.position);
             if(distToPlayer <= callDist && pdit.isDriving && pdit.isPickups && pdit.carCon.HasFreeSeats()) {
-                //Face jeepney when close?
+                //Face jeepney when close
                 FacePos(pdit.transform.position);
-                //[HAIL]
-                // GetComponent<Test_script>().Hail();
                 carCon = pdit.carCon;
 
                 if(carCon.GetComponent<Rigidbody>().velocity.magnitude <= magnitudeThresh) {
@@ -238,9 +235,8 @@ public class PersonHandler : MonoBehaviour {
                 }
             }
         } else { //NOT TUTORIAL
-            if(!player.isPickups || !isPassenger || (player.carCon && !player.carCon.HasFreeSeats()) || !player.isDriving) return;
+            if(!player.isPickups || !isPassenger || (player.carCon && !player.carCon.HasFreeSeats()) || !player.isDriving || cm.isPlayerWanted) return;
 
-            //[!+Call jeep when close]
             distToPlayer = Vector3.Distance(transform.position, player.transform.position);
             if(distToPlayer > callDist) return;
 

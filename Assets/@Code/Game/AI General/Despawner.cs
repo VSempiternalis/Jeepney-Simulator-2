@@ -1,6 +1,8 @@
 using UnityEngine;
 
 public class Despawner : MonoBehaviour {
+    private CrimeManager cm;
+
     [SerializeField] private string objectType;
     [SerializeField] private Transform pool;
 
@@ -17,6 +19,8 @@ public class Despawner : MonoBehaviour {
     private SpawnArea spawnArea;
 
     private void Start() {
+        cm = CrimeManager.current;
+
         nextSecUpdate = Time.time + 1;
 
         player = GameObject.Find("PLAYER").transform;
@@ -50,6 +54,9 @@ public class Despawner : MonoBehaviour {
             spawnArea.vicCount --;
             GetComponent<aiCarController>().Reset();
             GetComponent<aiCarController>().ResetHealth();
+            if(GetComponent<PoliceCar>() != null && GetComponent<PoliceCar>().isChasingTarget) {
+                cm.NewCopCarChasing(GetComponent<PoliceCar>(), false);
+            }
         }
         else if(objectType == "Person") {
             //Dont despawn when in vehicle

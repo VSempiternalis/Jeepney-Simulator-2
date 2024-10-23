@@ -67,8 +67,6 @@ public class aiCarController : MonoBehaviour, IHealth {
 
     private void Start() {
         maxMotorTorque = UnityEngine.Random.Range(maxMotorTorqueRange.x, maxMotorTorqueRange.y + 1);
-        // print("MAX MOTOR TORQUE: " + maxMotorTorque);
-        // maxMotorTorque = gearFactor;
         GetComponent<Rigidbody>().drag = freeDrag;
         audioSource = GetComponent<AudioSource>();
         ca = GetComponent<aiCarInput>().CA_frontMed;

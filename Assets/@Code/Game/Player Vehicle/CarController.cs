@@ -674,13 +674,15 @@ public class CarController : MonoBehaviour {
             if(audioHazard.isPlaying) audioHazard.Stop();
 
             //Clear CA boxes
-            rearCA.SetActive(false);
-            leftCA.SetActive(false);
-            rightCA.SetActive(false);
+            if(rearCA != null) {
+                rearCA.SetActive(false);
+                leftCA.SetActive(false);
+                rightCA.SetActive(false);
+            }
         }
 
         //INDICATOR COLLISION AVOIDANCE BOXES
-        if(hazardLightsActive) {
+        if(hazardLightsActive && rearCA != null) {
             if(indicatorDirection == 0) rearCA.SetActive(true);
             else if(indicatorDirection == -1) leftCA.SetActive(true);
             else if(indicatorDirection == 1) rightCA.SetActive(true);
@@ -721,6 +723,11 @@ public class CarController : MonoBehaviour {
 
     private void UpdateFlameFX() {
         if(health <= 0) {
+            flamesSmall.SetActive(false);
+            flamesMedium.SetActive(false);
+
+            flamesLarge.SetActive(true);
+            
             health = 0;
 
             healthFactor = 0.2f;
@@ -798,6 +805,8 @@ public class CarController : MonoBehaviour {
             float relativeVelocity = other.relativeVelocity.magnitude;
             // print("COLLISION: relvel:" + relativeVelocity);
 
+            // if(other.gameObject.GetComponent<PoliceCar>()) return;
+            // else 
             if(relativeVelocity > 7) { //tolerance
                 // damage vehicle
                 AddHealth(-(int)(relativeVelocity/2));

@@ -387,8 +387,8 @@ public class Settings : MonoBehaviour {
 
     public void SetMouseSens(float newMouseSens) {
         if(!playerCam) return;
-        playerCam.GetComponent<FirstPersonLook>().sensitivity = newMouseSens;
-        mouseSensText.text = Mathf.Round(newMouseSens*10.0f) * 0.01f + "";
+        playerCam.GetComponent<FirstPersonLook>().sensitivity = newMouseSens/10;
+        mouseSensText.text = Mathf.Round(newMouseSens*100.0f) * 0.001f + "";
         mouseSensSlider.value = newMouseSens;
 
         //Saving
