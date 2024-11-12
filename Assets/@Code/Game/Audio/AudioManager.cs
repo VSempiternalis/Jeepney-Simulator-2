@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-// using System.Collections.Generic;
+using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour {
     public static AudioManager current;
@@ -13,13 +13,17 @@ public class AudioManager : MonoBehaviour {
 
     //Ambience
     private AudioHandler oldAmbience;
+    private AudioSource oldAmbSource;
     private AudioHandler currentAmbience;
-    private int currentIndex;
-    [SerializeField] private AudioHandler ambienceHandler1;
-    [SerializeField] private AudioHandler ambienceHandler2;
-    private bool isTransitioning;
-    [SerializeField] private float smoothness;
+    private AudioSource currentAmbSource;
+    private int currentIndex; //song/audio index
+    public int currentAmbIndex; //audiohandler and source index
+    [SerializeField] private List<AudioHandler> ambienceHandlers;
+    [SerializeField] private List<AudioSource> ambSources;
+    // private bool isTransitioning;
+    // [SerializeField] private float smoothness;
     [SerializeField] private float maxAmbVolume;
+    [SerializeField] private float transitionTime;
 
     public bool isSayingStop;
 
@@ -28,20 +32,13 @@ public class AudioManager : MonoBehaviour {
     }
 
     private void Start() {
-        currentAmbience = ambienceHandler1;
-        // InitializePool();
+        currentIndex = 0;
+        currentAmbience = ambienceHandlers[currentAmbIndex];
+        currentAmbSource = ambSources[currentAmbIndex];
     }
 
     private void Update() {
-        // if(isTransitioning) {
-        //     oldAmbience.GetComponent<AudioSource>().volume = Mathf.Lerp(oldAmbience.GetComponent<AudioSource>().volume, 0, Time.deltaTime * smoothness);
-        //     currentAmbience.GetComponent<AudioSource>().volume = Mathf.Lerp(oldAmbience.GetComponent<AudioSource>().volume, maxAmbVolume, Time.deltaTime * smoothness);
-            
-        //     if(oldAmbience.GetComponent<AudioSource>().volume == 0 && currentAmbience.GetComponent<AudioSource>().volume == maxAmbVolume) {
-        //         oldAmbience.GetComponent<AudioSource>().enabled = false;
-        //         isTransitioning = false;
-        //     }
-        // }
+        
     }
 
     public void SayStop() {
@@ -54,13 +51,6 @@ public class AudioManager : MonoBehaviour {
         isSayingStop = false;
     }
 
-    // private void InitializePool() {
-    //     for(int i = 0; i < poolSize; i++) {
-    //         AudioSource source = gameObject.AddComponent<AudioSource>();
-    //         audioSources.Add(source);
-    //     }
-    // }
-
     public void PlayUI(int i) {
         uiHandler.PlayOneShot(i);
     }
@@ -71,22 +61,44 @@ public class AudioManager : MonoBehaviour {
     }
 
     public void NewAmb(int i) {
-        if(currentIndex == i) return;
+        if(i == currentIndex) return;
         currentIndex = i;
+
+        print("NEW AMB: " + i);
+        //OLD AMBIENCE
+        //slowly decrease volume from 0.4 to 0
+        // currentAmbSource.volume
+        LeanTween.value(gameObject, maxAmbVolume, 0f, transitionTime)
+        .setOnUpdate((float val)=> {
+            print("old val: " + val);
+            if(oldAmbSource != null) {
+                oldAmbSource.volume = val;
+                print("old vol: " + oldAmbSource.volume);
+            }
+        });
+        // .setOnComplete(() => {
+        //     ambSources[currentAmbIndex].Stop();
+        // });
+
+        //NEW AMBIENCE
+        if(currentAmbIndex == 0) currentAmbIndex = 1;
+        else currentAmbIndex = 0;
+
+        currentAmbience = ambienceHandlers[currentAmbIndex];
+        currentAmbSource = ambSources[currentAmbIndex];
+
+        //slowly increase volume from 0 to 0.4
         currentAmbience.Play(currentIndex);
-
-        //OLD
-        // //Slowly decrease volume of previous ambience
-        // oldAmbience = currentAmbience;
-
-        // //set new ambience
-        // if(currentAmbience == ambienceHandler1) currentAmbience = ambienceHandler2;
-        // else currentAmbience = ambienceHandler1;
-
-        // currentAmbience.GetComponent<AudioSource>().enabled = true;
-        // currentAmbience.Play(i);
-
-        // isTransitioning = true;
+        LeanTween.value(gameObject, 0, maxAmbVolume, transitionTime)
+        .setOnUpdate((float val)=> {
+            print("new val: " + val);
+            currentAmbSource.volume = val;
+            print("new vol: " + currentAmbSource.volume);
+        })
+        .setOnComplete(() => {
+            oldAmbience = currentAmbience;
+            oldAmbSource = currentAmbSource;
+        });
     }
 
     public void PlayFuelPump(bool newVal) {

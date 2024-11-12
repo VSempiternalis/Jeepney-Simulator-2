@@ -1,14 +1,18 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class PoliceCar : MonoBehaviour {
-    [SerializeField] private Transform target;
+    public Transform target;
     private aiCarController carCon;
     private aiCarInput aci;
     private CrimeManager cm;
     private NavMeshAgent nma;
     private Rigidbody rb;
+    private BoxCollider bc;
+    private Transform player;
+    private Transform playerJeep;
 
     public bool isChasingTarget;
     [SerializeField] private int arrestRange = 10;
@@ -19,6 +23,9 @@ public class PoliceCar : MonoBehaviour {
     [SerializeField] private LayerMask nodeLayer;
 
     [SerializeField] private GameObject lights;
+    [SerializeField] private GameObject redLight;
+    [SerializeField] private GameObject blueLight;
+    private Coroutine lightCoroutine;
     private AudioSource audioSource;
 
     //COLLISION
@@ -31,27 +38,45 @@ public class PoliceCar : MonoBehaviour {
         cm = CrimeManager.current;
         nma = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
         audioSource = GetComponent<AudioSource>();
+        bc = GetComponent<BoxCollider>();
+        player = PlayerDriveInput.current.transform;
+        playerJeep = PlayerDriveInput.current.carCon.transform;
 
         if(!cm.policeCars.Contains(this)) cm.policeCars.Add(this);
         visionRange = cm.copCarRange;
     }
 
     private void FixedUpdate() {
-        if(isChasingTarget) {
+        if(carCon.enabled == false) {
+            float distToTarget = Vector3.Distance(transform.position, target.position);
+            float distToPlayer = Vector3.Distance(transform.position, player.position);
+            float distToPlayerJeep = Vector3.Distance(transform.position, playerJeep.position);
+
+            //stop when too close
+            if(nma.isOnNavMesh && (distToTarget < 3 || distToPlayer < 5 || distToPlayerJeep < 5 )) {
+                // print(name + " STOPPING POLICE CAR");
+                nma.enabled = false;
+            } else if(!nma.enabled) {
+                nma.enabled = true;
+            }
+
             //check if close to target, start arresting
-            if(Vector3.Distance(transform.position, target.position) < arrestRange) {
+            // if(distToTarget < arrestRange) {
+            if(distToPlayer < arrestRange) {
+                // print("SHOULD BE ARRESTING");
                 cm.arrestProgress ++;
             }
 
             //if can see player, no aggro loss
-            if(Vector3.Distance(transform.position, target.position) < visionRange) {
+            if(distToTarget < visionRange) {
                 if(cm.isAggroLoss != false) cm.isAggroLoss = false;
             }
 
             //chase target
             // nma.destination = target.position;
-            if(nma != null) {
+            if(nma.isOnNavMesh && nma != null) {
                 nma.SetDestination(target.position);
                 nma.acceleration = nmaAcc*carCon.healthFactor;
             }
@@ -59,6 +84,7 @@ public class PoliceCar : MonoBehaviour {
     }
 
     public void SetIsChasing(bool newIsChasing) {
+        // print(name + " is chasing: " + newIsChasing);
         if(!gameObject.activeSelf) return;
 
         isChasingTarget = newIsChasing;
@@ -69,9 +95,22 @@ public class PoliceCar : MonoBehaviour {
         }
 
         // rb.isKinematic = newIsChasing;
+        // bc.enabled = !newIsChasing;
         chaseCoroutine = StartCoroutine(WaitAndChase(newIsChasing));
 
         cm.NewCopCarChasing(this, newIsChasing);
+    }
+
+    private IEnumerator LightCoroutine() {
+        while(isChasingTarget) {
+            redLight.SetActive(true);
+            blueLight.SetActive(false);
+            yield return new WaitForSeconds(0.5f);
+
+            redLight.SetActive(false);
+            blueLight.SetActive(true);
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
     private IEnumerator WaitAndChase(bool newIsChasing) {
@@ -99,66 +138,85 @@ public class PoliceCar : MonoBehaviour {
         if(isChasingTarget && !audioSource.isPlaying) audioSource.Play();
         else if(!isChasingTarget)audioSource.Stop();
 
-        //Lights
-        lights.SetActive(isChasingTarget);
+        //LIGHTS
+        if(isChasingTarget) {
+            lightCoroutine = StartCoroutine(LightCoroutine());
+        } else if(!isChasingTarget) {
+            if(lightCoroutine != null) StopCoroutine(lightCoroutine);
+            redLight.SetActive(false);
+            blueLight.SetActive(false);
+        }
 
         //if not chasing anymore, find nearby node and set it as target
-        float nodeFindRange = 100f;
-        float closestNodeDistance = 100f;
-        Transform closestNode = null;
+        if(!isChasingTarget) {
+            float nodeFindRange = 100f;
+            float closestNodeDistance = 100f;
+            Transform closestNode = null;
 
-        Collider[] colliders = Physics.OverlapSphere(transform.position, nodeFindRange, nodeLayer);
-        // print("COLLIDERS LENGTH: " + colliders.Length);
-        if(colliders.Length > 0) {
-            foreach(Collider col in colliders) {
-                print("COL: " + col.gameObject.name);
-                if(col.gameObject.layer == LayerMask.NameToLayer("Node")) {
-                    print("NODE: " + col.gameObject.name);
-                    float distance = Vector3.Distance(transform.position, col.transform.position);
-                    if(distance < closestNodeDistance) {
-                        closestNodeDistance = distance;
-                        closestNode = col.transform;
-                        break;
+            Collider[] colliders = Physics.OverlapSphere(transform.position, nodeFindRange, nodeLayer);
+            // print("COLLIDERS LENGTH: " + colliders.Length);
+            if(colliders.Length > 0) {
+                foreach(Collider col in colliders) {
+                    print("COL: " + col.gameObject.name);
+                    if(col.gameObject.layer == LayerMask.NameToLayer("Node")) {
+                        print("NODE: " + col.gameObject.name);
+                        float distance = Vector3.Distance(transform.position, col.transform.position);
+                        if(distance < closestNodeDistance) {
+                            closestNodeDistance = distance;
+                            closestNode = col.transform;
+                            break;
+                        }
                     }
                 }
             }
-        }
 
-        if(closestNode != null) {
-            carCon.currentNode = closestNode.gameObject.GetComponent<NodeHandler>();
-            carCon.nextNode = carCon.currentNode.GetRandomNode();
+            if(closestNode != null) {
+                carCon.currentNode = closestNode.gameObject.GetComponent<NodeHandler>();
+                carCon.nextNode = carCon.currentNode.GetRandomNode();
+            }
         }
     }
 
     // private void OnCollisionEnter(Collision other) {
-    //     print("police car collision: " + other.gameObject.name);
     //     if((collisionLayer.value & (1 << other.gameObject.layer)) != 0) {
     //         //COLLIDE WITH PLAYER CAR
     //         if(other.gameObject.GetComponent<CarController>()) {
-    //             print("has car controller");
+    //             print(name + " enter");
+    //             // print("has car controller");
+    //             bc.enabled = true;
+    //             // nma.isStopped = false;
     //         }
     //     }
     // }
 
+    private void OnTriggerEnter(Collider other) {
+        // print("ontriggerenter: " + other.gameObject.name);
+
+        //layer 6 is VEHICLES
+        if(other.gameObject.layer == 6) {
+            bc.isTrigger = false;
+            rb.isKinematic = false;
+        }
+    }
+
     private void OnCollisionStay(Collision other) {
         if((collisionLayer.value & (1 << other.gameObject.layer)) != 0) {
             //COLLIDE WITH PLAYER CAR
-            if(other.gameObject.GetComponent<CarController>()) {
-                print("stopped");
-                rb.isKinematic = false;
-                nma.isStopped = true;
+            if(other.gameObject.GetComponent<CarController>() && nma.isOnNavMesh && isChasingTarget) {
+                // print("STAY");
+                bc.isTrigger = true;
+                rb.isKinematic = true;
             }
         }
     }
 
-    private void OnCollisionExit(Collision other) {
-        if((collisionLayer.value & (1 << other.gameObject.layer)) != 0) {
-            //COLLIDE WITH PLAYER CAR
-            if(other.gameObject.GetComponent<CarController>()) {
-                print("go");
-                rb.isKinematic = true;
-                nma.isStopped = false;
-            }
+    private void OnTriggerExit(Collider other) {
+        // print("ontriggerexit: " + other.gameObject.name);
+
+        //layer 6 is VEHICLES
+        if(other.gameObject.layer == 6) {
+            bc.isTrigger = false;
+            rb.isKinematic = false;
         }
     }
 }

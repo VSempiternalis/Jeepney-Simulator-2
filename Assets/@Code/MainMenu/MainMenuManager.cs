@@ -37,11 +37,15 @@ public class MainMenuManager : MonoBehaviour {
         "Tip 22: Stuck? Out of gas? You can call the TOW TRUCK and drop your jeepney in the nearest gas station!",
         "Tip 23: Visit ALBERTO in the nearest EZ GAS to get change!",
         "Tip 24: Use ATMs to withdraw money from your bank account!",
-        "Tip 665: ",
+        // "Tip 665: ",
         "Tip 666: She's behind you.",
-        "Tip 667: "
+        // "Tip 667: "
     };
     [SerializeField] private TMP_Text tipText;
+
+    private void Awake() {
+        PlayerPrefs.DeleteAll();
+    }
 
     private void Start() {
         SteamAchievements.current.UnlockAchievement("ACH_STARTUP");

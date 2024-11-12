@@ -17,7 +17,7 @@ public class Follower : MonoBehaviour {
     }
 
     private void Update() {
-        if(image == null) return;
+        if(image == null || toFollow == null) return;
         
         if(!toFollow.gameObject.activeSelf && image.activeSelf) image.SetActive(false);
         else if(toFollow.gameObject.activeSelf && !image.activeSelf) image.SetActive(true);

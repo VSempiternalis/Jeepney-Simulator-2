@@ -160,6 +160,7 @@ public class SkinCustomizer : MonoBehaviour {
         nameText.text = currentSkin.skinName;
 
         //show right button
+        print("INDEX: " + index);
         if(skinsOwned[index]) {
             buttonOff.SetActive(false);
             buttonOn.SetActive(true);
