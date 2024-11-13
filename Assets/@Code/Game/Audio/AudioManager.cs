@@ -64,16 +64,16 @@ public class AudioManager : MonoBehaviour {
         if(i == currentIndex) return;
         currentIndex = i;
 
-        print("NEW AMB: " + i);
+        // print("NEW AMB: " + i);
         //OLD AMBIENCE
         //slowly decrease volume from 0.4 to 0
         // currentAmbSource.volume
         LeanTween.value(gameObject, maxAmbVolume, 0f, transitionTime)
         .setOnUpdate((float val)=> {
-            print("old val: " + val);
+            // print("old val: " + val);
             if(oldAmbSource != null) {
                 oldAmbSource.volume = val;
-                print("old vol: " + oldAmbSource.volume);
+                // print("old vol: " + oldAmbSource.volume);
             }
         });
         // .setOnComplete(() => {
@@ -91,9 +91,9 @@ public class AudioManager : MonoBehaviour {
         currentAmbience.Play(currentIndex);
         LeanTween.value(gameObject, 0, maxAmbVolume, transitionTime)
         .setOnUpdate((float val)=> {
-            print("new val: " + val);
+            // print("new val: " + val);
             currentAmbSource.volume = val;
-            print("new vol: " + currentAmbSource.volume);
+            // print("new vol: " + currentAmbSource.volume);
         })
         .setOnComplete(() => {
             oldAmbience = currentAmbience;

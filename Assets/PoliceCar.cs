@@ -38,7 +38,7 @@ public class PoliceCar : MonoBehaviour {
         cm = CrimeManager.current;
         nma = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
-        rb.isKinematic = true;
+        // rb.isKinematic = true;
         audioSource = GetComponent<AudioSource>();
         bc = GetComponent<BoxCollider>();
         player = PlayerDriveInput.current.transform;
@@ -58,13 +58,20 @@ public class PoliceCar : MonoBehaviour {
             if(nma.isOnNavMesh && (distToTarget < 3 || distToPlayer < 5 || distToPlayerJeep < 5 )) {
                 // print(name + " STOPPING POLICE CAR");
                 nma.enabled = false;
-            } else if(!nma.enabled) {
+            } else if(!nma.enabled && !(distToTarget < 3 || distToPlayer < 5 || distToPlayerJeep < 5 )) {
                 nma.enabled = true;
             }
 
+            // if(nma.isOnNavMesh) {
+            //     // print(name + " STOPPING POLICE CAR");
+            //     if(distToTarget < 3 || distToPlayer < 5 || distToPlayerJeep < 5 ) nma.enabled = false;
+            //     else nma.enabled = true;
+            // } 
+
             //check if close to target, start arresting
             // if(distToTarget < arrestRange) {
-            if(distToPlayer < arrestRange) {
+            // if(distToPlayer < arrestRange) {
+            if(distToPlayerJeep < arrestRange) {
                 // print("SHOULD BE ARRESTING");
                 cm.arrestProgress ++;
             }
@@ -94,7 +101,7 @@ public class PoliceCar : MonoBehaviour {
             StopCoroutine(chaseCoroutine);
         }
 
-        // rb.isKinematic = newIsChasing;
+        rb.isKinematic = newIsChasing;
         // bc.enabled = !newIsChasing;
         chaseCoroutine = StartCoroutine(WaitAndChase(newIsChasing));
 
@@ -128,7 +135,7 @@ public class PoliceCar : MonoBehaviour {
         // aci.isChasingTarget = isChasingTarget;
 
         //nma
-        if(nma != null) {
+        if(nma != null && nma.isOnNavMesh) {
             nma.enabled = isChasingTarget;
             nma.isStopped = !isChasingTarget;
         }
@@ -148,33 +155,35 @@ public class PoliceCar : MonoBehaviour {
         }
 
         //if not chasing anymore, find nearby node and set it as target
-        if(!isChasingTarget) {
-            float nodeFindRange = 100f;
-            float closestNodeDistance = 100f;
-            Transform closestNode = null;
+        // if(!isChasingTarget) {
+        //     print("not chasing target");
+        //     float nodeFindRange = 100f;
+        //     float closestNodeDistance = 100f;
+        //     Transform closestNode = null;
 
-            Collider[] colliders = Physics.OverlapSphere(transform.position, nodeFindRange, nodeLayer);
-            // print("COLLIDERS LENGTH: " + colliders.Length);
-            if(colliders.Length > 0) {
-                foreach(Collider col in colliders) {
-                    print("COL: " + col.gameObject.name);
-                    if(col.gameObject.layer == LayerMask.NameToLayer("Node")) {
-                        print("NODE: " + col.gameObject.name);
-                        float distance = Vector3.Distance(transform.position, col.transform.position);
-                        if(distance < closestNodeDistance) {
-                            closestNodeDistance = distance;
-                            closestNode = col.transform;
-                            break;
-                        }
-                    }
-                }
-            }
+        //     Collider[] colliders = Physics.OverlapSphere(transform.position, nodeFindRange, nodeLayer);
+        //     print("COLLIDERS LENGTH: " + colliders.Length);
+        //     if(colliders.Length > 0) {
+        //         print("colliders length: " + colliders.Length);
+        //         foreach(Collider col in colliders) {
+        //             print("COL: " + col.gameObject.name);
+        //             if(col.gameObject.layer == LayerMask.NameToLayer("Node")) {
+        //                 print("NODE: " + col.gameObject.name);
+        //                 float distance = Vector3.Distance(transform.position, col.transform.position);
+        //                 if(distance < closestNodeDistance) {
+        //                     closestNodeDistance = distance;
+        //                     closestNode = col.transform;
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //     }
 
-            if(closestNode != null) {
-                carCon.currentNode = closestNode.gameObject.GetComponent<NodeHandler>();
-                carCon.nextNode = carCon.currentNode.GetRandomNode();
-            }
-        }
+        //     if(closestNode != null) {
+        //         carCon.currentNode = closestNode.gameObject.GetComponent<NodeHandler>();
+        //         carCon.nextNode = carCon.currentNode.GetRandomNode();
+        //     }
+        // }
     }
 
     // private void OnCollisionEnter(Collision other) {

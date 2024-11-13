@@ -374,10 +374,12 @@ public class Settings : MonoBehaviour {
     public void SetFOV(float newFOV) {
         if(!playerCam) return;
         // print("Setting fov to: " + newFOV);
-        playerCam.GetComponent<Zoom>().defaultFOV = newFOV;
+        // playerCam.GetComponent<Zoom>().defaultFOV = newFOV;
         playerCam.GetComponent<Camera>().fieldOfView = newFOV;
         fovText.text = newFOV.ToString();
         fovSlider.value = newFOV;
+
+        ScreenShaker.current.SetMainFOV(newFOV);
 
         //Saving
         PlayerPrefs.SetFloat("Settings_FOV", newFOV);
@@ -389,7 +391,7 @@ public class Settings : MonoBehaviour {
     #region GAME
 
     public void SetMouseSens(float newMouseSens) {
-        print("SET MOUSE SENS TO: " + newMouseSens);
+        // print("SET MOUSE SENS TO: " + newMouseSens);
         if(!playerCam) return;
         playerCam.GetComponent<FirstPersonLook>().sensitivity = newMouseSens/10;
         mouseSensText.text = Mathf.Round(newMouseSens*100.0f) * 0.001f + "";
@@ -401,7 +403,7 @@ public class Settings : MonoBehaviour {
 
     public void SetZoomSens(float newZoomSens) {
         if(!playerCam) return;
-        playerCam.GetComponent<Zoom>().sensitivity = newZoomSens;
+        // playerCam.GetComponent<Zoom>().sensitivity = newZoomSens;
         zoomSensText.text = newZoomSens.ToString();
         zoomSensSlider.value = newZoomSens;
 
@@ -437,7 +439,7 @@ public class Settings : MonoBehaviour {
     }
 
     public void SetRenderDist(float newRenderDist) {
-        print("SETTING RENDER DIST TO: " + newRenderDist);
+        // print("SETTING RENDER DIST TO: " + newRenderDist);
         //float newRenderDist 1 = 100, 2 = 200, etc
 
         if(!playerCam) return;

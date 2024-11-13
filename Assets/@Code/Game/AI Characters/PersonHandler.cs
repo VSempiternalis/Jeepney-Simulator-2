@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using UnityEngine.TextCore.Text;
+using System.Collections;
 
 public class PersonHandler : MonoBehaviour {
     [Header("COMPONENTS")]
@@ -649,7 +648,16 @@ public class PersonHandler : MonoBehaviour {
         //death audio
         voiceHandler.Say("Death");
 
+        //timer to despawn
+        StartCoroutine(DespawnTimer(10f));
+
         // SteamAchievements.current.AddKill();
+    }
+
+    private IEnumerator DespawnTimer(float duration) {
+        yield return new WaitForSeconds(duration);
+
+        if(GetComponent<Despawner>()) GetComponent<Despawner>().Despawn();
     }
 
     private void OnTriggerEnter(Collider other) {
