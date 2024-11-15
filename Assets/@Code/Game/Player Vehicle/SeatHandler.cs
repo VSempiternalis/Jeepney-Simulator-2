@@ -28,6 +28,12 @@ public class SeatHandler : MonoBehaviour, IInteractable, ITooltipable {
         bool isTutorial = player.GetComponent<PlayerDriveInputTUTORIAL>();
 
         if(transform.childCount > 1) {
+            //Stop player from exiting when wanted
+            if(CrimeManager.current.isPlayerWanted) {
+                NotificationManager.current.NewNotifColor("WANTED!", "Cannot exit vehicle while you are wanted!", 3);
+                return;
+            }
+
             //EXIT
             player.position = exitPoint.position;
             player.SetParent(null);

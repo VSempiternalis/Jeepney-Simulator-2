@@ -6,6 +6,7 @@ public class NodeHandler : MonoBehaviour {
     [SerializeField] private List<NodeHandler> connections;
     public float speedMod;
     [SerializeField] private int vehicleLayer;
+    [SerializeField] private MeshRenderer mr;
 
     private void Start() {
         //Clear empty connections
@@ -16,6 +17,10 @@ public class NodeHandler : MonoBehaviour {
         foreach(NodeHandler clear in clearList) {
             connections.Remove(clear);
         }
+
+        //Turn mesh renderer off at start
+        mr = GetComponent<MeshRenderer>();
+        mr.enabled = false;
     }
 
     private void Update() {

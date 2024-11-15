@@ -18,6 +18,8 @@ public class Despawner : MonoBehaviour {
 
     private SpawnArea spawnArea;
 
+    private bool isCopCar;
+
     private void Start() {
         cm = CrimeManager.current;
 
@@ -28,6 +30,8 @@ public class Despawner : MonoBehaviour {
         spawnArea = SpawnArea.current;
 
         despawnDist = PlayerPrefs.GetInt("Settings_SpawnDist", 100);
+
+        isCopCar = GetComponent<PoliceCar>() != null;
     }
 
     private void Update() {
@@ -51,12 +55,15 @@ public class Despawner : MonoBehaviour {
 
     public void Despawn() {
         if(objectType == "Vehicle") {
+            if(isCopCar && GetComponent<PoliceCar>().isChasingTarget) {
+                return; //dont despawn
+            }
             spawnArea.vicCount --;
             GetComponent<aiCarController>().Reset();
             GetComponent<aiCarController>().ResetHealth();
-            if(GetComponent<PoliceCar>() != null && GetComponent<PoliceCar>().isChasingTarget) {
-                cm.NewCopCarChasing(GetComponent<PoliceCar>(), false);
-            }
+            // if(GetComponent<PoliceCar>() != null && GetComponent<PoliceCar>().isChasingTarget) {
+            //     cm.NewCopCarChasing(GetComponent<PoliceCar>(), false);
+            // }
         }
         else if(objectType == "Person") {
             //Dont despawn when in vehicle

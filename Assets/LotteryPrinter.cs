@@ -59,7 +59,7 @@ public class LotteryPrinter : MonoBehaviour {
 
             newTicket.SetActive(true);
             newTicket.GetComponent<LotteryTicket>().SetNumber(tensDigit, secondsDigit);
-            newTicket.name = "Luto Ticket: " + tensDigit + "" + secondsDigit;
+            newTicket.name = "Lottery Ticket [" + tensDigit + "" + secondsDigit + "]";
 
             ticketStorage.AddItemRandom(newTicket);
             lm.tickets.Add(newTicket);

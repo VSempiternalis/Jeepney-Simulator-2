@@ -14,9 +14,10 @@ public class CrimeManager : MonoBehaviour {
     private AudioManager am;
     public bool isOn;
 
-    public List<PoliceCar> policeCars;
+    public List<PoliceCar> policeCars; //contains all police cars
     public int copCarRange;
     private int carsChasing;
+    public List<Transform> targets;
 
     public bool isPlayerWanted;
     private int wantedLevel;
@@ -136,12 +137,10 @@ public class CrimeManager : MonoBehaviour {
                     StopCoroutine(redBlinkCoroutine);
                     redBlinkCoroutine = null;
                 }
-            } else {
-                // print("no red");
             }
 
             //set prev arrest prog
-            prevArrestProgress = arrestProgress;
+            // prevArrestProgress = arrestProgress;
         } else {
             if(arrestPanel.isIn) arrestPanel.Out();
 
@@ -177,12 +176,16 @@ public class CrimeManager : MonoBehaviour {
         if(!isOn) return;
 
         if(isPlayerWanted && isAggroLoss) {
-            aggroProgress --;
+            //dont lose aggro when being arrested
+            if(prevArrestProgress < arrestProgress) aggroProgress --;
 
             if(aggroProgress <= 0) {
                 SetIsPlayerWanted(false);
             }
         }
+
+        //set prev arrest prog
+        prevArrestProgress = arrestProgress;
     }
 
     private void LateUpdate() {
@@ -190,6 +193,7 @@ public class CrimeManager : MonoBehaviour {
     }
 
     private void UnderArrest() {
+        print("UNDER ARREST");
         SetIsPlayerWanted(false);
         
         //Reset values
@@ -355,7 +359,7 @@ public class CrimeManager : MonoBehaviour {
         if(wantedLevel >= 3) star3.SetActive(isPlayerWanted);
         if(wantedLevel >= 4) star4.SetActive(isPlayerWanted);
         if(wantedLevel >= 5) star5.SetActive(isPlayerWanted);
-        print("setisPlayerWanted. wanted level: " + wantedLevel);
+        // print("setisPlayerWanted. wanted level: " + wantedLevel);
 
         //AGGRO
         aggroProgress = aggroMax;
@@ -384,8 +388,12 @@ public class CrimeManager : MonoBehaviour {
     }
 
     public void NewCopCarChasing(PoliceCar pc, bool newIsChasing) {
-        print("new cop car chasing: " + pc.name + (newIsChasing? " TRUE":" FALSE"));
+        // print("new cop car chasing: " + pc.name + (newIsChasing? " TRUE":" FALSE"));
         carsChasing += newIsChasing? 1 : -1;
+
+        //give target
+        if(newIsChasing) pc.target = targets[carsChasing - 1];
+        // if(newIsChasing) print("NEW IS CHASING");;
     }
 
     public void NewViolation(int violation) {
@@ -406,7 +414,7 @@ public class CrimeManager : MonoBehaviour {
         foreach(PoliceCar pc in policeCars) {
             //DETTECT CRIME
             if(pc.gameObject.activeSelf && Vector3.Distance(pc.transform.position, pdi.transform.position) <= copCarRange) {
-                print("police alert!");
+                // print("police alert!");
                 if(!isPoliceAlert) isPoliceAlert = true;
 
                 break;
@@ -418,7 +426,7 @@ public class CrimeManager : MonoBehaviour {
             //Update wanted level
             //Disregard red light violation when already wanted
             if(wantedLevel > 1 && (violation == 1 || violation == 4)) {
-                //nothing
+                return;
             } else {
                 if(violation == 3) wantedLevel += 2;
                 else wantedLevel ++;
@@ -452,13 +460,6 @@ public class CrimeManager : MonoBehaviour {
                     //set this police car to chase
                     if(carsChasing < wantedLevel) pc.SetIsChasing(true);
                 }
-
-                else if(!pc.isChasingTarget && pc.gameObject.activeSelf) {
-                    //set this police car to chase
-                    print("distant car");
-                    // if(carsChasing < wantedLevel) pc.SetIsChasing(true);
-                }
-
             }
         }
         //Make distant, active cars chase
@@ -468,14 +469,12 @@ public class CrimeManager : MonoBehaviour {
                     //set this police car to chase
                     if(carsChasing < wantedLevel) pc.SetIsChasing(true);
                 }
-
-                //Spawn and make reserve cars chase
             }
         }
         //Spawn and make reserve cars chase
         if(carsChasing < wantedLevel) {
             foreach(PoliceCar pc in policeCars) {
-                //Spawn and make reserve cars chase
+                
             }
         }
 
@@ -484,7 +483,7 @@ public class CrimeManager : MonoBehaviour {
             if(violation == 1) nm.NewNotifColor("RED LIGHT VIOLATION", "A nearby police car just saw you running a red light!", 3);
             else if(violation == 2) nm.NewNotifColor("VEHICLE COLLISION", "A nearby police car just saw you colliding with a car!", 3);
             else if(violation == 3) nm.NewNotifColor("VEHICULAR MANSLAUGHTER", "A nearby police car just saw you crashing into a pedestrian!", 3);
-            else if(violation == 4) nm.NewNotifColor("ILLEGAL UNLOADING", "A nearby police car just saw you illegaly unloading passengers!", 3);
+            else if(violation == 4 && !isPlayerWanted) nm.NewNotifColor("ILLEGAL UNLOADING", "A nearby police car just saw you illegaly unloading passengers!", 3);
         } else {
             if(violation == 1) nm.NewNotifColor("RED LIGHT VIOLATION", "You just ran a red light!\n\nLuckily for you, no cop car was around to see it...", 2);
             else if(violation == 2) nm.NewNotifColor("VEHICLE COLLISION", "You have collided with a car!\n\nLuckily for you, no cop car was around to see it...", 2);

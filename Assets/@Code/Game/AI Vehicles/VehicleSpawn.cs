@@ -11,8 +11,11 @@ public class VehicleSpawn : MonoBehaviour {
     public bool onlySpawnSmallVics;
     public int triggerCount;
 
+    [SerializeField] private MeshRenderer mr;
+
     private void Start() {
-        
+        mr = GetComponent<MeshRenderer>();
+        mr.enabled = false;
     }
 
     private void Update() {

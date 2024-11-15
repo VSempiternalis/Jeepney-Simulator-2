@@ -179,6 +179,13 @@ public class CarController : MonoBehaviour {
     private Collider prevStopper = null;
 
     [Space(10)]
+    [Header("SCREENSHAKE")]
+    [SerializeField] private Animator camAnim;
+    [SerializeField] private ScreenShaker ss;
+    [Header("DYNAMIC FOV")]
+    [SerializeField] private Camera cam;
+
+    [Space(10)]
     [Header("WHEEL AND AXLES")]
     public List<Wheel> wheels;
 
@@ -215,12 +222,16 @@ public class CarController : MonoBehaviour {
         OnKeyChangeEvent();
 
         UpdateGearText();
+
+        // mainFOV = cam.fieldOfView;
+        // vp.TryGetSettings(out motionBlur);
     }
 
     private void Update() {
         if(isAutoTrans) AutoTrans();
         AnimateWheels();
         AnimateDashboard();
+        AnimateCamera();
     }
 
     private void FixedUpdate() {
@@ -636,7 +647,7 @@ public class CarController : MonoBehaviour {
 
         //SPEED
         float speedMpS = carRb.velocity.magnitude;
-        float speedKpH = speedMpS*3.6f;
+        float speedKpH = speedMpS*3.6f; //speed in km/h
         speedNeedle.localRotation = Quaternion.Euler(Mathf.Lerp(minSpeedNeedleRotation, maxSpeedNeedleRotation, speedKpH/maxSpeed), 0, 0);
         speedText.text = speedKpH.ToString("000");
         
@@ -697,6 +708,18 @@ public class CarController : MonoBehaviour {
             wheel.wheelModel.transform.position = pos;
             wheel.wheelModel.transform.rotation = rot;
         }
+    }
+
+    private void AnimateCamera() {
+        if(!pdi.isDriving) return;
+
+        // Get the player's speed
+        float speed = carRb.velocity.magnitude;
+        // Calculate the FOV based on speed
+        float t = Mathf.Clamp01(speed / 45); //45 is max/highest speed
+        t *= 2; //multiplier
+
+        ss.DynamicFOV(t);
     }
 
     #endregion
@@ -803,7 +826,13 @@ public class CarController : MonoBehaviour {
             // print("in layer");
             // Calculate the relative velocity between the two colliding objects
             float relativeVelocity = other.relativeVelocity.magnitude;
+
+            float shakeVel = 10;
+            if(relativeVelocity < 10) shakeVel = relativeVelocity;
             // print("COLLISION: relvel:" + relativeVelocity);
+
+            //screen shake (NEW)
+            ss.Shake(0.75f, shakeVel/50f);
 
             // if(other.gameObject.GetComponent<PoliceCar>()) return;
             // else 
@@ -830,6 +859,9 @@ public class CarController : MonoBehaviour {
                 if(other.gameObject.layer == 6) {
                     cm.NewViolation(2);
                 }
+
+                //screen shake (OLD)
+                // camAnim.SetTrigger("Shake");
             }
         }
     }

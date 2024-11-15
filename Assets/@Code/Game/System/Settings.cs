@@ -55,10 +55,12 @@ public class Settings : MonoBehaviour {
     [SerializeField] private TMP_Text zoomSensText;
     [SerializeField] private Slider mouseSensSlider;
     [SerializeField] private TMP_Text mouseSensText;
+    private float mouseSensDefault = 10f;
     [SerializeField] private Toggle tutorialPanelsToggle;
     [SerializeField] private Toggle autoTransToggle;
     [SerializeField] private Slider renderDistSlider;
     [SerializeField] private TMP_Text renderDistText;
+    private int renderDistDefault = 2;
     [SerializeField] private Slider spawnDistSlider;
     [SerializeField] private TMP_Text spawnDistText;
 
@@ -150,11 +152,12 @@ public class Settings : MonoBehaviour {
         SetReflectionProbeSize(3f);
         SetFOV(80);
 
-        SetMouseSens(2);
+        SetMouseSens(mouseSensDefault);
         SetZoomSens(3);
         SetTutorialPanels(true);
         SetAutoTrans(true);
-        SetRenderDist(2);
+        print("setting default render dist");
+        SetRenderDist(renderDistDefault);
         SetSpawnDistance(100);
     }
 
@@ -179,13 +182,13 @@ public class Settings : MonoBehaviour {
         SetReflectionProbeSize(PlayerPrefs.GetFloat("Settings_ReflectionProbeSize"));
         SetFOV(PlayerPrefs.GetFloat("Settings_FOV", 80));
 
-        float mouseSens = PlayerPrefs.GetFloat("Settings_MouseSens", 0.3f);
+        float mouseSens = PlayerPrefs.GetFloat("Settings_MouseSens", mouseSensDefault);
         SetMouseSens(mouseSens);
         float zoomSens = PlayerPrefs.GetFloat("Settings_ZoomSens", 3f);
         SetZoomSens(zoomSens);
         SetTutorialPanels(PlayerPrefs.GetInt("Settings_IsTutorialPanels", 1) == 1? true : false);
         SetAutoTrans(PlayerPrefs.GetInt("Settings_IsAutomaticTransmission", 1) == 1? true : false);
-        float renderDist = PlayerPrefs.GetFloat("Settings_RenderDist", 5);
+        float renderDist = PlayerPrefs.GetFloat("Settings_RenderDist", renderDistDefault);
         SetRenderDist(renderDist);
         int spawnDist = PlayerPrefs.GetInt("Settings_SpawnDist", 100);
         SetSpawnDistance(100);
@@ -276,9 +279,9 @@ public class Settings : MonoBehaviour {
         
         //Render Dist
         if(SystemInfo.graphicsMemorySize <= 1024) SetRenderDist(1);
-        else if(SystemInfo.graphicsMemorySize <= 2048) SetRenderDist(2);
-        else if(SystemInfo.graphicsMemorySize <= 4096) SetRenderDist(3);
-        else SetRenderDist(4);
+        else if(SystemInfo.graphicsMemorySize <= 2048) SetRenderDist(1);
+        else if(SystemInfo.graphicsMemorySize <= 4096) SetRenderDist(2);
+        else SetRenderDist(3);
     }
 
     public void SetGraphicsPreset(int qualityIndex) {
@@ -371,10 +374,12 @@ public class Settings : MonoBehaviour {
     public void SetFOV(float newFOV) {
         if(!playerCam) return;
         // print("Setting fov to: " + newFOV);
-        playerCam.GetComponent<Zoom>().defaultFOV = newFOV;
+        // playerCam.GetComponent<Zoom>().defaultFOV = newFOV;
         playerCam.GetComponent<Camera>().fieldOfView = newFOV;
         fovText.text = newFOV.ToString();
         fovSlider.value = newFOV;
+
+        ScreenShaker.current.SetMainFOV(newFOV);
 
         //Saving
         PlayerPrefs.SetFloat("Settings_FOV", newFOV);
@@ -386,6 +391,7 @@ public class Settings : MonoBehaviour {
     #region GAME
 
     public void SetMouseSens(float newMouseSens) {
+        // print("SET MOUSE SENS TO: " + newMouseSens);
         if(!playerCam) return;
         playerCam.GetComponent<FirstPersonLook>().sensitivity = newMouseSens/10;
         mouseSensText.text = Mathf.Round(newMouseSens*100.0f) * 0.001f + "";
@@ -397,7 +403,7 @@ public class Settings : MonoBehaviour {
 
     public void SetZoomSens(float newZoomSens) {
         if(!playerCam) return;
-        playerCam.GetComponent<Zoom>().sensitivity = newZoomSens;
+        // playerCam.GetComponent<Zoom>().sensitivity = newZoomSens;
         zoomSensText.text = newZoomSens.ToString();
         zoomSensSlider.value = newZoomSens;
 
@@ -433,6 +439,7 @@ public class Settings : MonoBehaviour {
     }
 
     public void SetRenderDist(float newRenderDist) {
+        // print("SETTING RENDER DIST TO: " + newRenderDist);
         //float newRenderDist 1 = 100, 2 = 200, etc
 
         if(!playerCam) return;
