@@ -23,7 +23,8 @@ public class CrimeManager : MonoBehaviour {
     private int wantedLevel;
 
     //UI
-    [SerializeField] private GameObject finesUI;
+    [SerializeField] private uiAnimGroup finesUI;
+    [SerializeField] private TMP_Text finesText;
     [SerializeField] private uiAnimGroup breakingNews;
     // [SerializeField] private GameObject breakingNews;
     [SerializeField] private GameObject star1;
@@ -61,6 +62,8 @@ public class CrimeManager : MonoBehaviour {
     private int illegalUnloadCount;
     private int finesTotal;
 
+    [Space]
+    [Header("UI")]
     [SerializeField] private TMP_Text redLightCountText;
     [SerializeField] private TMP_Text collisionCountText;
     [SerializeField] private TMP_Text manslaughterCountText;
@@ -75,8 +78,9 @@ public class CrimeManager : MonoBehaviour {
 
     [SerializeField] private TMP_Text depositText;
 
-    //Fines
-    [SerializeField] private uiAnimGroup finesPanel;
+    [Space]
+    [Header("FINES")]
+    [SerializeField] private uiAnimGroup finesPanel; //Under Arrest Panel
 
     //Bribery
     [SerializeField] private TMP_InputField bribePriceInput;
@@ -128,19 +132,20 @@ public class CrimeManager : MonoBehaviour {
 
             //Red blinker
             if(redBlinkCoroutine == null && arrestProgress > prevArrestProgress) {
-                // print("red on");
+                print("red on");
                 redBlinkCoroutine = StartCoroutine(RedBlinker());
             } else if(arrestProgress <= prevArrestProgress) {
-                // print("red off");
+                print("red off");
                 LeanTween.color(arrestRedBG, new Color(1, 0, 0, 0f), 0.25f);
                 if(redBlinkCoroutine != null) {
                     StopCoroutine(redBlinkCoroutine);
                     redBlinkCoroutine = null;
                 }
+                aggroProgress --;
             }
 
             //set prev arrest prog
-            // prevArrestProgress = arrestProgress;
+            prevArrestProgress = arrestProgress;
         } else {
             if(arrestPanel.isIn) arrestPanel.Out();
 
@@ -177,15 +182,12 @@ public class CrimeManager : MonoBehaviour {
 
         if(isPlayerWanted && isAggroLoss) {
             //dont lose aggro when being arrested
-            if(prevArrestProgress < arrestProgress) aggroProgress --;
+            // if(prevArrestProgress < arrestProgress) aggroProgress --;
 
             if(aggroProgress <= 0) {
                 SetIsPlayerWanted(false);
             }
         }
-
-        //set prev arrest prog
-        prevArrestProgress = arrestProgress;
     }
 
     private void LateUpdate() {
@@ -343,8 +345,12 @@ public class CrimeManager : MonoBehaviour {
         sa.currentMaxVicCount = isPlayerWanted? sa.wantedVicCount : sa.maxVicCount;
 
         //UI
-        finesUI.GetComponent<TMP_Text>().text = "FINES: P" + finesTotal;
-        finesUI.SetActive(isPlayerWanted);
+        // finesUI.GetComponent<TMP_Text>().text = "FINES: P" + finesTotal;
+        // finesText.text = "FINES: P" + finesTotal;
+        // finesUI.SetActive(isPlayerWanted);
+        if(isPlayerWanted) finesUI.In();
+        else finesUI.Out();
+        
         if(isPlayerWanted) breakingNews.In();
         else breakingNews.Out();
 
@@ -450,6 +456,9 @@ public class CrimeManager : MonoBehaviour {
 
             // if(!isPlayerWanted) 
             SetIsPlayerWanted(true);
+
+            //update fines text
+            finesText.text = "FINES: P" + finesTotal;
         }
 
         //CHASE

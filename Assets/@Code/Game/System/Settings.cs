@@ -136,6 +136,10 @@ public class Settings : MonoBehaviour {
         }
     }
 
+    public void ClearPlayerPrefs() {
+        PlayerPrefs.DeleteAll();
+    }
+
     public void LoadDefaultSettings() {
         print("[SETTINGS] Loading default settings");
         SetMasterVolume(-10); //0 is full

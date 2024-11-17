@@ -6,7 +6,6 @@ using TMPro;
 
 public class SaveLoadSystem : MonoBehaviour {
     public static SaveLoadSystem current;
-    private CrimeManager cm;
 
     public string gameMode;
     public bool isNewGame;
@@ -139,6 +138,9 @@ public class SaveLoadSystem : MonoBehaviour {
             LoadFreerideSettings(); //Game settings
             if(isNewGame) NewFreeride(); //Player data
             else LoadFreeride(); //Player data
+
+            //police off
+
         } else if(gameMode == "Career") {
             LoadCareerSettings();
             if(isNewGame) NewCareer();
