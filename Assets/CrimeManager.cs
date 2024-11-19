@@ -132,10 +132,10 @@ public class CrimeManager : MonoBehaviour {
 
             //Red blinker
             if(redBlinkCoroutine == null && arrestProgress > prevArrestProgress) {
-                print("red on");
+                // print("red on");
                 redBlinkCoroutine = StartCoroutine(RedBlinker());
             } else if(arrestProgress <= prevArrestProgress) {
-                print("red off");
+                // print("red off");
                 LeanTween.color(arrestRedBG, new Color(1, 0, 0, 0f), 0.25f);
                 if(redBlinkCoroutine != null) {
                     StopCoroutine(redBlinkCoroutine);

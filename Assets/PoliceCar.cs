@@ -1,5 +1,5 @@
 using System.Collections;
-using Unity.VisualScripting;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -31,10 +31,13 @@ public class PoliceCar : MonoBehaviour {
     //COLLISION
     [SerializeField] private LayerMask collisionLayer;
 
+    //Better timed destination updates
+    private float destinationUpdateInterval = 0.5f;
+    private float timeSinceLastUpdate = 0f;
+
     private void Start() {
         carCon = GetComponent<aiCarController>();
         aci = GetComponent<aiCarInput>();
-        // target = PlayerDriveInput.current.transform;
         cm = CrimeManager.current;
         nma = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
@@ -49,6 +52,8 @@ public class PoliceCar : MonoBehaviour {
     }
 
     private void FixedUpdate() {
+        timeSinceLastUpdate += Time.fixedDeltaTime;
+
         if(carCon.enabled == false) {
             float distToTarget = Vector3.Distance(transform.position, target.position);
             float distToPlayer = Vector3.Distance(transform.position, player.position);
@@ -56,23 +61,19 @@ public class PoliceCar : MonoBehaviour {
 
             //stop when too close
             if(nma.isOnNavMesh && (distToTarget < 3 || distToPlayer < 5 || distToPlayerJeep < 5 )) {
-                // print(name + " STOPPING POLICE CAR");
+                print(name + "STOPPING POLICE CAR");
                 nma.enabled = false;
+                rb.isKinematic = false;
+                nma.isStopped = true;
             } else if(!nma.enabled && !(distToTarget < 3 || distToPlayer < 5 || distToPlayerJeep < 5 )) {
+                print(name + "STARTING POLICE CAR");
                 nma.enabled = true;
+                rb.isKinematic = true;
+                nma.isStopped = false;
             }
 
-            // if(nma.isOnNavMesh) {
-            //     // print(name + " STOPPING POLICE CAR");
-            //     if(distToTarget < 3 || distToPlayer < 5 || distToPlayerJeep < 5 ) nma.enabled = false;
-            //     else nma.enabled = true;
-            // } 
-
             //check if close to target, start arresting
-            // if(distToTarget < arrestRange) {
-            // if(distToPlayer < arrestRange) {
             if(distToPlayerJeep < arrestRange) {
-                // print("SHOULD BE ARRESTING");
                 cm.arrestProgress ++;
             }
 
@@ -82,10 +83,10 @@ public class PoliceCar : MonoBehaviour {
             }
 
             //chase target
-            // nma.destination = target.position;
-            if(nma.isOnNavMesh && nma != null) {
+            if(nma.isOnNavMesh && nma != null && timeSinceLastUpdate >= destinationUpdateInterval && isChasingTarget) {
                 nma.SetDestination(target.position);
                 nma.acceleration = nmaAcc*carCon.healthFactor;
+                timeSinceLastUpdate = 0f;
             }
         }
     }
@@ -153,65 +154,26 @@ public class PoliceCar : MonoBehaviour {
             redLight.SetActive(false);
             blueLight.SetActive(false);
         }
-
-        //if not chasing anymore, find nearby node and set it as target
-        // if(!isChasingTarget) {
-        //     print("not chasing target");
-        //     float nodeFindRange = 100f;
-        //     float closestNodeDistance = 100f;
-        //     Transform closestNode = null;
-
-        //     Collider[] colliders = Physics.OverlapSphere(transform.position, nodeFindRange, nodeLayer);
-        //     print("COLLIDERS LENGTH: " + colliders.Length);
-        //     if(colliders.Length > 0) {
-        //         print("colliders length: " + colliders.Length);
-        //         foreach(Collider col in colliders) {
-        //             print("COL: " + col.gameObject.name);
-        //             if(col.gameObject.layer == LayerMask.NameToLayer("Node")) {
-        //                 print("NODE: " + col.gameObject.name);
-        //                 float distance = Vector3.Distance(transform.position, col.transform.position);
-        //                 if(distance < closestNodeDistance) {
-        //                     closestNodeDistance = distance;
-        //                     closestNode = col.transform;
-        //                     break;
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     if(closestNode != null) {
-        //         carCon.currentNode = closestNode.gameObject.GetComponent<NodeHandler>();
-        //         carCon.nextNode = carCon.currentNode.GetRandomNode();
-        //     }
-        // }
     }
 
-    // private void OnCollisionEnter(Collision other) {
-    //     if((collisionLayer.value & (1 << other.gameObject.layer)) != 0) {
-    //         //COLLIDE WITH PLAYER CAR
-    //         if(other.gameObject.GetComponent<CarController>()) {
-    //             print(name + " enter");
-    //             // print("has car controller");
-    //             bc.enabled = true;
-    //             // nma.isStopped = false;
-    //         }
-    //     }
-    // }
-
     private void OnTriggerEnter(Collider other) {
-        // print("ontriggerenter: " + other.gameObject.name);
+        print("ontriggerenter: " + other.gameObject.name);
 
         //layer 6 is VEHICLES
         if(other.gameObject.layer == 6) {
+            print("police ontriggerenter. collider on");
             bc.isTrigger = false;
             rb.isKinematic = false;
         }
     }
 
     private void OnCollisionStay(Collision other) {
+        print("oncollisionstay");
         if((collisionLayer.value & (1 << other.gameObject.layer)) != 0) {
+            print("collisionlayer");
             //COLLIDE WITH PLAYER CAR
             if(other.gameObject.GetComponent<CarController>() && nma.isOnNavMesh && isChasingTarget) {
+                print("police oncollisionstay. collider off");
                 // print("STAY");
                 bc.isTrigger = true;
                 rb.isKinematic = true;
@@ -224,6 +186,7 @@ public class PoliceCar : MonoBehaviour {
 
         //layer 6 is VEHICLES
         if(other.gameObject.layer == 6) {
+            print("police ontriggerexit. collider on");
             bc.isTrigger = false;
             rb.isKinematic = false;
         }

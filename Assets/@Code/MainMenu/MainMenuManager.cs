@@ -36,7 +36,8 @@ public class MainMenuManager : MonoBehaviour {
         "Tip 21: Feeling lucky? Buy a LOTTERY TICKET and wait for the draw!",
         "Tip 22: Stuck? Out of gas? You can call the TOW TRUCK and drop your jeepney in the nearest gas station!",
         "Tip 23: Visit ALBERTO in the nearest EZ GAS to get change!",
-        "Tip 24: Use ATMs to withdraw money from your bank account!",
+        "Tip 24: Use ATMs to withdraw money from your deposit!",
+        "Tip 25: Try not to commit any crimes near police cars! They are marked as red dots in the tablet map.",
         // "Tip 665: ",
         "Tip 666: She's behind you.",
         // "Tip 667: "

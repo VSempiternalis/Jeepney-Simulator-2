@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 
 public class CarController : MonoBehaviour {
     [SerializeField] private GameObject headlights;
@@ -35,6 +36,7 @@ public class CarController : MonoBehaviour {
     public int health;
     public float healthFactor = 1;
     public int maxHealth;
+    private bool isTakingDamage;
     public bool isEngineOn;
     public float maxAcceleration = 30.0f;
     public float brakeAcceleration = 50.0f;
@@ -243,6 +245,10 @@ public class CarController : MonoBehaviour {
         if(fuelAmount < 5000 && fuelAmount > 4900) NotificationManager.current.NewNotifColor("LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refuel!", 2);
         else if(fuelAmount < 2500 && fuelAmount > 2400) NotificationManager.current.NewNotifColor("VERY LOW FUEL!", "You're low on fuel! Visit the nearest EZ Gas and refuel!", 2);
         else if(fuelAmount < 10 && fuelAmount >= 0 ) NotificationManager.current.NewNotifColor("NO FUEL!", "You have run out of fuel! Call a tow truck using the tablet and refuel in the nearest gas station.", 3);
+    }
+
+    private void LateUpdate() {
+        isTakingDamage = false;
     }
 
     // CHECKS ======================================================================
@@ -727,6 +733,13 @@ public class CarController : MonoBehaviour {
     #region OTHERS ======================================================================
 
     public void AddHealth(int mod) {
+        print("ADD HEALTH: " + mod);
+        if(isTakingDamage) return;
+        if(mod < 0) isTakingDamage = true;
+
+        //if damage is too high, set to low
+        if(mod < -25) mod = -25;
+
         health += mod;
 
         UpdateFlameFX();
@@ -753,28 +766,28 @@ public class CarController : MonoBehaviour {
             
             health = 0;
 
-            healthFactor = 0.2f;
+            healthFactor = 0.4f;
         } else if(health < 25) {
             flamesSmall.SetActive(false);
             flamesMedium.SetActive(false);
 
             flamesLarge.SetActive(true);
 
-            healthFactor = 0.4f;
+            healthFactor = 0.6f;
         } else if(health < 50) {
             flamesSmall.SetActive(false);
             flamesLarge.SetActive(false);
 
             flamesMedium.SetActive(true);
 
-            healthFactor = 0.6f;
+            healthFactor = 0.8f;
         } else if(health < 75) {
             flamesMedium.SetActive(false);
             flamesLarge.SetActive(false);
 
             flamesSmall.SetActive(true);
 
-            healthFactor = 0.8f;
+            healthFactor = 0.9f;
         } else {
             flamesSmall.SetActive(false);
             flamesMedium.SetActive(false);
@@ -850,6 +863,7 @@ public class CarController : MonoBehaviour {
                 isSmoothRide = false;
 
                 if(other.gameObject.layer == 18) {
+                    if(other.gameObject.GetComponent<PoliceCar>() && other.gameObject.GetComponent<PoliceCar>().isChasingTarget) return;
                     SteamAchievements.current.AddKill();
 
                     cm.NewViolation(3);
