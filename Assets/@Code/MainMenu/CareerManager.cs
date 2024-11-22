@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 
 public class CareerManager : MonoBehaviour {
+    [SerializeField] private Slider sliderStartDeposit;
     [SerializeField] private Slider sliderPopulationCount;
     [SerializeField] private Slider sliderTrafficCount;
     [SerializeField] private Slider sliderShiftLength;
@@ -67,6 +68,7 @@ public class CareerManager : MonoBehaviour {
 
     //Only runs when start new is pressed
     public void SaveCareerSettings() {
+        SetStartDeposit(Mathf.RoundToInt(sliderStartDeposit.value));
         SetPopulationCount(Mathf.RoundToInt(sliderPopulationCount.value));
         SetTrafficCount(Mathf.RoundToInt(sliderTrafficCount.value));
         SetShiftLength(Mathf.RoundToInt(sliderShiftLength.value));
@@ -75,6 +77,10 @@ public class CareerManager : MonoBehaviour {
         PlayerPrefs.SetInt("Career_Deposit", 0);
         PlayerPrefs.SetInt("Career_Day", 1);
         PlayerPrefs.SetInt("Career_Time", 0);
+    }
+
+    public void SetStartDeposit(float newVal) {
+        PlayerPrefs.SetInt("Career_StartDeposit", Mathf.FloorToInt(newVal));
     }
 
     public void SetPopulationCount(float newVal) {

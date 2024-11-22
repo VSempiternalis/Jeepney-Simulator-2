@@ -16,6 +16,7 @@ public class SaveLoadSystem : MonoBehaviour {
     public bool isPayments;
     public bool isEvents;
     public bool isShifts;
+    public int startDeposit;
     public int populationCount;
     public int trafficCount;
     public int shiftLength;
@@ -77,7 +78,7 @@ public class SaveLoadSystem : MonoBehaviour {
             "Tip 4: People waiting in pedestrian lanes WILL NOT BOARD YOUR JEEPNEY!",
             "Tip 5: Want a challenge? Set the transmission to MANUAL and TURN OFF NOOB MODE UI in the settings",
             "Tip 6: You can improve your jeepney's speed and stats by BUYING UPGRADES in billy's office!",
-            "Tip 7: You can only carry TEN ITEMS in your hand.",
+            "Tip 7: Need to carry more coins? Upgrade your wallet in Billy's office!",
             "Tip 8: Passengers can't pay their fare if someone else is still trying to pay.",
             "Tip 9: Passengers won't leave the jeepney if they haven't received their change yet.",
             "Tip 10: Pay attention to YOUR FUEL!",
@@ -104,6 +105,7 @@ public class SaveLoadSystem : MonoBehaviour {
         careerPanel.SetActive(true);
 
         gameMode = PlayerPrefs.GetString("Game_GameMode");
+        print("GAME MODE: " + gameMode);
         isNewGame = PlayerPrefs.GetInt("Game_isNewGame") == 1? true:false;
 
         // print("(GAME) Game_isNewGame: " + (isNewGame? 1:0));
@@ -229,6 +231,11 @@ public class SaveLoadSystem : MonoBehaviour {
         isPayments = true;
         isEvents = true;
         isShifts = true;
+
+        //START DEPOSIT
+        startDeposit = PlayerPrefs.GetInt("Career_StartDeposit", 100);
+        print("START DEPOSIT: " + startDeposit);
+        BoundaryManager.current.AddToDeposit(100);
         
         //MAX POP
         populationCount = PlayerPrefs.GetInt("Career_MaxPop", 50);
@@ -301,7 +308,12 @@ public class SaveLoadSystem : MonoBehaviour {
 
         //DEPOSIT
         // deposit = PlayerPrefs.GetInt("Freeride_Deposit", 0);
-        BoundaryManager.current.deposit = 0;
+        // BoundaryManager.current.deposit = 0;
+
+        //START DEPOSIT
+        startDeposit = PlayerPrefs.GetInt("Career_StartDeposit", 100);
+        print("START DEPOSIT: " + startDeposit);
+        BoundaryManager.current.AddToDeposit(100);
 
         //SHIFTS
         TimeManager.current.CheckForShifts(isShifts);

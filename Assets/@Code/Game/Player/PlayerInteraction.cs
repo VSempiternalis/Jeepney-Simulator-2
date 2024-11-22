@@ -424,7 +424,7 @@ public class PlayerInteraction : MonoBehaviour {
             am.PlayUI(7);
         }
         if(inAreaUI.isIn && go.layer == layerArea) {
-            isInIllegalUnloadArea = true;
+            isInIllegalUnloadArea = false;
             inAreaUI.Out();
         }
     }

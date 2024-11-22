@@ -18,6 +18,8 @@ public class ScreenShaker : MonoBehaviour {
     private int zoomAdd = 10; //amount of FOV added per zoom level
     private int zoomFOVAdd; //amount current zoom adds to main fov
 
+    private bool isShaking;
+
     private void Awake() {
         current = this;
     }
@@ -61,6 +63,10 @@ public class ScreenShaker : MonoBehaviour {
 
     public void Shake(float duration, float magnitude) {
         print("SHAKING: " + magnitude);
+
+        if(isShaking) return;
+        isShaking = true;
+
         // Store the original position
         Vector3 originalPosition = parent.localPosition;
 
@@ -71,7 +77,10 @@ public class ScreenShaker : MonoBehaviour {
             .setOnComplete(() => {
                 // Reset the position after shaking
                 LeanTween.moveLocalX(parent.gameObject, originalPosition.x, duration*1.5f)
-                    .setEaseOutQuart();
+                    .setEaseOutQuart()
+                    .setOnComplete(() => {
+                        isShaking = false;
+                    });
             });
         
         // // LeanTween.moveLocalX(parent.gameObject, originalPosition.x, duration / 2f)
