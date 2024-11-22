@@ -4,8 +4,8 @@ using System.Collections.Generic;
 [ExecuteInEditMode]
 public class NodeHandler : MonoBehaviour {
     [SerializeField] private List<NodeHandler> connections;
-    public float speedMod;
-    [SerializeField] private int vehicleLayer;
+    // public float speedMod;
+    // [SerializeField] private int vehicleLayer;
     [SerializeField] private MeshRenderer mr;
 
     private void Start() {
@@ -20,11 +20,13 @@ public class NodeHandler : MonoBehaviour {
 
         //Turn mesh renderer off at start
         mr = GetComponent<MeshRenderer>();
+        // mr.enabled = true;
         mr.enabled = false;
     }
 
     private void Update() {
-        // DrawLines();
+        // if(!mr.enabled) mr.enabled = true;
+        DrawLines();
     }
 
     private void DrawLines() {

@@ -15,11 +15,12 @@ public class VehicleSpawn : MonoBehaviour {
 
     private void Start() {
         mr = GetComponent<MeshRenderer>();
+        // mr.enabled = true;
         mr.enabled = false;
     }
 
     private void Update() {
-        // DrawLines();
+        DrawLines();
     }
 
     private void DrawLines() {
