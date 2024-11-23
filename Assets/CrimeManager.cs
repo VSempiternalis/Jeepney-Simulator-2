@@ -107,9 +107,9 @@ public class CrimeManager : MonoBehaviour {
 
     private void Update() {
         //TEST
-        if(Input.GetKeyDown(KeyCode.Alpha0)) {
-            NewViolation(2);
-        }
+        // if(Input.GetKeyDown(KeyCode.Alpha0)) {
+        //     NewViolation(2);
+        // }
 
         if(!isOn) return;
         if(!isPlayerWanted) {
@@ -155,6 +155,9 @@ public class CrimeManager : MonoBehaviour {
                 redBlinkCoroutine = null;
                 arrestRedBG.GetComponent<Image>().color = new Color(0, 0, 0, 0);
             }
+
+            //Keep to lose aggro when not being arrested
+            aggroProgress --;
         }
 
         if(arrestProgress >= arrestMax) {
