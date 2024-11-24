@@ -26,7 +26,7 @@ public class NodeHandler : MonoBehaviour {
 
     private void Update() {
         // if(!mr.enabled) mr.enabled = true;
-        DrawLines();
+        // DrawLines();
     }
 
     private void DrawLines() {

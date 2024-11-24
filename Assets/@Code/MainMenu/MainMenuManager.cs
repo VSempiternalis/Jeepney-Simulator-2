@@ -22,22 +22,23 @@ public class MainMenuManager : MonoBehaviour {
         "Tip 7: You can only carry TEN ITEMS in your hand.",
         "Tip 8: Passengers can't pay their fare if someone else is still trying to pay.",
         "Tip 9: Passengers won't leave the jeepney if they haven't received their change yet.",
-        "Tip 10: Pay attention to YOUR FUEL!",
+        "Tip 10: Pay attention to YOUR FUEL!              ",
         "Tip 11: Once your shift has ended, YOU CAN NO LONGER PICK UP PASSENGERS.",
         "Tip 12: CRASHING will damage your jeepney and affect its performance.",
         "Tip 13: Always wear a GOOD MORNING TOWEL for luck!",
         "Tip 14: You can buy APARTMENTS in Billy's Office! They unlock new landmarks and serve as checkpoints where you can pay your boundary and save the game!",
-        "Tip 15: Try not to kill anyone!",
+        "Tip 15: Try not to hit anyone while driving!                   ",
         "Tip 16: You must purchase the ANTENNA upgrade in order to listen to your favorite music in-game!",
         "Tip 17: Add your favorite songs to the songs folder before launching the game. Adding songs during gameplay requires a restart to take effect.",
         "Tip 18: Try not to drop passengers at ILLEGAL DROP-OFFS",
         "Tip 19: Please leave a REVIEW if you enjoyed the game! It helps us a lot!",
         "Tip 20: Claim your lottery winnings at the GCSO OFFICE!",
         "Tip 21: Feeling lucky? Buy a LOTTERY TICKET and wait for the draw!",
-        "Tip 22: Stuck? Out of gas? You can call the TOW TRUCK and drop your jeepney in the nearest gas station!",
+        "Tip 22: Stuck? Out of gas? Use your tablet to find the TOW TRUCK and drop your jeepney in the nearest gas station!",
         "Tip 23: Visit ALBERTO in the nearest EZ GAS to get change!",
         "Tip 24: Use ATMs to withdraw money from your deposit!",
         "Tip 25: Try not to commit any crimes near police cars! They are marked as red dots in the tablet map.",
+        "Tip 25: Never drink and drive!                                ",
         // "Tip 665: ",
         "Tip 666: She's behind you.",
         // "Tip 667: "
@@ -45,7 +46,8 @@ public class MainMenuManager : MonoBehaviour {
     [SerializeField] private TMP_Text tipText;
 
     private void Awake() {
-        PlayerPrefs.DeleteAll();
+        // print("DELETE ALL");
+        // PlayerPrefs.DeleteAll();
     }
 
     private void Start() {

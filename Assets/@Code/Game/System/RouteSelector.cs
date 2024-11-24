@@ -21,6 +21,10 @@ public class RouteSelector : MonoBehaviour {
     [SerializeField] private Color uiRed;
     [SerializeField] private Color uiGreen;
 
+    //auto toggle
+    public bool isAutoUnlockDests = true;
+    public bool isAutoOffDests = false;
+
     private void Awake() {
         current = this;
     }
@@ -30,7 +34,41 @@ public class RouteSelector : MonoBehaviour {
     }
 
     private void Update() {
-        
+        // if(Input.GetKeyDown(KeyCode.Alpha9)) ForceDestUnlock("Tondoo");
+    }
+
+    public void ArrivedAt(string dest) {
+        if(isAutoUnlockDests) ForceDestUnlock(dest);
+        if(isAutoOffDests) ForceDestOff(dest);
+    }
+
+    public void ToggleAutoUnlockDests(bool newVal) {
+        isAutoUnlockDests = newVal;
+    }
+
+    public void ToggleAutoOffDests(bool newVal) {
+        isAutoOffDests = newVal;
+    }
+
+    public void ForceDestUnlock(string dest) {
+        print("FORCE UNLOCK: " + dest);
+        // if(!isAutoToggleDests) return;
+
+        if(lockedDestinations.Contains(dest)) {
+            lockedDestinations.Remove(dest);
+            ColorDest(dest, officeWhite, uiWhite);
+        }
+
+        AudioManager.current.PlayUI(1);
+    }
+
+    public void ForceDestOff(string dest) {
+        print("FORCE OFF: " + dest);
+
+        if(destinations.Contains(dest)) {
+            destinations.Remove(dest);
+            ColorDest(dest, officeRed, uiRed);
+        }
     }
 
     public void ToggleDestination(string destination) {

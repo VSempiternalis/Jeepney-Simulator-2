@@ -103,7 +103,7 @@ public class LotteryManager : MonoBehaviour {
                 
                 silverAnnounced = true;
             } else if(tm.shiftTimeLeft < 520 && !goldAnnounced) {
-                NotificationManager.current.NewNotifColor("GOLD PRIZE WINNERS!", "And finally, the Lottery GOLD JACKPOT numbers is...\n\n" +
+                NotificationManager.current.NewNotifColor("GOLD PRIZE WINNERS!", "And finally, the Lottery GOLD JACKPOT number is...\n\n" +
                 goldNums[0] + "!\n\nPRIZE: P200,000" +
                 // "\n\nSILVER:" + silverNums[0] + " and " + silverNums[1] +
                 // "\n\nGOLD:" + goldNums[0] + 
