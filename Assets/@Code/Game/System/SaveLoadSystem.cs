@@ -233,9 +233,9 @@ public class SaveLoadSystem : MonoBehaviour {
         isShifts = true;
 
         //START DEPOSIT
-        startDeposit = PlayerPrefs.GetInt("Career_StartDeposit", 100);
-        print("START DEPOSIT: " + startDeposit);
-        BoundaryManager.current.AddToDeposit(100);
+        // startDeposit = PlayerPrefs.GetInt("Career_StartDeposit", 100);
+        // print("START DEPOSIT: " + startDeposit);
+        // BoundaryManager.current.AddToDeposit(startDeposit);
         
         //MAX POP
         populationCount = PlayerPrefs.GetInt("Career_MaxPop", 50);
@@ -313,7 +313,7 @@ public class SaveLoadSystem : MonoBehaviour {
         //START DEPOSIT
         startDeposit = PlayerPrefs.GetInt("Career_StartDeposit", 100);
         print("START DEPOSIT: " + startDeposit);
-        BoundaryManager.current.AddToDeposit(100);
+        BoundaryManager.current.AddToDeposit(startDeposit);
 
         //SHIFTS
         TimeManager.current.CheckForShifts(isShifts);

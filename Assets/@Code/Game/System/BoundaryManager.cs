@@ -49,6 +49,8 @@ public class BoundaryManager : MonoBehaviour {
 
     private AudioManager am;
 
+    [SerializeField] private TMP_Text debugText;
+
     private void Awake() {
         current = this;
     }
@@ -184,6 +186,8 @@ public class BoundaryManager : MonoBehaviour {
 
     public void CompleteShift() {
         print("COMPLETE SHIFT");
+        debugText.text = "";
+        debugText.text = "Shift completed";
         if(CrimeManager.current.isPlayerWanted) {
             NotificationManager.current.NewNotif("YOU ARE WANTED!", "You cannot pay your boundary while you are wanted.");
             AudioManager.current.PlayUI(7);
@@ -199,28 +203,40 @@ public class BoundaryManager : MonoBehaviour {
             // AddToDeposit(-total);
             string text = "CONGRATULATIONS! YOU MADE THE BOUNDARY!\n\nSaving game...\n";
             if(!doBoundary) text = "Saving game...";
+            debugText.text = "Finishing shift";
 
             Fader.current.FadeToBlack(1f, text, () => {
                 //Reset
+                debugText.text = "Starting new shift";
                 TimeManager.current.NewShift();
+                debugText.text = "Adding hours";
                 TimeManager.current.AddHours(8);
+                debugText.text = "Selecting winning lottery numbers";
                 LotteryManager.current.NewNums(); //MUST BE AFTER TIME RESET
+                debugText.text = "Saving game";
                 SaveLoadSystem.current.SaveGame();
+                debugText.text = "Saving jeepney";
                 PlayerDriveInput.current.carCon.GetComponent<JeepneySLS>().Save();
+                debugText.text = "Saving owned houses";
                 HousePanel.current.Save();
 
                 am.PlayUI(3);
 
+                debugText.text = "Calculating new boundary";
                 CalculateNewBoundary();
+                debugText.text = "Updating texts";
                 UpdateTexts();
                 
                 LeanTween.delayedCall(1f, () => {
+                    debugText.text = "Setting day";
                     Fader.current.SetText("DAY " + TimeManager.current.days);
                 });
 
                 LeanTween.delayedCall(2f, () => {
                     am.PlayUI(4);
+                    debugText.text = "Finished setting day";
                     Fader.current.FadeFromBlack(1f, "DAY " + TimeManager.current.days, null);
+                    debugText.text = "";
                 });
             });
         } else {
@@ -248,19 +264,25 @@ public class BoundaryManager : MonoBehaviour {
                 });
             });
         }
+        debugText.text = "Resetting late fee and failure charge";
         lateFee = 0;
         failureCharge = 0;
         // PlayerDriveInput.current.isPickups = true;
+        debugText.text = "Resetting passenger pickups";
         PlayerDriveInput.current.SetPickups(SaveLoadSystem.current.isPassengerPickups);
+        debugText.text = "Locking destinations";
         RouteSelector.current.NewShift(3); //3 is dests to lock
         //Door
+        debugText.text = "Handling doors";
         foreach(DoorHandler door in doors) {
             if(door.state == "Open" || door.state == "Opening") door.NewState("Closing"); //Interact(gameObject);
         }
         // if(officeDoor.state == "Open" || officeDoor.state == "Opening") officeDoor.NewState("Closing"); //Interact(gameObject);
 
         //Clear jeepney seats
+        debugText.text = "Starting new day";
         carCon.NewDay();
+        debugText.text = "";
     }
 
     public void GetArrested() {

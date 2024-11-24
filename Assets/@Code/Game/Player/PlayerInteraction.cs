@@ -7,6 +7,7 @@ public class PlayerInteraction : MonoBehaviour {
     [SerializeField] private Camera playerCam;
     [SerializeField] private VicCamManager vcm;
     private PlayerDriveInput pdi;
+    private RouteSelector rs;
     
     private GameObject itemOver;
     [SerializeField] private float reachDist = 1.5f;
@@ -77,6 +78,7 @@ public class PlayerInteraction : MonoBehaviour {
         tm = TooltipMask.current;
         am = AudioManager.current;
         pdi = GetComponent<PlayerDriveInput>();
+        rs = RouteSelector.current;
     }
 
     private void Update() {
@@ -369,6 +371,11 @@ public class PlayerInteraction : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         GameObject go = other.gameObject;
+
+        if(other.gameObject.layer == 21) {
+            // print("Trigger 21: " + other.name);
+            rs.ArrivedAt(other.name);
+        }
          
         if(!playerDestUI.isIn && !inDrop && go.layer == layerDrop) { // && areaUI.text != other.name
             inDrop = true;

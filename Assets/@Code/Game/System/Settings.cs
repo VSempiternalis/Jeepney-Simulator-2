@@ -243,6 +243,7 @@ public class Settings : MonoBehaviour {
     #region AUDIO
 
     public void SetMasterVolume(float newVol) {
+        print("SETTING MASTER VOLUME: " + newVol);
         audioMixer.SetFloat("MasterVolume", newVol);
         // masterVolumeText.text = ((newVol + 80)) + "";
         masterVolumeText.text = (newVol + 100) + "";
