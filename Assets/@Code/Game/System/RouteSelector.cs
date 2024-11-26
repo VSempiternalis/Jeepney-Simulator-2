@@ -4,10 +4,13 @@ using TMPro;
 
 public class RouteSelector : MonoBehaviour {
     public static RouteSelector current;
+    private AudioManager am;
 
     public List<string> destinations; //destinations the player is taking
-    public List<string> allDestinations;
+    public List<string> allDestinations; //main, basic destinations based on office/beginner
     public List<string> lockedDestinations; //destinations that cannot be toggled for this shift
+    
+    public List<List<string>> landmarkAreas; //office, house 1, 2, and 3
 
     //office map
     [SerializeField] private List<TMP_Text> officeTexts;
@@ -30,11 +33,26 @@ public class RouteSelector : MonoBehaviour {
     }
 
     private void Start() {
-        
+        am = AudioManager.current;
+        print("Audio Manager exists: " + (am != null? "true" : "false"));
+
+        landmarkAreas = new List<List<string>>();
+        print("all destinations: " + allDestinations);
+        AddNewLandmarkArea(allDestinations);
     }
 
     private void Update() {
         // if(Input.GetKeyDown(KeyCode.Alpha9)) ForceDestUnlock("Tondoo");
+    }
+
+    public void AddNewLandmarkArea(List<string> newLandmarksArea) {
+        print("Adding new landmark area");
+        landmarkAreas.Add(newLandmarksArea);
+        print("landmarkAreas count: " + landmarkAreas.Count);
+
+        foreach(string landmark in newLandmarksArea) {
+            print("adding landmark: " + landmark);
+        }
     }
 
     public void ArrivedAt(string dest) {
@@ -59,7 +77,7 @@ public class RouteSelector : MonoBehaviour {
             ColorDest(dest, officeWhite, uiWhite);
         }
 
-        AudioManager.current.PlayUI(1);
+        am.PlayUI(1);
     }
 
     public void ForceDestOff(string dest) {
@@ -73,7 +91,7 @@ public class RouteSelector : MonoBehaviour {
 
     public void ToggleDestination(string destination) {
         if(lockedDestinations.Contains(destination)) {
-            AudioManager.current.PlayUI(7);
+            am.PlayUI(7);
             return;
         }
 
@@ -86,7 +104,7 @@ public class RouteSelector : MonoBehaviour {
             ColorDest(destination, officeWhite, uiWhite);
         }
 
-        AudioManager.current.PlayUI(1);
+        am.PlayUI(1);
     }
 
     private void ColorDest(string dest, Color officeColor, Color uiColor) {
@@ -119,9 +137,19 @@ public class RouteSelector : MonoBehaviour {
     }
 
     private void LockRandomDests(int num) {
+        //get landmark area
+        List<string> currentLandmarkArea;
+        int randInt = Random.Range(0, landmarkAreas.Count);
+        print("randInt: " + randInt);
+        print("lock. landmark areas count: " + landmarkAreas.Count);
+        currentLandmarkArea = landmarkAreas[randInt];
+
+        //fill in with new locked landmarks
         while(lockedDestinations.Count < num) {
-            int randInt = Random.Range(0, allDestinations.Count);
-            string newLockedDest = allDestinations[randInt];
+            int randInt2 = Random.Range(0, currentLandmarkArea.Count);
+            print("randInt2: " + randInt2);
+            string newLockedDest = currentLandmarkArea[randInt2];
+            print("new locked dest: " + newLockedDest);
 
             if(!lockedDestinations.Contains(newLockedDest)) {
                 lockedDestinations.Add(newLockedDest);

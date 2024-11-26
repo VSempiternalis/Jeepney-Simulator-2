@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class JeepneyPanel : MonoBehaviour {
     public static JeepneyPanel current;
     private BoundaryManager bm;
-    private CarController carcon;
+    [SerializeField] private CarController carcon;
     
     [SerializeField] private GameObject main;
     [SerializeField] private GameObject noJeepneyDetected;
@@ -88,7 +88,7 @@ public class JeepneyPanel : MonoBehaviour {
     }
 
     public void Setup() {
-        SetCarcon(PlayerDriveInput.current.carCon);
+        // SetCarcon(PlayerDriveInput.current.carCon);
 
         UpdateReqs();
     }
@@ -100,6 +100,7 @@ public class JeepneyPanel : MonoBehaviour {
     }
 
     public void UpdateReqs() {
+        print("UpdateReqs");
         // if(carcon == null) {
             // noJeepneyDetected.SetActive(true);
             // main.SetActive(false);
@@ -108,6 +109,7 @@ public class JeepneyPanel : MonoBehaviour {
             // main.SetActive(true);
 
         //Health
+        print("carcon: " + carcon);
         health = Mathf.RoundToInt(carcon.health);
         maxHealth = Mathf.RoundToInt(carcon.maxHealth);
         missingHealth = maxHealth - health;
@@ -187,6 +189,7 @@ public class JeepneyPanel : MonoBehaviour {
     private void UpdateBar(Transform bar, float value, float maxValue) {
         float ratio = value/maxValue;
         if(float.IsNaN(ratio)) ratio = 0.01f;
+        if(ratio > 1) ratio = 1;
         bar.localScale = new Vector3(ratio, 1, 1);
         bar.localPosition = new Vector3(-((1-ratio)/2), 0, -0.0001f);
     }

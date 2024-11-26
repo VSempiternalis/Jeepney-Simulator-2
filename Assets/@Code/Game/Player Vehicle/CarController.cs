@@ -733,7 +733,7 @@ public class CarController : MonoBehaviour {
     #region OTHERS ======================================================================
 
     public void AddHealth(int mod) {
-        print("ADD HEALTH: " + mod);
+        // print("ADD HEALTH: " + mod + "/" + maxHealth);
         if(isTakingDamage) return;
         if(mod < 0) isTakingDamage = true;
 

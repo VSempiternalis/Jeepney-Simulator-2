@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class HousePanel : MonoBehaviour {
     public static HousePanel current;
+    private SteamAchievements sa;
 
     [SerializeField] private List<int> housesOwned = new List<int>{0, 0, 0};
     [SerializeField] private List<int> housePrices;
@@ -19,11 +19,16 @@ public class HousePanel : MonoBehaviour {
 
     private void Awake() {
         current = this;
+        sa = SteamAchievements.current;
+        // print("Steam Achievements exists: " + (sa != null? "true" : "false"));
     }
 
     private void Start() {
         bm = BoundaryManager.current;
-        // rs = RouteSelector.current;
+        rs = RouteSelector.current;
+        // print("rs exists: " + (rs != null? "true" : "false"));
+        // sa = SteamAchievements.current;
+        // print("Steam Achievements exists: " + (sa != null? "true" : "false"));
     }
 
     private void Update() {
@@ -77,21 +82,22 @@ public class HousePanel : MonoBehaviour {
         else if(houseNum == 1) landmarks = house2Landmarks;
         else landmarks = house3Landmarks;
 
-        foreach(string landmark in landmarks) {
-            print("unlocking landmark: " + landmark);
-            rs.allDestinations.Add(landmark);
-        }
+        // foreach(string landmark in landmarks) {
+        //     print("unlocking landmark: " + landmark);
+        //     rs.allDestinations.Add(landmark);
+        // }
+        rs.AddNewLandmarkArea(landmarks);
 
         //STEAM ACH
-        if(houseNum == 0) SteamAchievements.current.UnlockAchievement("ACH_HOUSE1");
-        else if(houseNum == 1) SteamAchievements.current.UnlockAchievement("ACH_HOUSE2");
-        else if(houseNum == 2) SteamAchievements.current.UnlockAchievement("ACH_HOUSE3");
+        if(houseNum == 0) sa.UnlockAchievement("ACH_HOUSE1");
+        else if(houseNum == 1) sa.UnlockAchievement("ACH_HOUSE2");
+        else if(houseNum == 2) sa.UnlockAchievement("ACH_HOUSE3");
 
         bool isMaster = true;
         foreach(int house in housesOwned) {
             if(house == 0) isMaster = false;
         }
-        if(isMaster) SteamAchievements.current.UnlockAchievement("ACH_MASTER");
+        if(isMaster) sa.UnlockAchievement("ACH_MASTER");
     }
     
     private void LockHouse(int houseNum) {

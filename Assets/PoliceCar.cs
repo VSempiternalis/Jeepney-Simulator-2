@@ -161,19 +161,19 @@ public class PoliceCar : MonoBehaviour {
 
         //layer 6 is VEHICLES
         if(other.gameObject.layer == 6) {
-            print("police ontriggerenter. collider on");
+            // print("police ontriggerenter. collider on");
             bc.isTrigger = false;
             rb.isKinematic = false;
         }
     }
 
     private void OnCollisionStay(Collision other) {
-        print("oncollisionstay");
+        // print("oncollisionstay");
         if((collisionLayer.value & (1 << other.gameObject.layer)) != 0) {
-            print("collisionlayer");
+            // print("collisionlayer");
             //COLLIDE WITH PLAYER CAR
             if(other.gameObject.GetComponent<CarController>() && nma.isOnNavMesh && isChasingTarget) {
-                print("police oncollisionstay. collider off");
+                // print("police oncollisionstay. collider off");
                 // print("STAY");
                 bc.isTrigger = true;
                 rb.isKinematic = true;
@@ -186,7 +186,7 @@ public class PoliceCar : MonoBehaviour {
 
         //layer 6 is VEHICLES
         if(other.gameObject.layer == 6) {
-            print("police ontriggerexit. collider on");
+            // print("police ontriggerexit. collider on");
             bc.isTrigger = false;
             rb.isKinematic = false;
         }

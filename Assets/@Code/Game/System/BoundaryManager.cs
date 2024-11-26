@@ -58,6 +58,7 @@ public class BoundaryManager : MonoBehaviour {
     private void Start() {
         sls = SaveLoadSystem.current;
         am = AudioManager.current;
+        Resources.UnloadUnusedAssets();
     }
 
     private void Update() {
@@ -309,6 +310,7 @@ public class BoundaryManager : MonoBehaviour {
             
             LeanTween.delayedCall(1f, () => {
                 Fader.current.SetText("DAY " + TimeManager.current.days);
+                Resources.UnloadUnusedAssets();
             });
 
             LeanTween.delayedCall(2f, () => {

@@ -6,6 +6,7 @@ using TMPro;
 
 public class SaveLoadSystem : MonoBehaviour {
     public static SaveLoadSystem current;
+    private SteamAchievements sa;
 
     public string gameMode;
     public bool isNewGame;
@@ -70,6 +71,9 @@ public class SaveLoadSystem : MonoBehaviour {
     }
 
     private void Start() {
+        sa = SteamAchievements.current;
+        print("Steam Achievements exists 2: " + (sa != null? "true" : "false"));
+
         //populate tips
         tips = new List<string>(){
             "Tip 1: For the best performance, try decreasing the RENDER DISTANCE and GRAPHICS PRESET in the settings.",
@@ -396,24 +400,24 @@ public class SaveLoadSystem : MonoBehaviour {
 
         //STEAM ACHIEVEMENTS
         if(gameMode == "Freeride") {
-            if(days == 2) SteamAchievements.current.UnlockAchievement("ACH_FREERIDE_DAY_2");
-            else if(days == 5) SteamAchievements.current.UnlockAchievement("ACH_FREERIDE_DAY_5");
-            if(days == 10) SteamAchievements.current.UnlockAchievement("ACH_FREERIDE_DAY_10");
-            else if(days == 25) SteamAchievements.current.UnlockAchievement("ACH_FREERIDE_DAY_25");
-            if(days == 50) SteamAchievements.current.UnlockAchievement("ACH_FREERIDE_DAY_50");
-            else if(days == 100) SteamAchievements.current.UnlockAchievement("ACH_FREERIDE_DAY_100");
+            if(days == 2) sa.UnlockAchievement("ACH_FREERIDE_DAY_2");
+            else if(days == 5) sa.UnlockAchievement("ACH_FREERIDE_DAY_5");
+            if(days == 10) sa.UnlockAchievement("ACH_FREERIDE_DAY_10");
+            else if(days == 25) sa.UnlockAchievement("ACH_FREERIDE_DAY_25");
+            if(days == 50) sa.UnlockAchievement("ACH_FREERIDE_DAY_50");
+            else if(days == 100) sa.UnlockAchievement("ACH_FREERIDE_DAY_100");
         } else { //CAREER
-            if(days == 2) SteamAchievements.current.UnlockAchievement("ACH_CAREER_DAY_2");
-            else if(days == 5) SteamAchievements.current.UnlockAchievement("ACH_CAREER_DAY_5");
-            if(days == 10) SteamAchievements.current.UnlockAchievement("ACH_CAREER_DAY_10");
-            else if(days == 25) SteamAchievements.current.UnlockAchievement("ACH_CAREER_DAY_25");
-            if(days == 50) SteamAchievements.current.UnlockAchievement("ACH_CAREER_DAY_50");
-            else if(days == 100) SteamAchievements.current.UnlockAchievement("ACH_CAREER_DAY_100");
+            if(days == 2) sa.UnlockAchievement("ACH_CAREER_DAY_2");
+            else if(days == 5) sa.UnlockAchievement("ACH_CAREER_DAY_5");
+            if(days == 10) sa.UnlockAchievement("ACH_CAREER_DAY_10");
+            else if(days == 25) sa.UnlockAchievement("ACH_CAREER_DAY_25");
+            if(days == 50) sa.UnlockAchievement("ACH_CAREER_DAY_50");
+            else if(days == 100) sa.UnlockAchievement("ACH_CAREER_DAY_100");
         }
 
-        if(shiftLength == 30) SteamAchievements.current.UnlockAchievement("ACH_OVERTIME_30");
-        else if(shiftLength == 45) SteamAchievements.current.UnlockAchievement("ACH_OVERTIME_45");
-        else if(shiftLength == 60) SteamAchievements.current.UnlockAchievement("ACH_OVERTIME_60");
+        if(shiftLength == 30) sa.UnlockAchievement("ACH_OVERTIME_30");
+        else if(shiftLength == 45) sa.UnlockAchievement("ACH_OVERTIME_45");
+        else if(shiftLength == 60) sa.UnlockAchievement("ACH_OVERTIME_60");
     }
 
     public void OnLose() {
@@ -424,7 +428,7 @@ public class SaveLoadSystem : MonoBehaviour {
         Setup();
 
         //STEAM ACH
-        SteamAchievements.current.UnlockAchievement("ACH_BREADLOSER");
+        sa.UnlockAchievement("ACH_BREADLOSER");
     }
 
     #endregion

@@ -20,6 +20,7 @@ public class VehicleSpawn : MonoBehaviour {
     }
 
     private void Update() {
+        // if(!mr.enabled) mr.enabled = true;
         // DrawLines();
     }
 

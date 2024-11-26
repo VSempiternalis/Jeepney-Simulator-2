@@ -57,7 +57,7 @@ public class UpgradesPanel : MonoBehaviour {
     }
 
     public void Toggle(string newUpgName, bool toggleOn) { //must be string for JeepneySLS
-        // print("TOGGLING " + newUpgName);
+        print("TOGGLING " + newUpgName);
         //STEAM ACH
         bool isPatokJeepney = true;
         foreach(Upgrade upgrade in upgrades) {

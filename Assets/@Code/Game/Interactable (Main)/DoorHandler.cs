@@ -48,7 +48,7 @@ public class DoorHandler : MonoBehaviour, IInteractable, ITooltipable {
             return;
         }
         
-        if(isOfficeDoor && RouteSelector.current.destinations.Count <= 3) {
+        if(isOfficeDoor && RouteSelector.current.destinations.Count <= 3 && RouteSelector.current.lockedDestinations.Count > 0) {
             NotificationManager.current.NewNotifColor("NOT ENOUGH LANDMARKS", "You must have at least four active (ON or LOCKED) landmarks to start your shift. Go to the route selector and click on a red landmark!", 2);
             AudioManager.current.PlayUI(7);
             return;

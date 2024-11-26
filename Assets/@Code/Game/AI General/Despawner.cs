@@ -61,9 +61,9 @@ public class Despawner : MonoBehaviour {
             spawnArea.vicCount --;
             GetComponent<aiCarController>().Reset();
             GetComponent<aiCarController>().ResetHealth();
-            // if(GetComponent<PoliceCar>() != null && GetComponent<PoliceCar>().isChasingTarget) {
-            //     cm.NewCopCarChasing(GetComponent<PoliceCar>(), false);
-            // }
+            if(isCopCar && GetComponent<PoliceCar>().isChasingTarget && !cm.isPlayerWanted) {
+                cm.NewCopCarChasing(GetComponent<PoliceCar>(), false);
+            }
         }
         else if(objectType == "Person") {
             //Dont despawn when in vehicle

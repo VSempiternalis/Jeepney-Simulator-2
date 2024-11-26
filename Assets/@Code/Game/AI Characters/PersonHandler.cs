@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class PersonHandler : MonoBehaviour {
     [Header("COMPONENTS")]
@@ -85,6 +86,7 @@ public class PersonHandler : MonoBehaviour {
     private bool isRagdoll;
     [SerializeField] private float velocityThresh;
     [SerializeField] private float impactForceMultiplier;
+    private bool isHittingVehicle;
 
     [Space(10)]
     private float nextSecUpdate;
@@ -289,6 +291,8 @@ public class PersonHandler : MonoBehaviour {
     }
 
     private void MoveToNextPos() {
+        if(isHittingVehicle) return;
+
         FacePos(posDestinations[0]);
         float originalYRotation = transform.rotation.eulerAngles.y;
 
@@ -624,9 +628,43 @@ public class PersonHandler : MonoBehaviour {
                 // Apply the velocity to the object's Rigidbody
                 // Vector3 impactVelocity = other.relativeVelocity;
                 // GetComponent<Rigidbody>().velocity = impactVelocity * impactForceMultiplier;
+            } else {
+                //stop
+                print("isHittingVehicle = true");
+                isHittingVehicle = true;
             }
 
-            transform.LookAt(other.gameObject.transform);
+            // transform.LookAt(other.gameObject.transform);
+        }
+    }
+
+    private void OnCollisionStay(Collision other) {
+        if(isRagdoll) return;
+        
+        if((vehicleLayer.value & (1 << other.gameObject.layer)) != 0) {
+            // Calculate the relative velocity between the two colliding objects
+            float relativeVelocity = other.relativeVelocity.magnitude;
+
+            if(relativeVelocity <= velocityThresh) {
+                //stop
+                print("isHittingVehicle = true");
+                isHittingVehicle = true;
+            }
+
+            // transform.LookAt(other.gameObject.transform);
+        }
+    }
+
+    private void OnCollisionExit(Collision other) {
+        if(isRagdoll) return;
+        
+        if((vehicleLayer.value & (1 << other.gameObject.layer)) != 0) {
+            // Calculate the relative velocity between the two colliding objects
+            float relativeVelocity = other.relativeVelocity.magnitude;
+
+            //stop
+            print("isHittingVehicle = false");
+            isHittingVehicle = false;
         }
     }
 

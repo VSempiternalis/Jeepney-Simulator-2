@@ -20,7 +20,6 @@ public class NodeHandler : MonoBehaviour {
 
         //Turn mesh renderer off at start
         mr = GetComponent<MeshRenderer>();
-        // mr.enabled = true;
         mr.enabled = false;
     }
 
