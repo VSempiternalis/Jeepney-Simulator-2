@@ -19,7 +19,7 @@ public class WorldButton : MonoBehaviour, IInteractable, ITooltipable {
     [TextArea] [SerializeField] private string desc;
 
     private void Start() {
-        
+
     }
 
     private void Update() {

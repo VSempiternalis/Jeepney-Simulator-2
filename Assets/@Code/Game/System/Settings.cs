@@ -384,7 +384,7 @@ public class Settings : MonoBehaviour {
         fovText.text = newFOV.ToString();
         fovSlider.value = newFOV;
 
-        ScreenShaker.current.SetMainFOV(newFOV);
+        if(ScreenShaker.current) ScreenShaker.current.SetMainFOV(newFOV);
 
         //Saving
         PlayerPrefs.SetFloat("Settings_FOV", newFOV);

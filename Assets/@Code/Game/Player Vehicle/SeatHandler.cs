@@ -29,7 +29,7 @@ public class SeatHandler : MonoBehaviour, IInteractable, ITooltipable {
 
         if(transform.childCount > 1) {
             //Stop player from exiting when wanted
-            if(CrimeManager.current.isPlayerWanted) {
+            if(CrimeManager.current && CrimeManager.current.isPlayerWanted) {
                 NotificationManager.current.NewNotifColor("WANTED!", "Cannot exit vehicle while you are wanted!", 3);
                 return;
             }

@@ -12,10 +12,14 @@ public class FuelPump : MonoBehaviour, IPayable, ITooltipable {
     private bool isOn;
     private bool isPumpingFuel;
 
+    //adding npc alert here cuz I cant be bothered and we have to release 1.0 in a couple hours lol
+    private CrimeManager cm;
+
     private AudioManager am;
 
     private void Start() {
         am = AudioManager.current;
+        cm = CrimeManager.current;
     }
 
     private void Update() {
@@ -64,6 +68,8 @@ public class FuelPump : MonoBehaviour, IPayable, ITooltipable {
 
         if(isOn && !isPumpingFuel) {
             StartCoroutine(PumpingFuel());
+            // npc say
+            if(cm) cm.PlayerRefueling();
         } else {
             StopCoroutine(PumpingFuel());
             StopPumpingFuel();

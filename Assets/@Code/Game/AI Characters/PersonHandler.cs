@@ -95,11 +95,21 @@ public class PersonHandler : MonoBehaviour {
     [SerializeField] private float distToPlayer;
     public CarController carCon;
 
+    //chatter
+    [SerializeField] private Vector2 chatterTimeRange;
+    private float chatterTime;
+    public bool hasChattered;
+
     private void Start() {
         player = GameObject.Find("PLAYER").GetComponent<PlayerDriveInput>();
         pdit = GameObject.Find("PLAYER").GetComponent<PlayerDriveInputTUTORIAL>();
         ani = GetComponent<Animator>();
         cm = CrimeManager.current;
+
+        //subscribe to cm when player is wanted
+        CrimeManager.OnPlayerIsWanted += SayPlayerWanted;
+        CrimeManager.OnPlayerRefueling += SayPlayerRefueling;
+        CarController.OnPlayerHit += SayPlayerHit;
 
         //Populate money
         money.Add(coin1PF);
@@ -125,7 +135,7 @@ public class PersonHandler : MonoBehaviour {
         voiceHandler = GetComponent<VoiceHandler>();
         int voiceIndex = Random.Range(0, voices.childCount);
         VoiceType voiceType = voices.GetChild(voiceIndex).GetComponent<VoiceType>();
-        voiceHandler.SetAudioClips(voiceType.payAudios, voiceType.changeAudios, voiceType.stopAudios, voiceType.dropAudios, voiceType.deathAudios);
+        voiceHandler.SetAudioClips(voiceType.payAudios, voiceType.changeAudios, voiceType.stopAudios, voiceType.dropAudios, voiceType.deathAudios, voiceType.thanksAudios, voiceType.chatterAudios, voiceType.gasStationAudios, voiceType.hitAudios, voiceType.policeAudios);
         // patience = maxPatience;
 
         isPayments = true;
@@ -162,8 +172,17 @@ public class PersonHandler : MonoBehaviour {
                     if(payPoint.value > 0) StartPayTimer(); //reset pay if money still on paymat
                     else PayFare();
                 }
+                if(Time.time >= chatterTime && !hasChattered) {
+                    Chatter();
+                    hasChattered = true;
+                }
             } else if(state == "Waiting for change") {
                 // if(changePointStorage.value > 0 && changePoint.GetComponent<StorageHandler>().value <= change) {
+                if(Time.time >= chatterTime && !hasChattered) {
+                    Chatter();
+                    hasChattered = true;
+                }
+
                 if(changePointStorage.value > 0 && changePoint.currentChangee == this) {
                     // GetChange(changePointStorage.value);
                     // changePointStorage.Clear();
@@ -181,6 +200,11 @@ public class PersonHandler : MonoBehaviour {
                         Destroy(item);
                     }
                     changePoint.UpdateText();
+                }
+            } else if(state == "Waiting to arrive") {
+                if(Time.time >= chatterTime && !hasChattered) {
+                    Chatter();
+                    hasChattered = true;
                 }
             }
         }
@@ -354,13 +378,27 @@ public class PersonHandler : MonoBehaviour {
             ExitVehicle();
 
             //check illegal unloading
-            cm.CheckIllegalUnloading();
+            if(cm) cm.CheckIllegalUnloading();
         }
     }
 
     #endregion
 
     #region SINGLE FRAME FUNCTIONS =================================================================================================
+
+    private void SayPlayerWanted() {
+        print("say player wanted");
+        voiceHandler.Say("Police");
+    }
+    private void SayPlayerRefueling() {
+        print("say player refueling");
+        voiceHandler.Say("GasStation");
+    }
+
+    private void SayPlayerHit() {
+        print("say player hit");
+        voiceHandler.Say("Hit");
+    }
 
     public void ExitVehicle() {
         DestinationsUIManager.current.RemoveDestination(landmarkDest);
@@ -463,6 +501,7 @@ public class PersonHandler : MonoBehaviour {
         }
         
         AddDestination();
+        StartChatterTimer();
     }
 
     public void AddDestination() {
@@ -477,11 +516,21 @@ public class PersonHandler : MonoBehaviour {
         change -= amount;
         if(change <= 0) {
             // popup.SayChange("");
+            print("Say thanks");
+            voiceHandler.Say("Thanks");
             state = "Waiting to arrive";
             changePoint.RemoveChangee(this);
         } else {
             // popup.SayChange("P" + change); 
         }
+    }
+
+    private void StartChatterTimer() {
+        chatterTime = Mathf.RoundToInt(Time.time) + Random.Range(chatterTimeRange.x, chatterTimeRange.y);
+    }
+
+    private void Chatter() {
+        voiceHandler.Say("Chatter");
     }
 
     private void StartPayTimer() {
@@ -647,7 +696,7 @@ public class PersonHandler : MonoBehaviour {
 
             if(relativeVelocity <= velocityThresh) {
                 //stop
-                print("isHittingVehicle = true");
+                // print("isHittingVehicle = true");
                 isHittingVehicle = true;
             }
 

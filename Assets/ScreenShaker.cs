@@ -62,7 +62,7 @@ public class ScreenShaker : MonoBehaviour {
     }
 
     public void Shake(float duration, float magnitude) {
-        print("SHAKING: " + magnitude);
+        // print("SHAKING: " + magnitude);
 
         if(isShaking) return;
         isShaking = true;

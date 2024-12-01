@@ -6,11 +6,19 @@ public class VoiceHandler : MonoBehaviour {
     private AudioSource audioSource;
 
     //should be clear on start, to be filled by person handler
+    [Header("MAIN")]
     [SerializeField] public List<AudioClip> payAudios;
     [SerializeField] public List<AudioClip> changeAudios;
     [SerializeField] public List<AudioClip> stopAudios;
-    [SerializeField] public List<AudioClip> dropAudios;
     [SerializeField] public List<AudioClip> deathAudios;
+
+    [Header("OPTIONAL")]
+    public List<AudioClip> dropAudios;
+    public List<AudioClip> thanksAudios;
+    public List<AudioClip> chatterAudios;
+    public List<AudioClip> gasStationAudios;
+    public List<AudioClip> hitAudios;
+    public List<AudioClip> policeAudios;
 
     private void Start() {
         audioSource = GetComponent<AudioSource>();
@@ -38,19 +46,35 @@ public class VoiceHandler : MonoBehaviour {
             audios = stopAudios;
         } else if(sayType == "Drop") {
             audios = dropAudios;
+        }  else if(sayType == "Thanks") {
+            audios = thanksAudios;
         } else if(sayType == "Death") {
             audios = deathAudios;
+        } else if(sayType == "Chatter") {
+            audios = chatterAudios;
+        } else if(sayType == "GasStation") {
+            audios = gasStationAudios;
+        } else if(sayType == "Hit") {
+            audios = hitAudios;
+        } else if(sayType == "Police") {
+            audios = policeAudios;
         }
 
         Play(audios, GetRandomIndex(audios.Count));
     }
 
-    public void SetAudioClips(List<AudioClip> newPayAudios, List<AudioClip> newChangeAudios, List<AudioClip> newStopAudios, List<AudioClip> newDropAudios, List<AudioClip> newDeathAudios) {
+    public void SetAudioClips(List<AudioClip> newPayAudios, List<AudioClip> newChangeAudios, List<AudioClip> newStopAudios, List<AudioClip> newDropAudios, List<AudioClip> newDeathAudios, List<AudioClip> newThanksAudios, List<AudioClip> newChatterAudios, List<AudioClip> newGasStationAudios, List<AudioClip> newHitAudios, List<AudioClip> newPoliceAudios) {
         payAudios = newPayAudios;
         changeAudios = newChangeAudios;
         stopAudios = newStopAudios;
         dropAudios = newDropAudios;
         deathAudios = newDeathAudios;
+
+        thanksAudios = newThanksAudios;
+        chatterAudios = newChatterAudios;
+        gasStationAudios = newGasStationAudios;
+        hitAudios = newHitAudios;
+        policeAudios = newPoliceAudios;
     }
     
     public void Play(List<AudioClip> audios, int i) {

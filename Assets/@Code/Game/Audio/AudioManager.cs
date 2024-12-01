@@ -33,8 +33,11 @@ public class AudioManager : MonoBehaviour {
 
     private void Start() {
         currentIndex = 0;
-        currentAmbience = ambienceHandlers[currentAmbIndex];
-        currentAmbSource = ambSources[currentAmbIndex];
+
+        if(ambienceHandlers.Count > 0) {
+            currentAmbience = ambienceHandlers[currentAmbIndex];
+            currentAmbSource = ambSources[currentAmbIndex];
+        }
     }
 
     private void Update() {

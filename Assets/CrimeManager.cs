@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System;
 using TMPro;
 using UnityEngine.UI;
 
@@ -91,6 +92,10 @@ public class CrimeManager : MonoBehaviour {
 
     //Audio
     [SerializeField] private AudioSource audioSource;
+
+    //Event
+    public static event Action OnPlayerIsWanted;
+    public static event Action OnPlayerRefueling;
 
     private void Awake() {
         current = this;
@@ -195,6 +200,10 @@ public class CrimeManager : MonoBehaviour {
 
     private void LateUpdate() {
         isAggroLoss = true;
+    }
+
+    public void PlayerRefueling() {
+        OnPlayerRefueling?.Invoke();
     }
 
     private void UnderArrest() {
@@ -387,6 +396,9 @@ public class CrimeManager : MonoBehaviour {
                 pc.SetIsChasing(false);
             }
         }
+
+        //Alert passengers
+        OnPlayerIsWanted?.Invoke();
     }
 
     public void CheckIllegalUnloading() {
@@ -421,7 +433,7 @@ public class CrimeManager : MonoBehaviour {
 
         //CHECK VIOLATIONS
         foreach(PoliceCar pc in policeCars) {
-            //DETTECT CRIME
+            //DETECT CRIME
             if(pc.gameObject.activeSelf && Vector3.Distance(pc.transform.position, pdi.transform.position) <= copCarRange) {
                 // print("police alert!");
                 if(!isPoliceAlert) isPoliceAlert = true;
@@ -434,13 +446,13 @@ public class CrimeManager : MonoBehaviour {
         if(isPoliceAlert) {
             //Update wanted level
             //Disregard red light violation when already wanted
-            if(wantedLevel > 1 && (violation == 1 || violation == 4)) {
-                return;
-            } else {
+            // if(wantedLevel > 1 && (violation == 1 || violation == 4)) {
+            //     return;
+            // } else {
                 if(violation == 3) wantedLevel += 2;
                 else wantedLevel ++;
                 if(wantedLevel > 5) wantedLevel = 5;
-            }
+            // }
 
             //update fines
             if(violation == 1) {

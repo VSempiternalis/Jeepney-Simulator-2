@@ -148,6 +148,7 @@ public class SpawnArea : MonoBehaviour {
 
             newPerson.GetComponent<PersonHandler>().from = spawn.parent.name;
             newPerson.GetComponent<PersonHandler>().landmarkDest = GetDestination(spawn.parent.name);
+            newPerson.GetComponent<PersonHandler>().hasChattered = false;
 
             if(crosswalk != null) newPerson.GetComponent<PersonHandler>().CrossRoad(crosswalk.otherCrosswalk);
             else newPerson.GetComponent<PersonHandler>().MakeWait();

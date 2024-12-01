@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -84,6 +83,8 @@ public class PoliceCar : MonoBehaviour {
 
             //chase target
             if(nma.isOnNavMesh && nma != null && timeSinceLastUpdate >= destinationUpdateInterval && isChasingTarget) {
+                //check if player is still wanted
+                if(!cm.isPlayerWanted) SetIsChasing(false);
                 nma.SetDestination(target.position);
                 nma.acceleration = nmaAcc*carCon.healthFactor;
                 timeSinceLastUpdate = 0f;
@@ -157,7 +158,7 @@ public class PoliceCar : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        print("ontriggerenter: " + other.gameObject.name);
+        // print("ontriggerenter: " + other.gameObject.name);
 
         //layer 6 is VEHICLES
         if(other.gameObject.layer == 6) {

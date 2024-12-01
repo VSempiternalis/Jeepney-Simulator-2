@@ -179,7 +179,7 @@ public class Tutorial : MonoBehaviour {
             nm.Clear();
             nm.NewNotif("MANELLA CITY LANDMARKS", "This screen is a map of Manella City and its various landmarks. These are the places you'll take your passengers to.\n\n(Press [SPACE] to continue)");
         }
-        else if(step == 15) nm.NewNotif("LANDMARK TOGGLING", "Since there are a lot of landmarks, you can change which ones you have to go to by clicking their names on the screen. Passengers will not enter your jeep if their destination if RED\n\n(Press [SPACE] to continue)");
+        else if(step == 15) nm.NewNotif("LANDMARK TOGGLING", "Since there are a lot of landmarks, you can change which ones you have to go to by clicking their names on the screen. Passengers will not enter your jeep if their destination is RED\n\n(Press [SPACE] to continue)");
         else if(step == 16) nm.NewNotif("LOCKED LANDMARKS", "For every shift, you will be given a number of LOCKED/GREEN landmarks. These cannot be turned off and you have to deliver passengers there.\n\n(Press [SPACE] to continue)");
         else if(step == 17) nm.NewNotif("TONDOO", "For this tutorial, you'll only have FACTORY as the LOCKED landmark. And since TONDOO is on the way there, turn it on so you can unload passengers along the way.\n\n([LEFT CLICK] 'TONDOO' to turn ON)");
         else if(step == 18) nm.NewNotif("TERMINAL", "At the end of your shift, you need to go back to the TERMINAL to pay your boundary. So you may as well turn it on so you can unload here too.\n\n([LEFT CLICK] 'TERMINAL' to turn ON)");

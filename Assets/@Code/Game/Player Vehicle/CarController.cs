@@ -3,7 +3,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 
 public class CarController : MonoBehaviour {
     [SerializeField] private GameObject headlights;
@@ -190,6 +189,9 @@ public class CarController : MonoBehaviour {
     [Space(10)]
     [Header("WHEEL AND AXLES")]
     public List<Wheel> wheels;
+
+    //event
+    public static event Action OnPlayerHit;
 
     [Serializable] public struct Wheel {
         public GameObject wheelModel;
@@ -590,7 +592,7 @@ public class CarController : MonoBehaviour {
     private void GearAnimAudio() {
         UpdateGearText();
         stickShift.MoveToGear(gear);
-        pdi.IKShifter();
+        if(pdi) pdi.IKShifter();
 
         audioSource.PlayOneShot(audioGearChange);
     }
@@ -599,9 +601,9 @@ public class CarController : MonoBehaviour {
         hazardLightsActive = true;
 
         //Clear CA boxes
-        rearCA.SetActive(false);
-        leftCA.SetActive(false);
-        rightCA.SetActive(false);
+        if(rearCA) rearCA.SetActive(false);
+        if(leftCA) leftCA.SetActive(false);
+        if(rightCA) rightCA.SetActive(false);
 
         if(!audioHazard.isPlaying) audioHazard.Play();
 
@@ -717,7 +719,7 @@ public class CarController : MonoBehaviour {
     }
 
     private void AnimateCamera() {
-        if(!pdi.isDriving) return;
+        if(pdi && !pdi.isDriving) return;
 
         // Get the player's speed
         float speed = carRb.velocity.magnitude;
@@ -725,7 +727,7 @@ public class CarController : MonoBehaviour {
         float t = Mathf.Clamp01(speed / 45); //45 is max/highest speed
         t *= 2; //multiplier
 
-        ss.DynamicFOV(t);
+        if(ss) ss.DynamicFOV(t);
     }
 
     #endregion
@@ -829,7 +831,7 @@ public class CarController : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         if(other.gameObject.layer == 19 && other != prevStopper) {
             prevStopper = other;
-            cm.NewViolation(1);
+            if(cm) cm.NewViolation(1);
         }
     }
 
@@ -845,7 +847,7 @@ public class CarController : MonoBehaviour {
             // print("COLLISION: relvel:" + relativeVelocity);
 
             //screen shake (NEW)
-            ss.Shake(0.75f, shakeVel/50f);
+            if(ss) ss.Shake(0.75f, shakeVel/50f);
 
             // if(other.gameObject.GetComponent<PoliceCar>()) return;
             // else 
@@ -866,12 +868,14 @@ public class CarController : MonoBehaviour {
                     if(other.gameObject.GetComponent<PoliceCar>() && other.gameObject.GetComponent<PoliceCar>().isChasingTarget) return;
                     SteamAchievements.current.AddKill();
 
-                    cm.NewViolation(3);
+                    if(cm) cm.NewViolation(3);
+
+                    OnPlayerHit?.Invoke();
                 }
 
                 //COLLIDE WITH CAR
                 if(other.gameObject.layer == 6) {
-                    cm.NewViolation(2);
+                    if(cm) cm.NewViolation(2);
                 }
 
                 //screen shake (OLD)
