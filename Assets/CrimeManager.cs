@@ -112,9 +112,9 @@ public class CrimeManager : MonoBehaviour {
 
     private void Update() {
         //TEST
-        // if(Input.GetKeyDown(KeyCode.Alpha0)) {
-        //     NewViolation(2);
-        // }
+        if(Input.GetKeyDown(KeyCode.Alpha0)) {
+            NewViolation(2);
+        }
 
         if(!isOn) return;
         if(!isPlayerWanted) {
@@ -123,13 +123,16 @@ public class CrimeManager : MonoBehaviour {
             return;
         }
 
-        //AGGRO
+        //AGGRO BAR
         if(aggroProgress > 0) {
             float aggroRatio = aggroProgress / aggroMax;
             aggroBar.localScale = new Vector3(aggroRatio, 1, 1);
+        } else {
+            aggroBar.localScale = new Vector3(0, 1, 1);
+            SetIsPlayerWanted(false);
         }
 
-        //ARREST
+        //ARREST BAR
         if(arrestProgress > 0) {
             if(!arrestPanel.isIn) arrestPanel.In();
             float arrestRatio = arrestProgress / arrestMax;
@@ -335,7 +338,7 @@ public class CrimeManager : MonoBehaviour {
             briberyCost = (int)finesTotal/2;
             UpdateViolationsUI();
 
-            nm.NewNotifColor("BRIBE UNSUCCESSFUL!", "You have failed to bribe a police officer! Your fines have been increased by 50%. You now have to pay P" + finesTotal + "\n\nBRIBE ROLL: " + randInt + "%\nBRIBE CHANCE: " + bribePercent + "%\nRESULT: FAILURE!", 3);
+            nm.NewNotifColor("BRIBE UNSUCCESSFUL!", "You have failed to bribe a police officer! Your fines have been increased by 50%. You now have to pay P" + finesTotal + "\n\nBRIBE ROLL: " + randInt + "%\nBRIBE ROLL REQUIRED: " + bribePercent + "%\nRESULT: FAILURE!", 3);
 
             //remove bribery as an option
             bribePriceInput.interactable = false;
@@ -347,6 +350,7 @@ public class CrimeManager : MonoBehaviour {
     }
 
     private void SetIsPlayerWanted(bool newVal) {
+        print("set player is wanted. isOn: " + isOn);
         if(!isOn) return;
 
         // print("SET IS PLAYER WANTED: " + (newVal? "TRUE":"FALSE"));
@@ -409,7 +413,7 @@ public class CrimeManager : MonoBehaviour {
     }
 
     public void NewCopCarChasing(PoliceCar pc, bool newIsChasing) {
-        // print("new cop car chasing: " + pc.name + (newIsChasing? " TRUE":" FALSE"));
+        print("new cop car chasing: " + pc.name + (newIsChasing? " TRUE":" FALSE"));
         carsChasing += newIsChasing? 1 : -1;
 
         //give target
@@ -444,6 +448,7 @@ public class CrimeManager : MonoBehaviour {
 
         //VIOLATIONS AND WANTED LEVEL
         if(isPoliceAlert) {
+            print("police alert!");
             //Update wanted level
             //Disregard red light violation when already wanted
             // if(wantedLevel > 1 && (violation == 1 || violation == 4)) {
@@ -478,10 +483,16 @@ public class CrimeManager : MonoBehaviour {
 
         //CHASE
         //Make closest cars chase
+        print("cars chasing: " + carsChasing);
+        print("wantedLevel: " + wantedLevel);
         if(carsChasing < wantedLevel) {
             foreach(PoliceCar pc in policeCars) {
+                print("pc.isChasingTarget: " + (pc.isChasingTarget? "TRUE":"FALSE"));
+                print("pc.gameObject.activeSelf: " + (pc.gameObject.activeSelf? "TRUE":"FALSE"));
+                print("distance within range: " + (Vector3.Distance(pc.transform.position, pdi.transform.position) <= copCarRange? "TRUE":"FALSE"));
                 if(!pc.isChasingTarget && pc.gameObject.activeSelf && Vector3.Distance(pc.transform.position, pdi.transform.position) <= copCarRange) {
                     //set this police car to chase
+                    print("SET IS CHASING: " + pc.name);
                     if(carsChasing < wantedLevel) pc.SetIsChasing(true);
                 }
             }
@@ -496,11 +507,11 @@ public class CrimeManager : MonoBehaviour {
             }
         }
         //Spawn and make reserve cars chase
-        if(carsChasing < wantedLevel) {
-            foreach(PoliceCar pc in policeCars) {
+        // if(carsChasing < wantedLevel) {
+        //     foreach(PoliceCar pc in policeCars) {
                 
-            }
-        }
+        //     }
+        // }
 
         //NOTIFICATION
         if(isPoliceAlert) {

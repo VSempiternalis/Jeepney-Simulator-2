@@ -161,7 +161,7 @@ public class SkinCustomizer : MonoBehaviour {
 
         //show right button
         print("INDEX: " + index);
-        if(skinsOwned[index]) {
+        if(skinsOwned.Count > 0 && skinsOwned[index]) {
             buttonOff.SetActive(false);
             buttonOn.SetActive(true);
         } else {

@@ -34,7 +34,7 @@ public class VoiceHandler : MonoBehaviour {
     }
 
     public void Say(string sayType) {
-        if(audioSource.isPlaying) return;
+        if(audioSource && audioSource.isPlaying) return;
         
         List<AudioClip> audios = new List<AudioClip>();
 

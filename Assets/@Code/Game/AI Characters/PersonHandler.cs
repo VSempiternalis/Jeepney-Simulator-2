@@ -14,6 +14,7 @@ public class PersonHandler : MonoBehaviour {
     [SerializeField] private Transform voicesChild;
     private VoiceHandler voiceHandler;
     private CrimeManager cm;
+    private Rigidbody rb;
 
     [Space(10)]
     [Header("STATS")]
@@ -105,6 +106,7 @@ public class PersonHandler : MonoBehaviour {
         pdit = GameObject.Find("PLAYER").GetComponent<PlayerDriveInputTUTORIAL>();
         ani = GetComponent<Animator>();
         cm = CrimeManager.current;
+        rb = GetComponent<Rigidbody>();
 
         //subscribe to cm when player is wanted
         CrimeManager.OnPlayerIsWanted += SayPlayerWanted;
@@ -315,7 +317,23 @@ public class PersonHandler : MonoBehaviour {
     }
 
     private void MoveToNextPos() {
-        if(isHittingVehicle) return;
+        if(isHittingVehicle) {
+            if(ani.GetInteger("State") > 10) {
+                int anim;
+                anim = Random.Range(0, 10);
+
+                if(ani == null) ani = GetComponent<Animator>();
+                ani.SetInteger("State", anim);
+            }
+            return;
+        } else if(ani.GetInteger("State") < 14 || ani.GetInteger("State") > 20) {
+            int anim;
+            anim = Random.Range(14, 20);
+
+            if(ani == null) ani = GetComponent<Animator>();
+            ani.SetInteger("State", anim);
+            return;
+        }
 
         FacePos(posDestinations[0]);
         float originalYRotation = transform.rotation.eulerAngles.y;
@@ -387,17 +405,17 @@ public class PersonHandler : MonoBehaviour {
     #region SINGLE FRAME FUNCTIONS =================================================================================================
 
     private void SayPlayerWanted() {
-        print("say player wanted");
-        voiceHandler.Say("Police");
+        // print("say player wanted");
+        if(rb && rb.isKinematic) voiceHandler.Say("Police");
     }
     private void SayPlayerRefueling() {
-        print("say player refueling");
-        voiceHandler.Say("GasStation");
+        // print("say player refueling");
+        if(rb && rb.isKinematic) voiceHandler.Say("GasStation");
     }
 
     private void SayPlayerHit() {
-        print("say player hit");
-        voiceHandler.Say("Hit");
+        // print("say player hit");
+        if(rb && rb.isKinematic) voiceHandler.Say("Hit");
     }
 
     public void ExitVehicle() {
@@ -418,7 +436,7 @@ public class PersonHandler : MonoBehaviour {
         carCon.PassengerExit(transform);
         carCon = null;
         GetComponent<CapsuleCollider>().isTrigger = false;
-        GetComponent<Rigidbody>().isKinematic = false;
+        rb.isKinematic = false;
         
         dropStartTime = Time.time;
         voiceHandler.Say("Drop");
@@ -488,7 +506,7 @@ public class PersonHandler : MonoBehaviour {
         carCon.TakeSeat(transform);
 
         GetComponent<CapsuleCollider>().isTrigger = true;
-        GetComponent<Rigidbody>().isKinematic = true;
+        rb.isKinematic = true;
         // popup.SayConstant(to);
         // popup.SayChange("(Unpaid)");
         destinations.Clear();
@@ -586,7 +604,7 @@ public class PersonHandler : MonoBehaviour {
         isRagdoll = false;
 
         // GetComponent<Rigidbody>().freezeRotation = false;
-        GetComponent<Rigidbody>().isKinematic = false;
+        rb.isKinematic = false;
         // GetComponent<Rigidbody>().useGravity = true;
         GetComponent<CapsuleCollider>().enabled = true;
         GetComponent<BoxCollider>().enabled = false;
@@ -641,7 +659,11 @@ public class PersonHandler : MonoBehaviour {
         //Stand
         if(state == "Idle" || state == "Waiting" || state == "Waiting to cross") anim = Random.Range(0, 10);
         //Walk
-        else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering" || state == "Dropping" || state == "Moving to pos" || state == "Crossing") anim = Random.Range(14, 20);
+        else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering" || state == "Dropping" || state == "Moving to pos" || state == "Crossing") {
+            // if(isHittingVehicle) anim = Random.Range(0, 10);
+            // else 
+            anim = Random.Range(14, 20);
+        }
         //Sit
         else if(state == "Waiting to pay" || state == "Waiting to arrive") anim = Random.Range(20, 28);
         //Yes
@@ -672,7 +694,7 @@ public class PersonHandler : MonoBehaviour {
 
                 float forceMagnitude = relativeVelocity * impactForceMultiplier;
 
-                GetComponent<Rigidbody>().AddForce(direction * forceMagnitude, ForceMode.Impulse);
+                rb.AddForce(direction * forceMagnitude, ForceMode.Impulse);
 
                 // Apply the velocity to the object's Rigidbody
                 // Vector3 impactVelocity = other.relativeVelocity;

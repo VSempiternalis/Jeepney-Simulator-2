@@ -47,9 +47,7 @@ public class MainMenuManager : MonoBehaviour {
         "Tip 31: When being chased by police, drive as far away from them as you can! They will stop and let you go over time. Don't do this in real life please!",
         "Tip 32: Passengers will sometimes let you know whether they want to ride on your jeepney or not. Pay attention to their body language!",
         "Tip 33: Want to add your voice to the game? Go to the main menu and find the button on the left to upload your voice lines!",
-        // "Tip 665: ",
         "Tip 666: She's behind you.",
-        // "Tip 667: "
     };
     [SerializeField] private TMP_Text tipText;
 
@@ -79,11 +77,14 @@ public class MainMenuManager : MonoBehaviour {
     }
 
     IEnumerator LoadLevel(string gameMode, bool isNewGame) {
+        print("Load level: " + gameMode + ", isNewGame: " + isNewGame);
+
         loadingScreen.In();
         loadingScreen.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
         //Tips
         int randInt = Random.Range(0, tips.Count);
+        print("tip randInt: " + randInt);
         if(tipText) tipText.text = tips[randInt];
 
         yield return new WaitForSeconds(loadTransitionTime);

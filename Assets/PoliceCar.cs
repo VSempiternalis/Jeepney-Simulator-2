@@ -93,7 +93,7 @@ public class PoliceCar : MonoBehaviour {
     }
 
     public void SetIsChasing(bool newIsChasing) {
-        // print(name + " is chasing: " + newIsChasing);
+        print(name + " is chasing: " + newIsChasing);
         if(!gameObject.activeSelf) return;
 
         isChasingTarget = newIsChasing;
@@ -124,6 +124,7 @@ public class PoliceCar : MonoBehaviour {
 
     private IEnumerator WaitAndChase(bool newIsChasing) {
         yield return new WaitForSeconds(2f);
+        print("COP CAR CHASING");
 
         // isChasingTarget = newIsChasing;
 

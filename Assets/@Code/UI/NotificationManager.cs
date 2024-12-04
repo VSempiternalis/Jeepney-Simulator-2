@@ -51,6 +51,7 @@ public class NotificationManager : MonoBehaviour {
     }
 
     public void NewNotifColor(string header, string desc, int colorInt) {
+        print("NEW NOTIF: " + header);
         if(notifs.childCount > 3) {
             notifs.GetChild(0).GetComponent<Notification>().DestroySelf();
         }

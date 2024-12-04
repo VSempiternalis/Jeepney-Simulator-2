@@ -332,4 +332,56 @@ public class BoundaryManager : MonoBehaviour {
         //Clear jeepney seats
         carCon.NewDay();
     }
+
+    public void Restart() {
+        //if player in vic, exit vic
+        PlayerDriveInput pdi = PlayerDriveInput.current;
+        if(pdi.transform.parent.GetComponent<SeatHandler>()) {
+            pdi.transform.parent.GetComponent<SeatHandler>().Interact(pdi.gameObject);
+        }
+
+        Fader.current.FadeToBlack(1f, "RESTARTING SHIFT\n\nLoading previous save...\n", () => {
+            //Reset
+            // if(TimeManager.current.days == 1) SaveLoadSystem.current.NewGame();
+            // else 
+            SaveLoadSystem.current.OnLose();
+            UpdateTexts();
+            ResetVicMoney();
+            pdi.GetComponent<PlayerInteraction>().ClearItems(); //yes, this is stupid
+            TimeManager.current.ResetShiftTime();
+            LotteryManager.current.NewNums(); //MUST BE AFTER TIME RESET
+            pdi.carCon.GetComponent<JeepneySLS>().LoadPrevious();
+            HousePanel.current.Load();
+
+            am.PlayUI(5);
+            
+            LeanTween.delayedCall(1f, () => {
+                Fader.current.SetText("DAY " + TimeManager.current.days);
+                Resources.UnloadUnusedAssets();
+            });
+
+            LeanTween.delayedCall(2f, () => {
+                Fader.current.FadeFromBlack(1f, "DAY " + TimeManager.current.days, null);
+            });
+
+            //subtract start deposit to avoid money glitch
+            if(TimeManager.current.days == 1) {
+                CanPay(PlayerPrefs.GetInt("Career_StartDeposit", 100));
+            }
+        });
+
+        lateFee = 0;
+        failureCharge = 0;
+        // PlayerDriveInput.current.isPickups = true;
+        pdi.SetPickups(SaveLoadSystem.current.isPassengerPickups);
+        RouteSelector.current.NewShift(3); //3 is dests to lock
+
+        //Door
+        foreach(DoorHandler door in doors) {
+            if(door.state == "Open" || door.state == "Opening") door.NewState("Closing"); //Interact(gameObject);
+        }
+
+        //Clear jeepney seats
+        carCon.NewDay();
+    }
 }

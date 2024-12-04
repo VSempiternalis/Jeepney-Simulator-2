@@ -238,8 +238,16 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     private void PayItem() {
-        //Place item on itemover(storage)
+        print("pay item");
         GameObject giveItem = rightHand.GetChild(0).gameObject;
+
+        // stop if paying lottery ticket (CAUSES MASSIVE BUG)
+        if(giveItem.GetComponent<LotteryTicket>()) {
+            NotificationManager.current.NewNotifColor("CANNOT DEPOSIT LOTTERY TICKET", "You are not allowed to deposit lottery tickets!.", 3);
+            return;
+        }
+
+        //Place item on itemover(storage)
         if(giveItem) pdi.TryGrabIK(giveItem.transform);
         IPayable payable = itemOver.GetComponent<IPayable>();
         payable.Pay(giveItem.GetComponent<Value>().value);
@@ -303,8 +311,17 @@ public class PlayerInteraction : MonoBehaviour {
     }
 
     private void PlaceItem() {
+        print("place item");
         //Place item on itemover(storage)
         GameObject dropItem = rightHand.GetChild(0).gameObject;
+
+        //stop if paying lottery ticket (CAUSES MASSIVE BUG)
+        // print("itemover name: " + itemOver.name);
+        // print("contains deposit: " + (itemOver.name.Contains("Deposit")? "true" : "false"));
+        if(dropItem.GetComponent<LotteryTicket>() && itemOver.name.Contains("Deposit")) {
+            NotificationManager.current.NewNotifColor("CANNOT DEPOSIT LOTTERY TICKET", "You are not allowed to add a lottery ticket to your depository.", 3);
+            return;
+        }
 
         if(itemOver.GetComponent<StorageHandler>()) {
             StorageHandler storage = itemOver.GetComponent<StorageHandler>();

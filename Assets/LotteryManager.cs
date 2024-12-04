@@ -206,10 +206,11 @@ public class LotteryManager : MonoBehaviour {
 
         PlayerDriveInput.current.GetComponent<PlayerInteraction>().UpdateOnhandUI();
 
+        //set new winning numbers
         while(true) {
             int rNum = Random.Range(0, 100);
 
-            if(!bronzeNums.Contains(rNum) && !silverNums.Contains(rNum) && !silverNums.Contains(rNum)) {
+            if(!bronzeNums.Contains(rNum) && !silverNums.Contains(rNum) && !goldNums.Contains(rNum)) {
                 if(bronzeNums.Count < 3) {
                     bronzeNums.Add(rNum);
                     allNums.Add(rNum);

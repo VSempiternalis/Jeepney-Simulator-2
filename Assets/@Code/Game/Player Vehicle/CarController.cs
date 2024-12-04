@@ -35,7 +35,9 @@ public class CarController : MonoBehaviour {
     public int health;
     public float healthFactor = 1;
     public int maxHealth;
-    private bool isTakingDamage;
+    // private bool canBeDamaged;
+    private float lastDamageTime = 0; //time when vic was last damaged
+    // private bool isTakingDamage;
     public bool isEngineOn;
     public float maxAcceleration = 30.0f;
     public float brakeAcceleration = 50.0f;
@@ -236,6 +238,7 @@ public class CarController : MonoBehaviour {
         AnimateWheels();
         AnimateDashboard();
         AnimateCamera();
+        // UpdateCanTakeDamage();
     }
 
     private void FixedUpdate() {
@@ -249,11 +252,16 @@ public class CarController : MonoBehaviour {
         else if(fuelAmount < 10 && fuelAmount >= 0 ) NotificationManager.current.NewNotifColor("NO FUEL!", "You have run out of fuel! Call a tow truck using the tablet and refuel in the nearest gas station.", 3);
     }
 
-    private void LateUpdate() {
-        isTakingDamage = false;
-    }
+    // private void LateUpdate() {
+    //     isTakingDamage = false;
+    // }
 
     // CHECKS ======================================================================
+
+    // private void UpdateCanTakeDamage() {
+    //     //set 1 second timer between damages
+
+    // }
 
     public bool HasFreeSeats() {
         // bool returnBool = false;
@@ -735,9 +743,9 @@ public class CarController : MonoBehaviour {
     #region OTHERS ======================================================================
 
     public void AddHealth(int mod) {
-        // print("ADD HEALTH: " + mod + "/" + maxHealth);
-        if(isTakingDamage) return;
-        if(mod < 0) isTakingDamage = true;
+        print("ADD HEALTH: " + mod + "/" + maxHealth);
+        // if(isTakingDamage) return;
+        // if(mod < 0) isTakingDamage = true;
 
         //if damage is too high, set to low
         if(mod < -25) mod = -25;
@@ -852,18 +860,22 @@ public class CarController : MonoBehaviour {
             // if(other.gameObject.GetComponent<PoliceCar>()) return;
             // else 
             if(relativeVelocity > 7) { //tolerance
-                // damage vehicle
-                AddHealth(-(int)(relativeVelocity/2));
-                NotificationManager.current.NewNotifColor("VEHICLE DAMAGED!", "Jeepney health: " + health, 3);
+                //check if too early to damage vehicle
+                if(lastDamageTime + 0.5f < Time.time) {
+                    //damage vehicle
+                    AddHealth(-(int)(relativeVelocity/2));
+                    lastDamageTime = Time.time;
 
-                //damage other health
-                if(other.gameObject.GetComponent<IHealth>() != null) other.gameObject.GetComponent<IHealth>().AddHealth(-(int)(damage + relativeVelocity));
+                    NotificationManager.current.NewNotifColor("VEHICLE DAMAGED!", "Jeepney health: " + health, 3);
 
-                AudioManager.current.PlayUI(14);
+                    //damage other health
+                    if(other.gameObject.GetComponent<IHealth>() != null) other.gameObject.GetComponent<IHealth>().AddHealth(-(int)(damage + relativeVelocity));
+
+                    AudioManager.current.PlayUI(14);
+                }
 
                 //STEAM ACH, Collide with NPC
                 isSmoothRide = false;
-
                 if(other.gameObject.layer == 18) {
                     if(other.gameObject.GetComponent<PoliceCar>() && other.gameObject.GetComponent<PoliceCar>().isChasingTarget) return;
                     SteamAchievements.current.AddKill();
