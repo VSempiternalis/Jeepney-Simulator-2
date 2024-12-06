@@ -70,7 +70,7 @@ public class BoundaryManager : MonoBehaviour {
         storage1.Clear();
         storage2.Clear();
 
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 10; i++) {
             GameObject newMoney = Instantiate(money1PF, storage1.transform.position, Quaternion.identity);
             storage1.AddItemRandom(newMoney);
             newMoney.name = "Money - P" + newMoney.GetComponent<Value>().value;
@@ -264,6 +264,11 @@ public class BoundaryManager : MonoBehaviour {
                     Fader.current.FadeFromBlack(1f, "DAY " + TimeManager.current.days, null);
                 });
             });
+
+            //subtract start deposit to avoid money glitch
+            if(TimeManager.current.days == 1) {
+                CanPay(PlayerPrefs.GetInt("Career_StartDeposit", 100));
+            }
         }
         debugText.text = "Resetting late fee and failure charge";
         lateFee = 0;
@@ -316,6 +321,11 @@ public class BoundaryManager : MonoBehaviour {
             LeanTween.delayedCall(2f, () => {
                 Fader.current.FadeFromBlack(1f, "DAY " + TimeManager.current.days, null);
             });
+
+            //subtract start deposit to avoid money glitch
+            if(TimeManager.current.days == 1) {
+                CanPay(PlayerPrefs.GetInt("Career_StartDeposit", 100));
+            }
         });
 
         lateFee = 0;

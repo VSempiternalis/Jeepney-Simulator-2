@@ -24,6 +24,8 @@ public class JeepneySLS : MonoBehaviour {
     [SerializeField] private GameObject upgTopLights;
     [SerializeField] private GameObject upgCoinHolder1;
     [SerializeField] private GameObject upgCoinHolder2;
+    [SerializeField] private GameObject seats1;
+    [SerializeField] private GameObject seats2;
 
     //SKINS
     public int currentSkinIndex; //jeep body
@@ -94,6 +96,10 @@ public class JeepneySLS : MonoBehaviour {
         PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgTopLights", upgTopLights.activeSelf? 1:0);
         PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgCoinHolder1", upgCoinHolder1.activeSelf? 1:0);
         PlayerPrefs.SetInt(gameMode + "_Jeepney_UpgCoinHolder2", upgCoinHolder2.activeSelf? 1:0);
+        // PlayerPrefs.SetInt(gameMode + "_Jeepney_Seats1", seats1.activeSelf? 1:0);
+        // PlayerPrefs.SetInt(gameMode + "_Jeepney_Seats2", seats2.activeSelf? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_Seats1", up.seats1Bought? 1:0);
+        PlayerPrefs.SetInt(gameMode + "_Jeepney_Seats2", up.seats2Bought? 1:0);
 
         #endregion
         #region CUSTOMIZATION ================================================================================
@@ -167,6 +173,8 @@ public class JeepneySLS : MonoBehaviour {
         up.Toggle(upgTopLights.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgTopLights", 0) == 1? true:false));
         up.Toggle(upgCoinHolder1.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgCoinHolder1", 0) == 1? true:false));
         up.Toggle(upgCoinHolder2.name, (PlayerPrefs.GetInt(gameMode + "_Jeepney_UpgCoinHolder2", 0) == 1? true:false));
+        up.Toggle("UPG_Seats1", (PlayerPrefs.GetInt(gameMode + "_Jeepney_Seats1", 0) == 1? true:false));
+        up.Toggle("UPG_Seats2", (PlayerPrefs.GetInt(gameMode + "_Jeepney_Seats2", 0) == 1? true:false));
 
         #endregion
         #region CUSTOMIZATION ================================================================================

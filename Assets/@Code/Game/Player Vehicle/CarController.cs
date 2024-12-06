@@ -66,7 +66,7 @@ public class CarController : MonoBehaviour {
     [Header("PASSENGERS")]
     public int passengerCount;
     public List<Transform> seatSpots;
-    private List<int> seatsTaken = new List<int>();
+    // public List<int> seatsTaken = new List<int>();
     [SerializeField] private LayerMask collisionLayer;
     // [SerializeField] private List<Transform> leftSeats; //[!] left (perspective of passenger entering from rear)
 
@@ -219,10 +219,13 @@ public class CarController : MonoBehaviour {
         swStandardRot.y = 180;
         swStandardRot.z = 0;
 
-        for(int i = 0; i < seatSpots.Count; i++){
-            seatsTaken.Add(0);
-        }
-        UpdateSeatsTaken();
+        // for(int i = 0; i < seatSpots.Count; i++){
+            // seatsTaken.Add(0);
+        // }
+        // foreach(Transform seat in seatSpots) {
+        //     seat.name += "X";
+        // }
+        // UpdateSeatsTaken();
 
         if(Keybinds.current) Keybinds.current.onKeyChangeEvent += OnKeyChangeEvent;
         OnKeyChangeEvent();
@@ -402,23 +405,32 @@ public class CarController : MonoBehaviour {
     #region PASSENGERS ======================================================================
 
     public void TakeSeat(Transform passenger) {
-        // print("Taking seat");
-        UpdateSeatsTaken();
+        print("Taking seat");
+        // UpdateSeatsTaken();
 
         //Get free seats
-        List<int> freeSeats = new List<int>();
-        for(int i = 0; i < seatsTaken.Count; i++){
-            if(seatsTaken[i] == 0) freeSeats.Add(i);
+        // List<int> freeSeats = new List<int>();
+        List<Transform> freeSeats = new List<Transform>();
+        // for(int i = 0; i < seatsTaken.Count; i++){
+        //     if(seatsTaken[i] == 0) freeSeats.Add(i);
+        // }
+        foreach(Transform seat in seatSpots) {
+            // if(!seat.name.Contains("X")) freeSeats.Add(seat);
+            if(seat.childCount == 0) freeSeats.Add(seat);
         }
 
         //NO SEATS
         if(freeSeats.Count == 0) return;
         else if(freeSeats.Count == 1) SteamAchievements.current.UnlockAchievement("ACH_FULLY_LOADED");
 
+        print("sitting");
+
         //Pick random from free seats
         int randInt = UnityEngine.Random.Range(0, freeSeats.Count);
-        int seatIndex = freeSeats[randInt];
-        Transform seatSpot = seatSpots[seatIndex];
+        // int seatIndex = freeSeats[randInt];
+        // Transform seatSpot = seatSpots[seatIndex];
+        Transform seatSpot = freeSeats[randInt];
+        // seatSpot.name += "X";
 
         //Setup
         // print("seatspot: " + seatSpot.name);
@@ -440,17 +452,18 @@ public class CarController : MonoBehaviour {
         passenger.GetComponent<PersonHandler>().changePointStorage = changePoint.GetComponent<StorageHandler>();
     }
 
-    private void UpdateSeatsTaken() {
-        // print("Updating seats taken");
-        for(int i = 0; i < seatSpots.Count; i++) {
-            if(seatSpots[i].childCount == 0) seatsTaken[i] = 0;
-            else seatsTaken[i] = 1;
-        }
-    }
+    // private void UpdateSeatsTaken() {
+    //     // print("Updating seats taken");
+    //     // for(int i = 0; i < seatSpots.Count; i++) {
+    //     //     if(seatSpots[i].childCount == 0) seatsTaken[i] = 0;
+    //     //     else seatsTaken[i] = 1;
+    //     // }
+    // }
 
     public void PassengerExit(Transform passenger) {
         Transform seatSpot = passenger.parent;
 
+        // seatSpot.name.Remove(-1);
         passenger.parent = GameObject.Find("WORLD").transform;
         Vector3 dropPos = pointPassengerEntrance.position;
         dropPos.y += 0.5f;

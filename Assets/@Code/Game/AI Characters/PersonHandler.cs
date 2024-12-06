@@ -701,7 +701,7 @@ public class PersonHandler : MonoBehaviour {
                 // GetComponent<Rigidbody>().velocity = impactVelocity * impactForceMultiplier;
             } else {
                 //stop
-                print("isHittingVehicle = true");
+                // print("isHittingVehicle = true");
                 isHittingVehicle = true;
             }
 

@@ -59,15 +59,15 @@ public class LotteryPrinter : MonoBehaviour {
 
             newTicket.SetActive(true);
             newTicket.GetComponent<LotteryTicket>().SetNumber(tensDigit, secondsDigit);
-            newTicket.name = "Lottery Ticket [" + tensDigit + "" + secondsDigit + "]";
+            newTicket.name = "Lottery Ticket: " + tensDigit + "" + secondsDigit + "";
 
             ticketStorage.AddItemRandom(newTicket);
             lm.tickets.Add(newTicket);
 
-            NotificationManager.current.NewNotif("TICKET BOUGHT", "Ticket cost: P10\n\nRemaining deposit: " + BoundaryManager.current.deposit);
+            NotificationManager.current.NewNotif("TICKET BOUGHT", "Good luck!\nTicket cost: P10\n\nRemaining deposit: " + BoundaryManager.current.deposit);
             AudioManager.current.PlayUI(2);
         } else {
-            NotificationManager.current.NewNotifColor("INSUFFICIENT FUNDS", "You do not have enough money in the deposit to afford a ticket!", 2);
+            NotificationManager.current.NewNotifColor("INSUFFICIENT FUNDS", "You do not have enough money in the deposit to afford a ticket! Give some money to Billy to add to your deposit!", 2);
             AudioManager.current.PlayUI(7);
         }
     }

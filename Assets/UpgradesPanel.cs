@@ -13,6 +13,12 @@ public class UpgradesPanel : MonoBehaviour {
     public List<Upgrade> upgrades;
     [SerializeField] private bool allFree; //DEBUG ONLY
 
+    //SEATS
+    [SerializeField] private List<Transform> seats1;
+    [SerializeField] private List<Transform> seats2;
+    public bool seats1Bought;
+    public bool seats2Bought;
+
     [Serializable] public struct Upgrade {
         public GameObject go;
         public GameObject button;
@@ -22,6 +28,7 @@ public class UpgradesPanel : MonoBehaviour {
         public int massAdd;
         public int damageAdd;
         public bool enablesMusic;
+        public int extraSeats;
     }
 
     private void Awake() {
@@ -37,7 +44,7 @@ public class UpgradesPanel : MonoBehaviour {
     }
 
     public void TryBuy(string newUpgName) {
-        // print("BUYING " + newUpgName);
+        print("BUYING " + newUpgName);
         foreach(Upgrade upgrade in upgrades) {
             if(upgrade.upgName == newUpgName) {
                 // print("FOUND " + newUpgName);
@@ -61,12 +68,15 @@ public class UpgradesPanel : MonoBehaviour {
         //STEAM ACH
         bool isPatokJeepney = true;
         foreach(Upgrade upgrade in upgrades) {
+            print("UPGRADE: " + upgrade.upgName + " / " + newUpgName);
             if(upgrade.upgName == newUpgName) {
+                print("FOUND: " + newUpgName);
                 //go
                 upgrade.go.SetActive(toggleOn);
 
                 //stats
                 if(toggleOn) {
+                    print("TOGGLED ON: " + newUpgName);
                     carcon.maxHealth += upgrade.maxHealthAdd;
                     carcon.AddHealth(upgrade.maxHealthAdd);
                     carcon.GetComponent<Rigidbody>().mass -= upgrade.massAdd;
@@ -80,9 +90,25 @@ public class UpgradesPanel : MonoBehaviour {
                         SteamAchievements.current.UnlockAchievement("ACH_TURN_UP_THE_MUSIC");
                     }
 
+                    //SEATS
+                    if(upgrade.extraSeats == 1) {
+                        print("SEATS 1");
+                        foreach(Transform seatspot in seats1) {
+                            carcon.seatSpots.Add(seatspot);
+                            seats1Bought = true;
+                        }
+                    } else if(upgrade.extraSeats == 2) {
+                        print("SEATS 2");
+                        foreach(Transform seatspot in seats2) {
+                            carcon.seatSpots.Add(seatspot);
+                            seats2Bought = true;
+                        }
+                    }
+
                     //button
                     upgrade.button.SetActive(false);
                 } else {
+                    print("TOGGLED OFF: " + newUpgName);
                     carcon.maxHealth -= upgrade.maxHealthAdd;
                     carcon.AddHealth(-upgrade.maxHealthAdd);
                     carcon.GetComponent<Rigidbody>().mass += upgrade.massAdd;
@@ -93,6 +119,25 @@ public class UpgradesPanel : MonoBehaviour {
 
                     //button
                     upgrade.button.SetActive(true);
+
+                    //SEATS
+                    if(upgrade.extraSeats == 2) {
+                        print("SEATS 2");
+                        foreach(Transform seatspot in seats2) {
+                            if(carcon.seatSpots.Contains(seatspot)) {
+                                carcon.seatSpots.Remove(seatspot);
+                                seats2Bought = false;
+                            }
+                        }
+                    } else if(upgrade.extraSeats == 1) {
+                        print("SEATS 1");
+                        foreach(Transform seatspot in seats1) {
+                            if(carcon.seatSpots.Contains(seatspot)) {
+                                carcon.seatSpots.Remove(seatspot);
+                                seats1Bought = false;
+                            }
+                        }
+                    }
                 }
 
                 JeepneyPanel.current.UpdateReqs();
@@ -106,10 +151,19 @@ public class UpgradesPanel : MonoBehaviour {
 
     public void SetAsDefault() {
         foreach(Upgrade upgrade in upgrades) {
-            if(upgrade.go.transform.GetChild(0).GetComponent<StorageHandler>()) upgrade.go.transform.GetChild(0).GetComponent<StorageHandler>().Clear();
+            if(upgrade.go.transform.childCount > 0 && upgrade.go.transform.GetChild(0).GetComponent<StorageHandler>()) upgrade.go.transform.GetChild(0).GetComponent<StorageHandler>().Clear();
 
-            upgrade.go.SetActive(false);
+            if(!upgrade.go.name.Contains("Seatspot")) upgrade.go.SetActive(false);
             upgrade.button.SetActive(true);
+
+            foreach(Transform seatspot in seats1) {
+                carcon.seatSpots.Remove(seatspot);
+                seats1Bought = false;
+            }
+            foreach(Transform seatspot in seats2) {
+                carcon.seatSpots.Remove(seatspot);
+                seats2Bought = false;
+            }
         }
                     
         carcon.mp.SetActive(false);

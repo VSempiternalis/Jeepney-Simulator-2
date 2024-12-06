@@ -34,10 +34,10 @@ public class RouteSelector : MonoBehaviour {
 
     private void Start() {
         am = AudioManager.current;
-        print("Audio Manager exists: " + (am != null? "true" : "false"));
+        // print("Audio Manager exists: " + (am != null? "true" : "false"));
 
         landmarkAreas = new List<List<string>>();
-        print("all destinations: " + allDestinations);
+        // print("all destinations: " + allDestinations);
         AddNewLandmarkArea(allDestinations);
     }
 
@@ -46,12 +46,12 @@ public class RouteSelector : MonoBehaviour {
     }
 
     public void AddNewLandmarkArea(List<string> newLandmarksArea) {
-        print("Adding new landmark area");
+        // print("Adding new landmark area");
         landmarkAreas.Add(newLandmarksArea);
-        print("landmarkAreas count: " + landmarkAreas.Count);
+        // print("landmarkAreas count: " + landmarkAreas.Count);
 
         foreach(string landmark in newLandmarksArea) {
-            print("adding landmark: " + landmark);
+            // print("adding landmark: " + landmark);
         }
     }
 
@@ -69,7 +69,7 @@ public class RouteSelector : MonoBehaviour {
     }
 
     public void ForceDestUnlock(string dest) {
-        print("FORCE UNLOCK: " + dest);
+        // print("FORCE UNLOCK: " + dest);
         // if(!isAutoToggleDests) return;
 
         if(lockedDestinations.Contains(dest)) {
@@ -140,16 +140,16 @@ public class RouteSelector : MonoBehaviour {
         //get landmark area
         List<string> currentLandmarkArea;
         int randInt = Random.Range(0, landmarkAreas.Count);
-        print("randInt: " + randInt);
-        print("lock. landmark areas count: " + landmarkAreas.Count);
+        // print("randInt: " + randInt);
+        // print("lock. landmark areas count: " + landmarkAreas.Count);
         currentLandmarkArea = landmarkAreas[randInt];
 
         //fill in with new locked landmarks
         while(lockedDestinations.Count < num) {
             int randInt2 = Random.Range(0, currentLandmarkArea.Count);
-            print("randInt2: " + randInt2);
+            // print("randInt2: " + randInt2);
             string newLockedDest = currentLandmarkArea[randInt2];
-            print("new locked dest: " + newLockedDest);
+            // print("new locked dest: " + newLockedDest);
 
             if(!lockedDestinations.Contains(newLockedDest)) {
                 lockedDestinations.Add(newLockedDest);

@@ -12,7 +12,7 @@ public class MainMenuManager : MonoBehaviour {
     [Space(10)]
     [Header("TIPS")]
     //Hard coded
-    [SerializeField] private List<string> tips = new List<string>(){
+    private List<string> tips = new List<string>(){
         "Tip 1: For the best performance, try decreasing the RENDER DISTANCE and QUALITY in the settings.",
         "Tip 2: The game will only save when you press the 'PAY BOUNDARY' button. Try not to ALT+F4!",
         "Tip 3: You can change the KEYBINDS in the settings by pressing [ESC].",

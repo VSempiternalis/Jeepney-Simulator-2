@@ -27,6 +27,7 @@ public class Notification : MonoBehaviour {
             descImg.SetActive(false);
             descImg.SetActive(true);
         }
+
         // if(!gameObject.activeSelf) gameObject.SetActive(true);
     }
 
@@ -40,13 +41,14 @@ public class Notification : MonoBehaviour {
         // descImg.SetActive(false);
         // descImg.SetActive(true);
         
-        gameObject.SetActive(true);
+        // gameObject.SetActive(true);
         // transform.parent.gameObject.SetActive(true);
 
         headerText.text = header;
         descText.text = desc;
         
         // gameObject.SetActive(false);
+        gameObject.SetActive(true);
         // transform.parent.gameObject.SetActive(false);
 
         // transform.localPosition = new Vector3(-125, -435.3f, 0);

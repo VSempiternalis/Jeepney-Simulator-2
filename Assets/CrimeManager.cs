@@ -14,6 +14,7 @@ public class CrimeManager : MonoBehaviour {
     private BoundaryManager bm;
     private AudioManager am;
     public bool isOn;
+    [SerializeField] private bool isDebug;
 
     public List<PoliceCar> policeCars; //contains all police cars
     public int copCarRange;
@@ -112,7 +113,7 @@ public class CrimeManager : MonoBehaviour {
 
     private void Update() {
         //TEST
-        if(Input.GetKeyDown(KeyCode.Alpha0)) {
+        if(isDebug && Input.GetKeyDown(KeyCode.Alpha0)) {
             NewViolation(2);
         }
 

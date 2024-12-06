@@ -358,11 +358,12 @@ public class PlayerInteraction : MonoBehaviour {
             onhandItem.SetActive(true);
 
             onhandUI.gameObject.SetActive(false);
-            onhandUI.gameObject.SetActive(true);
+            // onhandUI.gameObject.SetActive(true);
 
             // if(i == 0) onhandItem.GetComponent<VerticalLayoutGroup>().padding.right = 40;
             // else onhandItem.GetComponent<VerticalLayoutGroup>().padding.right = 20;
         }
+        onhandUI.gameObject.SetActive(true);
     }
 
     private void ClearOnhandUI() {
