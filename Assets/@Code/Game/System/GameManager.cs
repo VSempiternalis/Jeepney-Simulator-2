@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
 using TMPro;
 
@@ -7,8 +8,12 @@ public class GameManager : MonoBehaviour {
 
     [SerializeField] private TMP_Text versionText;
 
+    //FUEL
     public int pricePerLiter = 20; //fuel price
     [SerializeField] private List<TMP_Text> fuelPriceTexts;
+
+    //FARE
+    public int fare;
 
     public int playerSpawnLocation; //0 - Billys, 1 - Cathedral, 2 - Westwood, 3 - BBC
 
@@ -19,6 +24,9 @@ public class GameManager : MonoBehaviour {
     //SPAWNS
     [SerializeField] private List<Transform> playerSpawns;
     [SerializeField] private List<Transform> playerVicSpawns;
+
+    //EVENTS
+    public static event Action OnFareChanged;
 
     private void Awake() {
         current = this;
@@ -36,6 +44,16 @@ public class GameManager : MonoBehaviour {
 
     private void Update() {
         
+    }
+
+    public void UpdateFare(int newFare) {
+        fare = newFare;
+        OnFareChanged?.Invoke();
+    }
+
+    public void UpdateFuelPrice(int newPrice) {
+        pricePerLiter = newPrice;
+        UpdateFuelPriceTexts();
     }
 
     private void UpdateFuelPriceTexts() {

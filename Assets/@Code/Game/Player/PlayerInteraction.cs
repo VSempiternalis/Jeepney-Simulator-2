@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -70,6 +71,11 @@ public class PlayerInteraction : MonoBehaviour {
     [Space(10)]
     [Header("AUDIO")]
     private AudioManager am;
+
+    //AREA
+    public event Action OnArrivedAtDropoff;
+    public event Action OnArrivedAtLandmark;
+    public string currentLandmark;
 
     private void Start() {
         Keybinds.current.onKeyChangeEvent += OnKeyChangeEvent;
@@ -400,12 +406,19 @@ public class PlayerInteraction : MonoBehaviour {
 
             playerDestUI.In();
             if(areaUI.text != other.name) areaUI.text = other.name;
+            
+            print("ARRIVED AT LANDMARK: " + other.name);
+            currentLandmark = other.name;
+            OnArrivedAtLandmark?.Invoke();
 
             //Audio
             am.PlayUI(6);
         } else if(!inAreaUI.isIn && go.layer == layerArea && go.GetComponent<DropSpot>()) { // && areaUI.text != other.name
             inArea = true;
             inAreaUI.In();
+
+            // currentLandmark = other.name;
+            OnArrivedAtDropoff?.Invoke();
 
             if(go.GetComponent<DropSpot>().isIllegal) {
                 isInIllegalUnloadArea = true;
@@ -443,7 +456,7 @@ public class PlayerInteraction : MonoBehaviour {
         GameObject go = other.gameObject;
 
         if(other.gameObject.layer == 21) {
-            print("Trigger 21: " + other.name);
+            // print("Trigger 21: " + other.name);
             rs.ArrivedAt(other.name);
         }
         

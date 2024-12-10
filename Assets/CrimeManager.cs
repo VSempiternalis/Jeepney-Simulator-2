@@ -97,6 +97,7 @@ public class CrimeManager : MonoBehaviour {
     //Event
     public static event Action OnPlayerIsWanted;
     public static event Action OnPlayerRefueling;
+    public static event Action OnPlayerEscape;
 
     private void Awake() {
         current = this;
@@ -131,6 +132,7 @@ public class CrimeManager : MonoBehaviour {
         } else {
             aggroBar.localScale = new Vector3(0, 1, 1);
             SetIsPlayerWanted(false);
+            OnPlayerEscape?.Invoke();
         }
 
         //ARREST BAR
@@ -198,6 +200,7 @@ public class CrimeManager : MonoBehaviour {
 
             if(aggroProgress <= 0) {
                 SetIsPlayerWanted(false);
+                OnPlayerEscape?.Invoke();
             }
         }
     }
@@ -274,8 +277,9 @@ public class CrimeManager : MonoBehaviour {
         // if(!isPlayerWanted) return;
 
         if(bm.CanPay(finesTotal)) {
+            //notif
+            nm.NewNotif("FINES PAID", "You have successfully paid your P" + finesTotal + " fine. Remaining deposit: P" + bm.deposit);
             ArrestFinish();
-            // TowTruck.current.PoliceTow();
 
             //sfx
             am.PlayUI(2);
@@ -354,6 +358,11 @@ public class CrimeManager : MonoBehaviour {
         print("set player is wanted. isOn: " + isOn);
         if(!isOn) return;
 
+        if(!isPlayerWanted) {
+            //AGGRO
+            aggroProgress = aggroMax;
+        }
+
         // print("SET IS PLAYER WANTED: " + (newVal? "TRUE":"FALSE"));
         isPlayerWanted = newVal;
 
@@ -384,8 +393,6 @@ public class CrimeManager : MonoBehaviour {
         if(wantedLevel >= 5) star5.SetActive(isPlayerWanted);
         // print("setisPlayerWanted. wanted level: " + wantedLevel);
 
-        //AGGRO
-        aggroProgress = aggroMax;
         // if(isPlayerWanted) aggroProgress = aggroMax;
 
         //Audio
@@ -403,7 +410,7 @@ public class CrimeManager : MonoBehaviour {
         }
 
         //Alert passengers
-        OnPlayerIsWanted?.Invoke();
+        if(isPlayerWanted) OnPlayerIsWanted?.Invoke();
     }
 
     public void CheckIllegalUnloading() {

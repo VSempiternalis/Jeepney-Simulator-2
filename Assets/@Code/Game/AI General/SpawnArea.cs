@@ -114,7 +114,10 @@ public class SpawnArea : MonoBehaviour {
 
     private void TrySpawnPerson(Transform spawn) {
         // print("tryspawnperson");
-        if(personCount >= maxPersonCount || personPool.childCount == 0) return;
+        if(personCount >= maxPersonCount || personPool.childCount == 0) {
+            print("No more people to spawn");
+            return;
+        }
 
         int toSpawn;
         Crosswalk crosswalk = null;
@@ -130,7 +133,10 @@ public class SpawnArea : MonoBehaviour {
 
         //Spawn people
         for(int i = 0; i < toSpawn; i++) {
-            if(personCount >= maxPersonCount || personPool.childCount == 0) break;
+            if(personCount >= maxPersonCount || personPool.childCount == 0) {
+                print("reached max NPC count!");
+                break;
+            }
             
             //Set random variables
             float spawnX = Random.Range(spawn.position.x - (spawn.localScale.x/2), spawn.position.x + (spawn.localScale.x/2));

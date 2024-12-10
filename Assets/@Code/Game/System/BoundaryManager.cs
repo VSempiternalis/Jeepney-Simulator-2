@@ -6,6 +6,7 @@ public class BoundaryManager : MonoBehaviour {
     public static BoundaryManager current;
 
     private SaveLoadSystem sls;
+    private MissionManager mm;
     public bool doBoundary;
     public int deposit;
     public int boundary;
@@ -58,6 +59,7 @@ public class BoundaryManager : MonoBehaviour {
     private void Start() {
         sls = SaveLoadSystem.current;
         am = AudioManager.current;
+        mm = MissionManager.current;
         Resources.UnloadUnusedAssets();
     }
 
@@ -220,6 +222,8 @@ public class BoundaryManager : MonoBehaviour {
                 PlayerDriveInput.current.carCon.GetComponent<JeepneySLS>().Save();
                 debugText.text = "Saving owned houses";
                 HousePanel.current.Save();
+                //Get new mission
+                mm.NewDay();
 
                 am.PlayUI(3);
 

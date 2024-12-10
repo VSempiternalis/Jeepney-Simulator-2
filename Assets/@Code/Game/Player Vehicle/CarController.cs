@@ -194,6 +194,7 @@ public class CarController : MonoBehaviour {
 
     //event
     public static event Action OnPlayerHit;
+    public static event Action OnPassengerExit;
 
     [Serializable] public struct Wheel {
         public GameObject wheelModel;
@@ -470,6 +471,7 @@ public class CarController : MonoBehaviour {
         passenger.position = dropPos;
 
         passengerCount --;
+        OnPassengerExit?.Invoke();
     }
 
     #endregion
@@ -895,6 +897,7 @@ public class CarController : MonoBehaviour {
 
                     if(cm) cm.NewViolation(3);
 
+                    print("player hit npc");
                     OnPlayerHit?.Invoke();
                 }
 

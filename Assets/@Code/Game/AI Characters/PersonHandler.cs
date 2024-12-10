@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
-using Unity.VisualScripting;
 
 public class PersonHandler : MonoBehaviour {
     [Header("COMPONENTS")]
@@ -15,6 +14,7 @@ public class PersonHandler : MonoBehaviour {
     private VoiceHandler voiceHandler;
     private CrimeManager cm;
     private Rigidbody rb;
+    private GameManager gm;
 
     [Space(10)]
     [Header("STATS")]
@@ -107,11 +107,15 @@ public class PersonHandler : MonoBehaviour {
         ani = GetComponent<Animator>();
         cm = CrimeManager.current;
         rb = GetComponent<Rigidbody>();
+        gm = GameManager.current;
 
         //subscribe to cm when player is wanted
         CrimeManager.OnPlayerIsWanted += SayPlayerWanted;
         CrimeManager.OnPlayerRefueling += SayPlayerRefueling;
         CarController.OnPlayerHit += SayPlayerHit;
+
+        //subscribe to when fare is updated
+        GameManager.OnFareChanged += SetFare;
 
         //Populate money
         money.Add(coin1PF);
@@ -404,6 +408,11 @@ public class PersonHandler : MonoBehaviour {
 
     #region SINGLE FRAME FUNCTIONS =================================================================================================
 
+    public void SetFare() {
+        int newFare = gm.fare;
+        fare = newFare;
+    }
+
     private void SayPlayerWanted() {
         // print("say player wanted");
         if(rb && rb.isKinematic) voiceHandler.Say("Police");
@@ -455,6 +464,13 @@ public class PersonHandler : MonoBehaviour {
 
     private void Arrived() {
         if(state == "Dropping") return;
+        if(state == "Waiting to pay") {
+            if(!hasSentChangeNotif) {
+                NotificationManager.current.NewNotifColor("PASSENGER NEEDS TO PAY!", "A passenger has arrived but they still aren't able to pay their fare. Get the fares of other passengers so they can pay!", 2);
+                hasSentChangeNotif = true;
+            }
+            return;
+        }
         if(state == "Waiting for change") {
             if(!hasSentChangeNotif) {
                 voiceHandler.Say("Change");
@@ -734,7 +750,7 @@ public class PersonHandler : MonoBehaviour {
             float relativeVelocity = other.relativeVelocity.magnitude;
 
             //stop
-            print("isHittingVehicle = false");
+            // print("isHittingVehicle = false");
             isHittingVehicle = false;
         }
     }
