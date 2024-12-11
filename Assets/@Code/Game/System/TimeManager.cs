@@ -45,6 +45,7 @@ public class TimeManager : MonoBehaviour {
     
     //[EVENTS]
     public event Action<int, int> onHourUpdateEvent;
+    // public event Action<int, int> onHourUpdateEvent;
 
     private AudioManager am;
 

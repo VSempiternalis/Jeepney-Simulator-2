@@ -10,7 +10,8 @@ public class MissionManager : MonoBehaviour {
     private BoundaryManager bm;
     private CrimeManager cm;
     private AudioManager am;
-    // [SerializeField] private CarController carcon;
+    private TimeManager tm;
+    [SerializeField] private CarController carcon;
 
     [SerializeField] private TMP_Text missionText;
 
@@ -23,7 +24,9 @@ public class MissionManager : MonoBehaviour {
         "CATCH ME IF YOU CAN",
         "STREET MARKETING",
         "INSURANCE FRAUD",
-        "CROWD CONTROL"
+        "CROWD CONTROL",
+        "LATE FOR WORK", //7
+        "STAY LOW, NOT SLOW"
     };
     private List<string> missionDescs = new List<string>() {
         "Billy has decided to increase the fare for today!",
@@ -32,7 +35,9 @@ public class MissionManager : MonoBehaviour {
         "Billy is wanted for tax evasion! He needs you to distract the police by committing a crime and successfully escaping from them!",
         "Billy wants you to visit a landmark to promote BILLY'S BOUNDARIES. Go to ",
         "Billy needs you to hit three pedestrians for their insurance fraud scheme. He forgot who they were so just hit any three random pedestrians!",
-        "Your performance has been dropping lately. We need you to deliver a total of "
+        "Your performance has been dropping lately. We need you to deliver a total of ",
+        "A VIP (Very Important Passenger) is late for work! You need to deliver them to ", //7
+        "Drive carefully! If you don't alert the police for this shift, you'll get a reward of P"
     };
     private List<int> missionRewards = new List<int>() {
         0,
@@ -41,6 +46,8 @@ public class MissionManager : MonoBehaviour {
         100,
         50,
         100,
+        50,
+        50, //7
         50
     };
 
@@ -75,6 +82,10 @@ public class MissionManager : MonoBehaviour {
     private int targetPassengersDelivered;
     private int passengersHit;
 
+    [SerializeField] private PersonHandler vip;
+    private float timeLeft = 300f;
+    private bool timerRunning;
+
     public int missionIndex;
     public string missionName;
     public string missionDesc;
@@ -103,6 +114,8 @@ public class MissionManager : MonoBehaviour {
         nm = NotificationManager.current;
         bm = BoundaryManager.current;
         cm = CrimeManager.current;
+        tm = TimeManager.current;
+        am = AudioManager.current;
         // StartMission(0);
         NewDay();
 
@@ -111,42 +124,70 @@ public class MissionManager : MonoBehaviour {
         player.OnArrivedAtLandmark += ArrivedAtLandmark;
         CarController.OnPlayerHit += PassengerHit;
         CarController.OnPassengerExit += PassengerExit;
+        tm.onHourUpdateEvent += HourUpdate;
+        vip.vipExit += VipExit;
+        CrimeManager.OnPlayerIsWanted += PlayerWanted;
     }
 
     private void Update() {
-        if(Input.GetKeyDown(KeyCode.F9)) NewDay();
+        // if(Input.GetKeyDown(KeyCode.F9)) NewDay();
+
+        if(missionIndex == 7 && timerRunning) {
+            if(vip.state == "Waiting") vip.SetState("Waiting to arrive");
+            if(timeLeft > 0) {
+                timeLeft -= Time.deltaTime;
+                missionText.text = missionName + "\n" + missionDesc + " | " + Mathf.Round(timeLeft) + " seconds left";
+            } else {
+                timeLeft = 0;
+                timerRunning = false;
+                missionText.text = missionName + "\n" + "Mission failed! Better luck next time.";
+                nm.NewNotifColor("MISSION FAILED!", "You have failed to deliver the VIP in time!", 3);
+
+                //sfx
+                am.PlayUI(9); //or 21
+            }
+
+            //alerts
+            if(timeLeft < 60) nm.NewNotif("LATE FOR WORK", "1 minute left to deliver the VIP. Hurry!");
+            else if(timeLeft < 180) nm.NewNotif("LATE FOR WORK", "3 minutes left to deliver the VIP!");
+        } else if(missionIndex == 8 && tm.shiftTimeLeft <= 60 && !missionFinished) {
+            CompleteMission(8);
+        }
     }
 
     public void NewDay() {
-        //reset settings
         ResetSettings();
-
-        //get new mission
         TryGetNewMission();
-
-        //wait for completion
     }
 
     private void ResetSettings() {
+        //if on mission 8
+        if(missionIndex == 8 && !missionFinished) {
+            CompleteMission(8);
+        }
+
         //reset
         missionFinished = false;
         gm.UpdateFare(13);
         gm.UpdateFuelPrice(1);
         package.SetActive(false);
         passengersDelivered = 0;
+        vip.gameObject.SetActive(false);
+        timeLeft = 300;
+        timerRunning = false;
     }
 
     private void TryGetNewMission() {
-        // int randInt = UnityEngine.Random.Range(0, 2);
-
-        // if(randInt == 0) {
-        //     nm.NewNotif("REGULAR SHIFT", "You don't have a mission for today!");
-        //     return;
-        // }
+        //Roll to see if you get a mission
+        int randInt = UnityEngine.Random.Range(0, 2);
+        if(randInt == 0) {
+            nm.NewNotif("REGULAR SHIFT", "You don't have a mission for today!");
+            return;
+        }
 
         //get new mission
-        // missionIndex = UnityEngine.Random.Range(0, missionNames.Count);
-        missionIndex = 6;
+        missionIndex = UnityEngine.Random.Range(0, missionNames.Count);
+        // missionIndex = 8;
 
         missionName = missionNames[missionIndex];
         missionDesc = missionDescs[missionIndex];
@@ -154,7 +195,7 @@ public class MissionManager : MonoBehaviour {
         StartMission(missionIndex);
 
         //notification and text
-        nm.NewNotifColor(missionName, missionDesc, 1);
+        nm.NewNotifColor(missionName, missionDesc + "\n\nTo learn more, go to the [SERVICES] page in your TABLET...", 1);
         missionText.text = missionName + "\n" + missionDesc;
     }
 
@@ -194,7 +235,29 @@ public class MissionManager : MonoBehaviour {
             targetPassengersDelivered = UnityEngine.Random.Range(10, 20);
 
             missionDesc += targetPassengersDelivered + " passengers for this shift.\nREWARD: P" + missionRewards[i];
-        }
+        } else if(i == 7) {
+            // spawn person
+            vip.carCon = carcon;
+            vip.gameObject.SetActive(true);
+            vip.Start();
+
+            // get destination
+            int index = UnityEngine.Random.Range(0, landmarks.Count);
+            // targetLandmark = landmarks[index];
+            // vip.landmarkDest = targetLandmark;
+            targetLandmark = "Terminal";
+            vip.landmarkDest = "Terminal";
+
+            // add to vic
+            vip.EnterVehicle();
+            vip.SetState("Waiting to arrive");
+
+            timerRunning = true;
+
+            missionDesc += targetLandmark + " in five minutes!\nREWARD: P" + missionRewards[i];
+        } else if(i == 8) {
+            missionDesc += missionRewards[i];
+        } 
     }
 
     public void CompleteMission(int index) {
@@ -220,6 +283,10 @@ public class MissionManager : MonoBehaviour {
 
         //sfx
         am.PlayUI(24);
+    }
+
+    private void HourUpdate(int hours, int days) {
+    
     }
 
     private void ArrivedAtDropoff() {
@@ -255,12 +322,27 @@ public class MissionManager : MonoBehaviour {
     }
 
     private void PassengerExit() {
-        passengersDelivered ++;
-        print("ON PASSENGER EXIT: " + passengersDelivered + "/" + targetPassengersDelivered);
-
         if(missionIndex == 6) {
+            passengersDelivered ++;
+            print("ON PASSENGER EXIT: " + passengersDelivered + "/" + targetPassengersDelivered);
+
             if(passengersDelivered >= targetPassengersDelivered) CompleteMission(6);
             else nm.NewNotif("CROWD CONTROL", "Passengers Delivered: " + passengersDelivered + "/" + targetPassengersDelivered);
+        }
+    }
+
+    private void VipExit() {
+        if(missionIndex == 7 && timeLeft > 0) {
+            timerRunning = false;
+            CompleteMission(7);
+        }
+    }
+
+    private void PlayerWanted() {
+        if(missionIndex == 8) {
+            missionFinished = true;
+            nm.NewNotifColor("MISSION FAILED!", "You have alerted the police! You will not get the P50 bonus", 3);
+            am.PlayUI(9);
         }
     }
 }

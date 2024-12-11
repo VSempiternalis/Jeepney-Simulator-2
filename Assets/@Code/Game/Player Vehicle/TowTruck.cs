@@ -5,6 +5,7 @@ public class TowTruck : MonoBehaviour {
     public static TowTruck current;
     // [SerializeField] private Transform carcon;
     private CrimeManager cm;
+    [SerializeField] private ChunksManager chunkMan;
 
     [SerializeField] private Transform officePoint;
     private BoundaryManager bm;
@@ -49,6 +50,9 @@ public class TowTruck : MonoBehaviour {
 
         //audio
         AudioManager.current.PlayUI(1);
+
+        //chunks
+        chunkMan.ChunkCheck();
     }
 
     public void Tow() {
@@ -95,6 +99,9 @@ public class TowTruck : MonoBehaviour {
 
         //audio
         AudioManager.current.PlayUI(1);
+
+        //chunks
+        chunkMan.ChunkCheck();
     }
 
     public void TowToNearestGasStation() {
@@ -134,5 +141,8 @@ public class TowTruck : MonoBehaviour {
 
         //audio
         AudioManager.current.PlayUI(1);
+
+        //chunks
+        chunkMan.ChunkCheck();
     }
 }

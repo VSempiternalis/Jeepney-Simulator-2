@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TGStylizedWorld;
-// using UnityEditor.ShaderGraph;
 
 public class SpawnArea : MonoBehaviour {
     public static SpawnArea current;
@@ -129,10 +128,12 @@ public class SpawnArea : MonoBehaviour {
         } else {
             //set number of persons to spawn on spawn transform
             toSpawn = Random.Range(personSpawnRange.x, personSpawnRange.y + 1);
+            print("toSpawn: " + toSpawn);
         }
 
         //Spawn people
         for(int i = 0; i < toSpawn; i++) {
+            print("spawn: " + i);
             if(personCount >= maxPersonCount || personPool.childCount == 0) {
                 print("reached max NPC count!");
                 break;

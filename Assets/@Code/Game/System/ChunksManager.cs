@@ -18,7 +18,7 @@ public class ChunksManager : MonoBehaviour {
         InvokeRepeating("ChunkCheck", 0f, loadFreq);
     }
 
-    private void ChunkCheck() {
+    public void ChunkCheck() {
         loadDist = ((int)PlayerPrefs.GetFloat("Settings_RenderDist", 30)*100) + 200;
 
         // print(Time.time + " chunk check");

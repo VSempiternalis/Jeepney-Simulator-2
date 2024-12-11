@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System;
 
 public class PersonHandler : MonoBehaviour {
     [Header("COMPONENTS")]
@@ -101,7 +102,10 @@ public class PersonHandler : MonoBehaviour {
     private float chatterTime;
     public bool hasChattered;
 
-    private void Start() {
+    public bool isVIP;
+    public event Action vipExit;
+
+    public void Start() {
         player = GameObject.Find("PLAYER").GetComponent<PlayerDriveInput>();
         pdit = GameObject.Find("PLAYER").GetComponent<PlayerDriveInputTUTORIAL>();
         ani = GetComponent<Animator>();
@@ -127,7 +131,7 @@ public class PersonHandler : MonoBehaviour {
         if(state != "Waiting to cross") MakeWait();
 
         //SET MOVESPEED
-        moveSpeed = Random.Range(moveSpeedRange.x, moveSpeedRange.y);
+        moveSpeed = UnityEngine.Random.Range(moveSpeedRange.x, moveSpeedRange.y);
 
         //GET VOICES
         if(personType == "Male") voices = voicesMale;
@@ -139,7 +143,7 @@ public class PersonHandler : MonoBehaviour {
         }
         else print("VOICE ERROR GODDAMMIT");
         voiceHandler = GetComponent<VoiceHandler>();
-        int voiceIndex = Random.Range(0, voices.childCount);
+        int voiceIndex = UnityEngine.Random.Range(0, voices.childCount);
         VoiceType voiceType = voices.GetChild(voiceIndex).GetComponent<VoiceType>();
         voiceHandler.SetAudioClips(voiceType.payAudios, voiceType.changeAudios, voiceType.stopAudios, voiceType.dropAudios, voiceType.deathAudios, voiceType.thanksAudios, voiceType.chatterAudios, voiceType.gasStationAudios, voiceType.hitAudios, voiceType.policeAudios);
         // patience = maxPatience;
@@ -272,7 +276,7 @@ public class PersonHandler : MonoBehaviour {
             if(distToPlayer > callDist) return;
 
             if(!RouteSelector.current.destinations.Contains(landmarkDest)) {
-                int randInt = Random.Range(0, 101);
+                int randInt = UnityEngine.Random.Range(0, 101);
                 if(randInt > 75) {
                     //LOOK AT PLAYER
                     Vector3 dir = player.transform.position - transform.position;
@@ -295,7 +299,7 @@ public class PersonHandler : MonoBehaviour {
                 transform.rotation = rot;
 
                 //HAIL ANIM
-                int randInt = Random.Range(0, 101);
+                int randInt = UnityEngine.Random.Range(0, 101);
                 if(randInt > 10 && state != "Hailing") SetState("Hailing");
 
                 //Face jeepney when close?
@@ -324,7 +328,7 @@ public class PersonHandler : MonoBehaviour {
         if(isHittingVehicle) {
             if(ani.GetInteger("State") > 10) {
                 int anim;
-                anim = Random.Range(0, 10);
+                anim = UnityEngine.Random.Range(0, 10);
 
                 if(ani == null) ani = GetComponent<Animator>();
                 ani.SetInteger("State", anim);
@@ -332,7 +336,7 @@ public class PersonHandler : MonoBehaviour {
             return;
         } else if(ani.GetInteger("State") < 14 || ani.GetInteger("State") > 20) {
             int anim;
-            anim = Random.Range(14, 20);
+            anim = UnityEngine.Random.Range(14, 20);
 
             if(ani == null) ani = GetComponent<Animator>();
             ani.SetInteger("State", anim);
@@ -370,8 +374,8 @@ public class PersonHandler : MonoBehaviour {
     }
 
     private void ReturnToCurrentSpot() {
-        float dropX = Random.Range(currentSpot.position.x - (currentSpot.localScale.x/2), currentSpot.position.x + (currentSpot.localScale.x/2));
-        float dropZ = Random.Range(currentSpot.position.z - (currentSpot.localScale.z/2), currentSpot.position.z + (currentSpot.localScale.z/2));
+        float dropX = UnityEngine.Random.Range(currentSpot.position.x - (currentSpot.localScale.x/2), currentSpot.position.x + (currentSpot.localScale.x/2));
+        float dropZ = UnityEngine.Random.Range(currentSpot.position.z - (currentSpot.localScale.z/2), currentSpot.position.z + (currentSpot.localScale.z/2));
         float dropY = currentSpot.position.y;
 
         posDestinations.Add(new Vector3(dropX, dropY, dropZ));
@@ -450,6 +454,8 @@ public class PersonHandler : MonoBehaviour {
         dropStartTime = Time.time;
         voiceHandler.Say("Drop");
         SetState("Dropping");
+
+        if(isVIP) vipExit?.Invoke();
     }
     
     private void Dropping() {
@@ -517,7 +523,7 @@ public class PersonHandler : MonoBehaviour {
         transform.rotation = Quaternion.Slerp(transform.rotation, newYRotation, rotationSpeed * Time.fixedDeltaTime);
     }
 
-    private void EnterVehicle() {
+    public void EnterVehicle() {
         // print("ENTER VEHICLE");
         carCon.TakeSeat(transform);
 
@@ -560,7 +566,7 @@ public class PersonHandler : MonoBehaviour {
     }
 
     private void StartChatterTimer() {
-        chatterTime = Mathf.RoundToInt(Time.time) + Random.Range(chatterTimeRange.x, chatterTimeRange.y);
+        chatterTime = Mathf.RoundToInt(Time.time) + UnityEngine.Random.Range(chatterTimeRange.x, chatterTimeRange.y);
     }
 
     private void Chatter() {
@@ -568,7 +574,7 @@ public class PersonHandler : MonoBehaviour {
     }
 
     private void StartPayTimer() {
-        payTime = Mathf.RoundToInt(Time.time) + Random.Range(payTimeRange.x, payTimeRange.y);
+        payTime = Mathf.RoundToInt(Time.time) + UnityEngine.Random.Range(payTimeRange.x, payTimeRange.y);
     }
 
     private void PayFare() {
@@ -580,7 +586,7 @@ public class PersonHandler : MonoBehaviour {
 
         for(int i = money.Count; i > 0; i--) {
             while(paid < fare) {
-                int spawnRoll = Random.Range(0, 101);
+                int spawnRoll = UnityEngine.Random.Range(0, 101);
 
                 if(spawnRoll <= moneySpawnProbabilities[i-1]) {
                     GameObject newMoney = Instantiate(money[i-1]);
@@ -624,6 +630,7 @@ public class PersonHandler : MonoBehaviour {
         // GetComponent<Rigidbody>().useGravity = true;
         GetComponent<CapsuleCollider>().enabled = true;
         GetComponent<BoxCollider>().enabled = false;
+        hasChattered = false;
     }
 
     public bool CanReset() {
@@ -639,17 +646,17 @@ public class PersonHandler : MonoBehaviour {
     public void CrossRoad(Transform otherCrosswalk) {
         // print(name + " crossing road");
         crossRoad = otherCrosswalk;
-        crossWaitTime = Time.time + Random.Range(crossWaitTimeRange.x, crossWaitTimeRange.y + 1);
+        crossWaitTime = Time.time + UnityEngine.Random.Range(crossWaitTimeRange.x, crossWaitTimeRange.y + 1);
 
-        float moveX = Random.Range(crossRoad.position.x - (crossRoad.localScale.x/2), crossRoad.position.x + (crossRoad.localScale.x/2));
-        float moveZ = Random.Range(crossRoad.position.z - (crossRoad.localScale.z/2), crossRoad.position.z + (crossRoad.localScale.z/2));
+        float moveX = UnityEngine.Random.Range(crossRoad.position.x - (crossRoad.localScale.x/2), crossRoad.position.x + (crossRoad.localScale.x/2));
+        float moveZ = UnityEngine.Random.Range(crossRoad.position.z - (crossRoad.localScale.z/2), crossRoad.position.z + (crossRoad.localScale.z/2));
 
         posDestinations.Add(new Vector3(moveX, crossRoad.position.y + yUp, moveZ));
         SetState("Waiting to cross");
     }
 
     public void MakeWait() {
-        waitTime = Time.time + Random.Range(waitTimeRange.x, waitTimeRange.y + 1);
+        waitTime = Time.time + UnityEngine.Random.Range(waitTimeRange.x, waitTimeRange.y + 1);
 
         SetState("Waiting");
     }
@@ -657,37 +664,37 @@ public class PersonHandler : MonoBehaviour {
     private void MakeWander() {
         if(currentSpot == null) return;
 
-        float moveX = Random.Range(currentSpot.position.x - (currentSpot.localScale.x/2), currentSpot.position.x + (currentSpot.localScale.x/2));
-        float moveZ = Random.Range(currentSpot.position.z - (currentSpot.localScale.z/2), currentSpot.position.z + (currentSpot.localScale.z/2));
+        float moveX = UnityEngine.Random.Range(currentSpot.position.x - (currentSpot.localScale.x/2), currentSpot.position.x + (currentSpot.localScale.x/2));
+        float moveZ = UnityEngine.Random.Range(currentSpot.position.z - (currentSpot.localScale.z/2), currentSpot.position.z + (currentSpot.localScale.z/2));
 
         posDestinations.Add(new Vector3(moveX, currentSpot.position.y, moveZ));
         // posDestinations.Add(new Vector3(moveX, currentSpot.position.y + yUp, moveZ));
         SetState("Wandering");
     }
 
-    private void SetState(string newState) {
-        // print("setting state to: " + newState);
+    public void SetState(string newState) {
+        if(isVIP) print("setting state to: " + newState);
         state = newState;
 
         //ANIMATION
         int anim = 0;
         
         //Stand
-        if(state == "Idle" || state == "Waiting" || state == "Waiting to cross") anim = Random.Range(0, 10);
+        if(state == "Idle" || state == "Waiting" || state == "Waiting to cross") anim = UnityEngine.Random.Range(0, 10);
         //Walk
         else if(state == "Walking" || state == "Moving to vehicle" || state == "Wandering" || state == "Dropping" || state == "Moving to pos" || state == "Crossing") {
             // if(isHittingVehicle) anim = Random.Range(0, 10);
             // else 
-            anim = Random.Range(14, 20);
+            anim = UnityEngine.Random.Range(14, 20);
         }
         //Sit
-        else if(state == "Waiting to pay" || state == "Waiting to arrive") anim = Random.Range(20, 28);
+        else if(state == "Waiting to pay" || state == "Waiting to arrive") anim = UnityEngine.Random.Range(20, 28);
         //Yes
-        else if(state == "Hailing") anim = Random.Range(30, 37);
+        else if(state == "Hailing") anim = UnityEngine.Random.Range(30, 37);
         //No
-        else if(state == "Declining") anim = Random.Range(40, 43);
+        else if(state == "Declining") anim = UnityEngine.Random.Range(40, 43);
         //Death
-        else if(state == "Death") anim = Random.Range(80, 86);
+        else if(state == "Death") anim = UnityEngine.Random.Range(80, 86);
 
         if(ani == null) ani = GetComponent<Animator>();
         ani.SetInteger("State", anim);
