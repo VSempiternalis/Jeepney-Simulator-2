@@ -15,6 +15,8 @@ public class Target : MonoBehaviour
     [Tooltip("Select if arrow indicator is required for this target")]
     [SerializeField] private bool needArrowIndicator = true;
 
+    [SerializeField] private bool needSubIndicator = true;
+
     [Tooltip("Select if distance text is required for this target")]
     [SerializeField] private bool needDistanceText = true;
 
@@ -24,6 +26,12 @@ public class Target : MonoBehaviour
     /// its value is assigned at runtime by the offscreen indicator script.
     /// </summary>
     [HideInInspector] public Indicator indicator;
+    public string text;
+    public string speaker;
+
+    private void LateUpdate() {
+        indicator.SetText(speaker, text);
+    }
 
     /// <summary>
     /// Gets the color for the target indicator.
@@ -55,6 +63,12 @@ public class Target : MonoBehaviour
         get
         {
             return needArrowIndicator;
+        }
+    }
+
+    public bool NeedSubIndicator {
+        get {
+            return needSubIndicator;
         }
     }
 
@@ -101,4 +115,15 @@ public class Target : MonoBehaviour
         float distanceFromCamera = Vector3.Distance(cameraPosition, transform.position);
         return distanceFromCamera;
     }
+
+    // public void SetText(string value) {
+    //     text = value;
+    //     print(gameObject.name + " SETTING SUBS FROM '" + indicator.text.text + "' TO: " + value);
+    //     indicator.SetText(text);
+    // }
+
+    // public string GetText() {
+    //     print(gameObject.name + " GETTING SUBS: " + indicator.text.text);
+    //     return indicator.text.text;
+    // }
 }

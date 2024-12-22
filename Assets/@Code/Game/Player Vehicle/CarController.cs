@@ -406,7 +406,7 @@ public class CarController : MonoBehaviour {
     #region PASSENGERS ======================================================================
 
     public void TakeSeat(Transform passenger) {
-        print("Taking seat");
+        // print("Taking seat");
         // UpdateSeatsTaken();
 
         //Get free seats
@@ -424,7 +424,7 @@ public class CarController : MonoBehaviour {
         if(freeSeats.Count == 0) return;
         else if(freeSeats.Count == 1) SteamAchievements.current.UnlockAchievement("ACH_FULLY_LOADED");
 
-        print("sitting");
+        // print("sitting");
 
         //Pick random from free seats
         int randInt = UnityEngine.Random.Range(0, freeSeats.Count);

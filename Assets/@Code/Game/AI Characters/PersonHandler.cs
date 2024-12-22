@@ -145,7 +145,8 @@ public class PersonHandler : MonoBehaviour {
         voiceHandler = GetComponent<VoiceHandler>();
         int voiceIndex = UnityEngine.Random.Range(0, voices.childCount);
         VoiceType voiceType = voices.GetChild(voiceIndex).GetComponent<VoiceType>();
-        voiceHandler.SetAudioClips(voiceType.payAudios, voiceType.changeAudios, voiceType.stopAudios, voiceType.dropAudios, voiceType.deathAudios, voiceType.thanksAudios, voiceType.chatterAudios, voiceType.gasStationAudios, voiceType.hitAudios, voiceType.policeAudios);
+        voiceHandler.SetAudioClips(voiceType);
+        // voiceHandler.SetAudioClips(voiceType.payAudios, voiceType.changeAudios, voiceType.stopAudios, voiceType.dropAudios, voiceType.deathAudios, voiceType.thanksAudios, voiceType.chatterAudios, voiceType.gasStationAudios, voiceType.hitAudios, voiceType.policeAudios);
         // patience = maxPatience;
 
         isPayments = true;
@@ -218,6 +219,11 @@ public class PersonHandler : MonoBehaviour {
                 }
             }
         }
+    }
+
+    private void Update() {
+        //DEBUG
+        if(Input.GetKeyDown(KeyCode.F10)) voiceHandler.Say("Pay");
     }
 
     // private void PatienceCheck() {
@@ -427,8 +433,9 @@ public class PersonHandler : MonoBehaviour {
     }
 
     private void SayPlayerHit() {
-        // print("say player hit");
-        if(rb && rb.isKinematic) voiceHandler.Say("Hit");
+        // print(gameObject.name + " saying player hit");
+        print("isKinematic: " + rb.isKinematic);
+        if(rb && rb.isKinematic && GetComponent<CapsuleCollider>().isTrigger) voiceHandler.Say("Hit");
     }
 
     public void ExitVehicle() {

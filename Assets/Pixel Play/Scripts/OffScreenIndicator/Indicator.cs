@@ -9,7 +9,10 @@ public class Indicator : MonoBehaviour
 {
     [SerializeField] private IndicatorType indicatorType;
     private Image indicatorImage;
-    private TMP_Text distanceText;
+    public TMP_Text speakerText;
+    public TMP_Text subtitleText;
+
+    public Target subsHolder;
 
     /// <summary>
     /// Gets if the game object is active in hierarchy.
@@ -33,18 +36,17 @@ public class Indicator : MonoBehaviour
         }
     }
 
-    void Awake()
-    {
+    void Awake() {
         indicatorImage = transform.GetComponent<Image>();
-        distanceText = transform.GetComponentInChildren<TMP_Text>();
+        speakerText = transform.GetChild(0).GetComponent<TMP_Text>();
+        subtitleText = transform.GetChild(1).GetComponent<TMP_Text>();
     }
 
     /// <summary>
     /// Sets the image color for the indicator.
     /// </summary>
     /// <param name="color"></param>
-    public void SetImageColor(Color color)
-    {
+    public void SetImageColor(Color color) {
         indicatorImage.color = color;
     }
 
@@ -52,9 +54,14 @@ public class Indicator : MonoBehaviour
     /// Sets the distance text for the indicator.
     /// </summary>
     /// <param name="value"></param>
-    public void SetDistanceText(float value)
-    {
-        distanceText.text = value >= 0 ? Mathf.Floor(value) + " m" : "";
+    public void SetDistanceText(float value) {
+        if(indicatorType != IndicatorType.SUBTITLE) subtitleText.text = value >= 0 ? Mathf.Floor(value) + " m" : "";
+    }
+
+    public void SetText(string speaker, string subtitles) {
+        // text.text = value;
+        speakerText.text = speaker;
+        subtitleText.text = subtitles;
     }
 
     /// <summary>
@@ -63,7 +70,8 @@ public class Indicator : MonoBehaviour
     /// <param name="rotation"></param>
     public void SetTextRotation(Quaternion rotation)
     {
-        distanceText.rectTransform.rotation = rotation;
+        speakerText.rectTransform.rotation = rotation;
+        subtitleText.rectTransform.rotation = rotation;
     }
 
     /// <summary>
@@ -76,8 +84,8 @@ public class Indicator : MonoBehaviour
     }
 }
 
-public enum IndicatorType
-{
+public enum IndicatorType {
     BOX,
-    ARROW
+    ARROW,
+    SUBTITLE
 }

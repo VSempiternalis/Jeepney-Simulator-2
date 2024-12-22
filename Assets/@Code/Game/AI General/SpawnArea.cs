@@ -114,7 +114,7 @@ public class SpawnArea : MonoBehaviour {
     private void TrySpawnPerson(Transform spawn) {
         // print("tryspawnperson");
         if(personCount >= maxPersonCount || personPool.childCount == 0) {
-            print("No more people to spawn");
+            // print("No more people to spawn");
             return;
         }
 
@@ -128,14 +128,14 @@ public class SpawnArea : MonoBehaviour {
         } else {
             //set number of persons to spawn on spawn transform
             toSpawn = Random.Range(personSpawnRange.x, personSpawnRange.y + 1);
-            print("toSpawn: " + toSpawn);
+            // print("toSpawn: " + toSpawn);
         }
 
         //Spawn people
         for(int i = 0; i < toSpawn; i++) {
-            print("spawn: " + i);
+            // print("spawn: " + i);
             if(personCount >= maxPersonCount || personPool.childCount == 0) {
-                print("reached max NPC count!");
+                // print("reached max NPC count!");
                 break;
             }
             

@@ -7,6 +7,7 @@ using TMPro;
 public class SaveLoadSystem : MonoBehaviour {
     public static SaveLoadSystem current;
     private SteamAchievements sa;
+    private MissionManager mm;
 
     public string gameMode;
     public bool isNewGame;
@@ -72,6 +73,7 @@ public class SaveLoadSystem : MonoBehaviour {
 
     private void Start() {
         sa = SteamAchievements.current;
+        mm = MissionManager.current;
         print("Steam Achievements exists 2: " + (sa != null? "true" : "false"));
 
         //populate tips
@@ -98,7 +100,7 @@ public class SaveLoadSystem : MonoBehaviour {
             "Tip 20: Claim your lottery winnings at the GCSO OFFICE!",
             "Tip 21: Feeling lucky? Buy a LOTTERY TICKET and wait for the draw!",
             "Tip 22: Stuck? Out of gas? Use your tablet to find the TOW TRUCK and drop your jeepney in the nearest gas station or even in Billy's Office!",
-            "Tip 23: Visit ALBERTO in the nearest EZ GAS to get change!",
+            "Tip 23: Visit ALBERTO in the nearest EZ GAS to get change and fuel!",
             "Tip 24: Use ATMs to withdraw money from your deposit!",
             "Tip 25: Try not to commit any crimes near police cars! They are marked as red dots in the tablet map.",
             "Tip 25: Never drink and drive!                                ",
@@ -132,6 +134,7 @@ public class SaveLoadSystem : MonoBehaviour {
         SpawnArea.current.isRoadEvents = isEvents;
         CrimeManager.current.isOn = (gameMode == "Career"? true:false);
         print("CM IS ON: " + (gameMode == "Career"? true:false));
+        mm.NewDay();
 
         // //load houses
         // HousePanel.current.Load();

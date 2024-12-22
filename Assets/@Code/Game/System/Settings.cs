@@ -63,6 +63,7 @@ public class Settings : MonoBehaviour {
     private int renderDistDefault = 2;
     [SerializeField] private Slider spawnDistSlider;
     [SerializeField] private TMP_Text spawnDistText;
+    [SerializeField] private TMP_Dropdown subsLanguageDropdown;
 
     public bool isTutorialPanelsOn;
     [SerializeField] private CanvasGroup tutorialUI; //help/page at game start
@@ -71,11 +72,15 @@ public class Settings : MonoBehaviour {
 
     [SerializeField] private CarController carCon;
 
+    private SubsManager sm;
+
     private void Awake() {
         current = this;
     }
 
     private void Start() {
+        sm = SubsManager.current;
+
         //Set quality button text
         if(specsText) specsText.text = "CPU: " + SystemInfo.processorType + "\nRAM: " + SystemInfo.systemMemorySize + "MB\nGPU: " + SystemInfo.graphicsDeviceName + "\nVRAM: " + SystemInfo.graphicsMemorySize + " MB";
 
@@ -163,6 +168,7 @@ public class Settings : MonoBehaviour {
         print("setting default render dist");
         SetRenderDist(renderDistDefault);
         SetSpawnDistance(100);
+        SetSubsLanguage(2);
     }
 
     private void LoadSavedSettings() {
@@ -196,6 +202,8 @@ public class Settings : MonoBehaviour {
         SetRenderDist(renderDist);
         int spawnDist = PlayerPrefs.GetInt("Settings_SpawnDist", 100);
         SetSpawnDistance(100);
+        int subsLangIndex = PlayerPrefs.GetInt("Settings_SubsLanguage", 2);
+        SetSubsLanguage(subsLangIndex);
     }
 
     public void ToggleCursor() {
@@ -471,6 +479,22 @@ public class Settings : MonoBehaviour {
         //Update UI
         spawnDistText.text = spawnDist + "";
         spawnDistSlider.value = spawnDist;
+    }
+
+    public void SetSubsLanguage(int languageIndex) {
+        print("SETTINGS: Set Subs Language");
+        //0: OFF, 1: ORIGINAL, 2: ENGLISH
+        if(languageIndex == 0) {
+            sm.SetLanguage(Language.OFF);
+        } else if(languageIndex == 1) {
+            sm.SetLanguage(Language.ORIGINAL);
+        } else if(languageIndex == 2) {
+            sm.SetLanguage(Language.ENGLISH);
+        } 
+
+        PlayerPrefs.SetInt("Settings_SubsLanguage", languageIndex);
+
+        subsLanguageDropdown.value = languageIndex;
     }
 
     #endregion

@@ -117,7 +117,7 @@ public class MissionManager : MonoBehaviour {
         tm = TimeManager.current;
         am = AudioManager.current;
         // StartMission(0);
-        NewDay();
+        // NewDay();
 
         player.OnArrivedAtDropoff += ArrivedAtDropoff;
         CrimeManager.OnPlayerEscape += PlayerEscaped;
@@ -148,8 +148,12 @@ public class MissionManager : MonoBehaviour {
             }
 
             //alerts
-            if(timeLeft < 60) nm.NewNotif("LATE FOR WORK", "1 minute left to deliver the VIP. Hurry!");
-            else if(timeLeft < 180) nm.NewNotif("LATE FOR WORK", "3 minutes left to deliver the VIP!");
+            if(timeLeft < 60 && timeLeft > 50) {
+                nm.NewNotif("LATE FOR WORK", "1 minute left to deliver the VIP. Hurry!");
+            } 
+            else if(timeLeft < 180 && timeLeft > 170) {
+                nm.NewNotif("LATE FOR WORK", "3 minutes left to deliver the VIP!");
+            } 
         } else if(missionIndex == 8 && tm.shiftTimeLeft <= 60 && !missionFinished) {
             CompleteMission(8);
         }
@@ -187,7 +191,7 @@ public class MissionManager : MonoBehaviour {
 
         //get new mission
         missionIndex = UnityEngine.Random.Range(0, missionNames.Count);
-        // missionIndex = 8;
+        // missionIndex = 6;
 
         missionName = missionNames[missionIndex];
         missionDesc = missionDescs[missionIndex];
@@ -206,12 +210,14 @@ public class MissionManager : MonoBehaviour {
             int newFare = UnityEngine.Random.Range(14, 20);
             gm.UpdateFare(newFare);
             missionDesc += "\nNew Fare: P" + newFare;
-        } else if(i == 1) {
+        } 
+        else if(i == 1) {
             int newPrice = UnityEngine.Random.Range(2, 5);
             print("PRICE HIKE: " + newPrice);
             gm.UpdateFuelPrice(newPrice);
             missionDesc += "\nNew Fuel Price: P" + newPrice + " per liter";
-        } else if(i == 2) {
+        } 
+        else if(i == 2) {
             // spawn package, add to storage
             package.SetActive(true);
             packageStorage.AddItemRandom(package);
@@ -220,22 +226,32 @@ public class MissionManager : MonoBehaviour {
             targetLandmark = landmarks[index];
 
             missionDesc += targetLandmark + "\nREWARD: P" + missionRewards[i];
-        } else if(i == 3) {
+        } 
+        else if(i == 3) {
             missionDesc += "\nREWARD: P" + missionRewards[i];
-        } else if(i == 4) {
+        } 
+        else if(i == 4) {
             //get destination
             int index = UnityEngine.Random.Range(0, landmarks.Count);
             targetLandmark = landmarks[index];
 
             missionDesc += targetLandmark + " for a reward of P" + missionRewards[i];
-        } else if(i == 5) {
+        } 
+        else if(i == 5) {
             missionDesc += "\nREWARD: P" + missionRewards[i];
-        } else if(i == 6) {
+        } 
+        else if(i == 6) { //CROWD CONTROL
             //get target passenger num
-            targetPassengersDelivered = UnityEngine.Random.Range(10, 20);
+            targetPassengersDelivered = UnityEngine.Random.Range(1, 4);
+            //multiply based on shift time
+            print("SHIFT LENGTH: " + tm.shiftLength);
+            int shiftTime = tm.shiftLength;
+            targetPassengersDelivered *= shiftTime;
+            targetPassengersDelivered = Mathf.FloorToInt(targetPassengersDelivered);
 
-            missionDesc += targetPassengersDelivered + " passengers for this shift.\nREWARD: P" + missionRewards[i];
-        } else if(i == 7) {
+            missionDesc += targetPassengersDelivered + " passengers for this shift.\nREWARD: P" + (missionRewards[i]*(targetPassengersDelivered/shiftTime));
+        } 
+        else if(i == 7) {
             // spawn person
             vip.carCon = carcon;
             vip.gameObject.SetActive(true);
@@ -243,10 +259,12 @@ public class MissionManager : MonoBehaviour {
 
             // get destination
             int index = UnityEngine.Random.Range(0, landmarks.Count);
-            // targetLandmark = landmarks[index];
-            // vip.landmarkDest = targetLandmark;
-            targetLandmark = "Terminal";
-            vip.landmarkDest = "Terminal";
+            // print("VIP DEST INDEX: " + index + "/" + landmarks.Count);
+            targetLandmark = landmarks[index];
+            vip.landmarkDest = targetLandmark;
+            // FOR TESTING:
+            // targetLandmark = "Terminal";
+            // vip.landmarkDest = "Terminal";
 
             // add to vic
             vip.EnterVehicle();
@@ -255,7 +273,8 @@ public class MissionManager : MonoBehaviour {
             timerRunning = true;
 
             missionDesc += targetLandmark + " in five minutes!\nREWARD: P" + missionRewards[i];
-        } else if(i == 8) {
+        } 
+        else if(i == 8) {
             missionDesc += missionRewards[i];
         } 
     }
@@ -269,6 +288,9 @@ public class MissionManager : MonoBehaviour {
         print("MISSION COMPLETED: " + index);
         if(missionRewards[index] == 0) {
             //no reward
+        } else if(missionIndex == 6) {
+            nm.NewNotifColor("MISSION COMPLETED!", "Good work! A reward of P" + (missionRewards[index]*targetPassengersDelivered) + " has been added to your deposit!", 1);
+            bm.AddToDeposit(missionRewards[index]*targetPassengersDelivered);
         } else {
             nm.NewNotifColor("MISSION COMPLETED!", "Good work! A reward of P" + missionRewards[index] + " has been added to your deposit!", 1);
             bm.AddToDeposit(missionRewards[index]);
@@ -315,19 +337,20 @@ public class MissionManager : MonoBehaviour {
         passengersHit ++;
         print("ON PASSENGER HIT: " + passengersHit + "/3");
 
-        if(missionIndex == 5) {
+        if(missionIndex == 5 && !missionFinished) {
+            nm.NewNotif("INSURANCE FRAUD", "Pedestrians hit: " + passengersHit + "/3");
             if(passengersHit >= 3) CompleteMission(5);
-            else nm.NewNotif("INSURANCE FRAUD", "Pedestrians hit: " + passengersHit + "/3");
         }
     }
 
     private void PassengerExit() {
-        if(missionIndex == 6) {
+        if(missionIndex == 6 && !missionFinished) {
             passengersDelivered ++;
             print("ON PASSENGER EXIT: " + passengersDelivered + "/" + targetPassengersDelivered);
 
+            nm.NewNotif("CROWD CONTROL", "Passengers Delivered: " + passengersDelivered + "/" + targetPassengersDelivered);
             if(passengersDelivered >= targetPassengersDelivered) CompleteMission(6);
-            else nm.NewNotif("CROWD CONTROL", "Passengers Delivered: " + passengersDelivered + "/" + targetPassengersDelivered);
+            // else nm.NewNotif("CROWD CONTROL", "Passengers Delivered: " + passengersDelivered + "/" + targetPassengersDelivered);
         }
     }
 
