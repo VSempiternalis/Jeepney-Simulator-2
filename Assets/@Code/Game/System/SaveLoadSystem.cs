@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -67,6 +68,8 @@ public class SaveLoadSystem : MonoBehaviour {
     [SerializeField] private List<GameObject> customizationFreeride;
     [SerializeField] private List<GameObject> customizationCareer;
 
+    public event Action<bool, string> onGameStart;
+
     private void Awake() {
         current = this;
     }
@@ -123,6 +126,7 @@ public class SaveLoadSystem : MonoBehaviour {
         gameMode = PlayerPrefs.GetString("Game_GameMode");
         print("GAME MODE: " + gameMode);
         isNewGame = PlayerPrefs.GetInt("Game_isNewGame") == 1? true:false;
+        onGameStart?.Invoke(isNewGame, gameMode);
 
         // print("(GAME) Game_isNewGame: " + (isNewGame? 1:0));
 
@@ -461,7 +465,7 @@ public class SaveLoadSystem : MonoBehaviour {
         if(mp.isPlaying) mp.TogglePlay();
 
         //Tip
-        int randInt = Random.Range(0, tips.Count);
+        int randInt = UnityEngine.Random.Range(0, tips.Count);
         if(tipText) tipText.text = tips[randInt];
 
         yield return new WaitForSeconds(loadTransitionTime);

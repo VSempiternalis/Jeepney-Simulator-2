@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using System;
+
 
 public class BoundaryManager : MonoBehaviour {
     public static BoundaryManager current;
@@ -51,6 +53,11 @@ public class BoundaryManager : MonoBehaviour {
     private AudioManager am;
 
     [SerializeField] private TMP_Text debugText;
+
+    //EVENT
+    // public event Action onShiftCompleted;
+    public event Action onSavingGame;
+    public event Action onPlayerFired;
 
     private void Awake() {
         current = this;
@@ -163,7 +170,10 @@ public class BoundaryManager : MonoBehaviour {
         if(deposit >= value) {
             AddToDeposit(-value);
             return true;
-        } else return false;
+        } else {
+            am.PlayUI(7);
+            return false;
+        }
     }
 
     public void AddToDeposit(int mod) {
@@ -224,6 +234,8 @@ public class BoundaryManager : MonoBehaviour {
                 HousePanel.current.Save();
                 //Get new mission
                 mm.NewDay();
+                //trigger save event
+                onSavingGame?.Invoke();
 
                 am.PlayUI(3);
 
@@ -257,6 +269,8 @@ public class BoundaryManager : MonoBehaviour {
                 LotteryManager.current.NewNums(); //MUST BE AFTER TIME RESET
                 PlayerDriveInput.current.carCon.GetComponent<JeepneySLS>().LoadPrevious();
                 HousePanel.current.Load();
+                //trigger load event
+                onPlayerFired?.Invoke();
 
                 am.PlayUI(5);
                 
@@ -293,6 +307,8 @@ public class BoundaryManager : MonoBehaviour {
         debugText.text = "Starting new day";
         carCon.NewDay();
         debugText.text = "";
+
+        // onShiftCompleted?.Invoke();
     }
 
     public void GetArrested() {
@@ -314,6 +330,8 @@ public class BoundaryManager : MonoBehaviour {
             LotteryManager.current.NewNums(); //MUST BE AFTER TIME RESET
             pdi.carCon.GetComponent<JeepneySLS>().LoadPrevious();
             HousePanel.current.Load();
+            //trigger load event
+            onPlayerFired?.Invoke();
 
             am.PlayUI(5);
             
@@ -345,6 +363,8 @@ public class BoundaryManager : MonoBehaviour {
 
         //Clear jeepney seats
         carCon.NewDay();
+
+        // onShiftCompleted?.Invoke();
     }
 
     public void Restart() {
@@ -366,6 +386,8 @@ public class BoundaryManager : MonoBehaviour {
             LotteryManager.current.NewNums(); //MUST BE AFTER TIME RESET
             pdi.carCon.GetComponent<JeepneySLS>().LoadPrevious();
             HousePanel.current.Load();
+            //trigger load event
+            onPlayerFired?.Invoke();
 
             am.PlayUI(5);
             
@@ -397,5 +419,7 @@ public class BoundaryManager : MonoBehaviour {
 
         //Clear jeepney seats
         carCon.NewDay();
+
+        // onShiftCompleted?.Invoke();
     }
 }

@@ -31,7 +31,7 @@ public class MissionManager : MonoBehaviour {
     private List<string> missionDescs = new List<string>() {
         "Billy has decided to increase the fare for today!",
         "Geopolitical tensions are causing the fuel prices to increase!",
-        "Billy wants you to deliver a package to any drop-off area at ",
+        "Billy wants you to deliver a package to any drop-off area in ",
         "Billy is wanted for tax evasion! He needs you to distract the police by committing a crime and successfully escaping from them!",
         "Billy wants you to visit a landmark to promote BILLY'S BOUNDARIES. Go to ",
         "Billy needs you to hit three pedestrians for their insurance fraud scheme. He forgot who they were so just hit any three random pedestrians!",
@@ -185,13 +185,14 @@ public class MissionManager : MonoBehaviour {
         //Roll to see if you get a mission
         int randInt = UnityEngine.Random.Range(0, 2);
         if(randInt == 0) {
+            print("NO MISSION");
             nm.NewNotif("REGULAR SHIFT", "You don't have a mission for today!");
             return;
         }
 
         //get new mission
         missionIndex = UnityEngine.Random.Range(0, missionNames.Count);
-        // missionIndex = 6;
+        // missionIndex = 8;
 
         missionName = missionNames[missionIndex];
         missionDesc = missionDescs[missionIndex];

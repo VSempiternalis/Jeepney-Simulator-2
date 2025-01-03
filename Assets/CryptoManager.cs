@@ -5,6 +5,9 @@ public class CryptoManager : MonoBehaviour {
     public static CryptoManager current;
     private TimeManager tm;
     private BoundaryManager bm;
+    private SaveLoadSystem sls;
+
+    private string gameMode;
 
     [Header("Line Renderers")]
     [SerializeField] private LineRenderer BBClineR;
@@ -44,10 +47,13 @@ public class CryptoManager : MonoBehaviour {
     private void Start() {
         tm = TimeManager.current;
         bm = BoundaryManager.current;
+        sls = SaveLoadSystem.current;
         tm.onHourUpdateEvent += NewTick;
+        bm.onSavingGame += OnSave;
+        sls.onGameStart += GameStart;
 
         priceBBC = Random.Range(1, 101);
-        priceSHT = 100;
+        priceSHT = Random.Range(1, 101);
         priceCUM = Random.Range(1, 101);
 
         UpdateGraph();
@@ -55,10 +61,24 @@ public class CryptoManager : MonoBehaviour {
 
         NewTick(1, 1);
         NewTick(1, 1);
+        NewTick(1, 1);
+        NewTick(1, 1);
     }
 
     private void Update() {
-        if(Input.GetKeyDown(KeyCode.F1)) NewTick(1, 1);
+        // if(Input.GetKeyDown(KeyCode.F1)) NewTick(1, 1);
+    }
+
+    private void GameStart(bool isNewGame, string thisGameMode) {
+        gameMode = thisGameMode;
+
+        if(gameMode == "Freeride") return;
+
+        if(!isNewGame) {
+            ownedBBC = PlayerPrefs.GetInt("OwnedBBC", 0);
+            ownedSHT = PlayerPrefs.GetInt("OwnedSHT", 0);
+            ownedCUM = PlayerPrefs.GetInt("OwnedCUM", 0);
+        }
     }
 
     private void NewTick(int hours, int days) {
@@ -148,5 +168,13 @@ public class CryptoManager : MonoBehaviour {
         for(int i = 0; i < 10; i++){
             Sell(coin);
         }
+    }
+
+    private void OnSave() {
+        if(gameMode == "Freeride") return;
+
+        PlayerPrefs.SetInt("OwnedBBC", ownedBBC);
+        PlayerPrefs.SetInt("OwnedSHT", ownedSHT);
+        PlayerPrefs.SetInt("OwnedCUM", ownedCUM);
     }
 }
